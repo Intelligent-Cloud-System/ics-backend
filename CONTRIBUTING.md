@@ -34,4 +34,4 @@ Telegram:
 
 - Uryn Dmytro: https://t.me/tedi4t
 - Govoruha Maxim: https://t.me/Maksgovorrr
-- Honchar Andriya: https://t.me/Hemingwai
+- Gonchar Andriy: https://t.me/Hemingwai
