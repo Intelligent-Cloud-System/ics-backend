@@ -1,0 +1,24 @@
+{
+  "name": "ics-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Stub\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Intelligent-Cloud-System/ics-backend.git"
+  },
+  "keywords": [
+    "cloud",
+    "storage",
+    "ics"
+  ],
+  "author": "ICS Contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Intelligent-Cloud-System/ics-backend/issues"
+  },
+  "homepage": "https://github.com/Intelligent-Cloud-System/ics-backend#readme"
+}
