@@ -20,5 +20,13 @@
   "bugs": {
     "url": "https://github.com/Intelligent-Cloud-System/ics-backend/issues"
   },
-  "homepage": "https://github.com/Intelligent-Cloud-System/ics-backend#readme"
+  "homepage": "https://github.com/Intelligent-Cloud-System/ics-backend#readme",
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-metarhia": "^7.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1"
+  }
 }
