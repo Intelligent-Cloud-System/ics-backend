@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Stub\""
+    "test": "echo \"Stub\"",
+    "lint": "eslint . && prettier -c \"**/*.js\" \"**/*.json\" \"**/*.md\" \"**/*.ts\"",
+    "fmt": "prettier --write \"**/*.js\" \"**/*.json\" \"**/*.md\" \"**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,9 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Intelligent-Cloud-System/ics-backend/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   },
   "homepage": "https://github.com/Intelligent-Cloud-System/ics-backend#readme",
   "devDependencies": {
