@@ -1,0 +1,15 @@
+{
+  "extends": ["metarhia", "plugin:prettier/recommended"],
+  "parserOptions": { "ecmaVersion": 2020 },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "arrow-parens": ["error", "always"],
+    "comma-dangle": "off",
+    "handle-callback-err": "off",
+    "consistent-return": "off"
+  }
+}
