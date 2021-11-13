@@ -6,11 +6,13 @@ import { AppService } from './service/app.service';
 import { DbController } from './controller/db.controller';
 import { UsersModule } from './module/users.module';
 import configuration from './config/configuration';
+import dbConfig from './config/db.config';
+import { DatabaseConfig } from './config/interfaces';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [configuration],
+      load: [configuration, dbConfig],
       envFilePath: ['.env.development'],
       isGlobal: true,
       cache: true,
@@ -18,12 +20,8 @@ import configuration from './config/configuration';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
+        ...configService.get<DatabaseConfig>('db'),
         type: 'postgres',
-        host: configService.get('db.host'),
-        port: +configService.get<number>('db.port'),
-        username: configService.get('db.username'),
-        password: configService.get('db.password'),
-        database: configService.get('db.database'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),

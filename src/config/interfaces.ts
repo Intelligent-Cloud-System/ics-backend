@@ -1,5 +1,4 @@
 interface DatabaseConfig {
-  type: string;
   port: number;
   host: string;
   username: string;
