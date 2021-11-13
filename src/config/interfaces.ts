@@ -3,4 +3,4 @@ interface DatabaseConfig {
   port: number;
 }
 
-export { DatabaseConfig }
+export { DatabaseConfig };

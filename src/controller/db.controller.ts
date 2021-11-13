@@ -8,7 +8,7 @@ export class DbController {
 
   @Get()
   getConfigInfo(): DatabaseConfig {
-    const database = this.configServise.get<DatabaseConfig>('database')
+    const database = this.configServise.get<DatabaseConfig>('database');
     return database;
   }
 }
