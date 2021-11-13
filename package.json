@@ -38,6 +38,7 @@
   "homepage": "https://github.com/Intelligent-Cloud-System/ics-backend#readme",
   "dependencies": {
     "@nestjs/common": "^8.0.0",
+    "@nestjs/config": "^1.1.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "reflect-metadata": "^0.1.13",
