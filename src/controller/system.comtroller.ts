@@ -5,7 +5,7 @@ import { Response } from 'express';
 export class SystemController {
   constructor() {}
 
-  @Get()
+  @Get('healthy')
   @HttpCode(HttpStatus.OK)
   healthy(
     @Res() res: Response,
