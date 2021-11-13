@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './controller/app.controller';
 import { AppService } from './service/app.service';
 import { DbController } from './controller/db.controller';
+import { config } from './orm.config';
 import configuration from './config/configuration';
 
 @Module({
@@ -13,6 +15,7 @@ import configuration from './config/configuration';
       isGlobal: true,
       cache: true,
     }),
+    TypeOrmModule.forRoot(config)
   ],
   controllers: [AppController, DbController],
   providers: [AppService],
