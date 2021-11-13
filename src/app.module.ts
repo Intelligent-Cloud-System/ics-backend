@@ -11,6 +11,7 @@ import configuration from './config/configuration';
       load: [configuration],
       envFilePath: ['.env.development'],
       isGlobal: true,
+      cache: true
     }),
   ],
   controllers: [AppController, DbController],
