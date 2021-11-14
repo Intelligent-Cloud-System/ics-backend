@@ -14,7 +14,7 @@ import dbConfig from './config/db.config';
   imports: [
     ConfigModule.forRoot({
       load: [configuration, dbConfig],
-      envFilePath: ['.env.development'],
+      envFilePath: ['.env'],
       isGlobal: true,
       cache: true,
     }),

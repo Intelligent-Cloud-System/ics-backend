@@ -1,4 +1,4 @@
-interface DatabaseConfig {
+export interface DatabaseConfig {
   port: number;
   host: string;
   username: string;
@@ -6,4 +6,7 @@ interface DatabaseConfig {
   database: string;
 }
 
-export { DatabaseConfig };
+export interface SwaggerConfig {
+  title: string;
+  description: string;
+}
