@@ -12,7 +12,7 @@ import { DatabaseConfig } from './config/interfaces';
   imports: [
     ConfigModule.forRoot({
       load: [configuration, dbConfig],
-      envFilePath: ['.env.development'],
+      envFilePath: ['.env'],
       isGlobal: true,
       cache: true,
     }),
