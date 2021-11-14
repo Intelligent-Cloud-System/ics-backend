@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AppController } from './controller/app.controller';
-import { AppService } from './service/app.service';
 import { UsersModule } from './module/users.module';
+import { SystemModule } from './module/system.module';
+import { AppService } from './service/app.service';
+import { DatabaseConfig } from './config/interfaces';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
-import { DatabaseConfig } from './config/interfaces';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { DatabaseConfig } from './config/interfaces';
       inject: [ConfigService],
     }),
     UsersModule,
+    SystemModule,
   ],
   controllers: [AppController],
   providers: [AppService],
