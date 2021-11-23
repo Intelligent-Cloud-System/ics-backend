@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './controller/app.controller';
 import { UsersModule } from './module/users.module';
 import { SystemModule } from './module/system.module';
+import { FilesModule } from './module/files.module';
 import { AppService } from './service/app.service';
 import { DatabaseConfig } from './config/interfaces';
-import { FilesController } from './controller/files.controller';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
 
@@ -31,8 +31,9 @@ import dbConfig from './config/db.config';
     }),
     UsersModule,
     SystemModule,
+    FilesModule
   ],
-  controllers: [AppController, FilesController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
