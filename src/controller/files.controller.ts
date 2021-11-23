@@ -23,11 +23,11 @@ export class FilesController {
   async upload(@UploadedFile() file: Express.Multer.File) {
     if (file) {
       const { originalname, buffer } = file;
-      // try {
+      try {
       await this.filesService.writeFileUser(originalname, buffer);
-      // } catch (error) {
-      // return { error };
-      // }
+      } catch (error) {
+      return { error };
+      }
     }
   }
 }
