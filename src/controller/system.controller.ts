@@ -7,9 +7,7 @@ export class SystemController {
 
   @Get('healthy')
   @HttpCode(HttpStatus.OK)
-  healthy(
-    @Res() res: Response,
-  ): void {
+  healthy(@Res() res: Response): void {
     res.status(HttpStatus.OK).send();
   }
 }

@@ -7,6 +7,7 @@ import { UsersModule } from './module/users.module';
 import { SystemModule } from './module/system.module';
 import { AppService } from './service/app.service';
 import { DatabaseConfig } from './config/interfaces';
+import { FilesController } from './controller/files.controller';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
 
@@ -31,7 +32,7 @@ import dbConfig from './config/db.config';
     UsersModule,
     SystemModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, FilesController],
   providers: [AppService],
 })
 export class AppModule {}
