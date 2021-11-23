@@ -24,9 +24,9 @@ export class FilesController {
     if (file) {
       const { originalname, buffer } = file;
       try {
-      await this.filesService.writeFileUser(originalname, buffer);
+        await this.filesService.writeFileUser(originalname, buffer);
       } catch (error) {
-      return { error };
+        return { error };
       }
     }
   }
