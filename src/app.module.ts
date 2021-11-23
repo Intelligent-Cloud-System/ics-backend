@@ -31,7 +31,7 @@ import dbConfig from './config/db.config';
     }),
     UsersModule,
     SystemModule,
-    FilesModule
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
