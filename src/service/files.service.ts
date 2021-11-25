@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { writeFile, mkdir } from 'fs/promises';
+import { existsSync } from 'fs';
 import { join } from 'path';
 
 const outputFolder = join(process.cwd(), 'fs-ics');
@@ -13,6 +14,8 @@ export class FilesService {
 
   registerDirectory(dirName: string): Promise<void> {
     const dirPath = join(outputFolder, dirName);
-    return mkdir(dirPath);
+    if (!existsSync(dirPath)) {
+      return mkdir(dirPath);
+    }
   }
 }
