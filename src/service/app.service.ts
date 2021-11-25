@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { provide } from 'inversify-binding-decorators';
 
-@Injectable()
+
+@provide(AppService)
 export class AppService {
+
   getHello(): string {
     return 'Hello World!';
   }

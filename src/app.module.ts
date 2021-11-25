@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, Type } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -9,6 +9,9 @@ import { AppService } from './service/app.service';
 import { DatabaseConfig } from './config/interfaces';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
+
+import { AuthenticationMiddleware } from './middleware/authentication.middleware';
+import * as Controllers from './controller';
 
 @Module({
   imports: [
@@ -34,4 +37,12 @@ import dbConfig from './config/db.config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    const controllers: Array<Type<any>> = Object.values(Controllers);
+
+    consumer
+      .apply(AuthenticationMiddleware)
+      .forRoutes(...controllers);
+  }
+}
