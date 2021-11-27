@@ -12,6 +12,8 @@ import dbConfig from './config/db.config';
 
 import { AuthenticationMiddleware } from './middleware/authentication.middleware';
 import * as Controllers from './controller';
+import { User } from './model/user';
+import { EntityManager } from 'typeorm';
 
 @Module({
   imports: [
@@ -31,11 +33,12 @@ import * as Controllers from './controller';
       }),
       inject: [ConfigService],
     }),
+    EntityManager,
     UsersModule,
     SystemModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, User, Number, String],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

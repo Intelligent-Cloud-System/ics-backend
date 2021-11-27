@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/Intelligent-Cloud-System/ics-backend#readme",
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.42.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.0",
     "@nestjs/core": "^8.0.0",
