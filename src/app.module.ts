@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './controller/app.controller';
-import { UsersModule } from './module/users.module';
+import { UserModule } from './module/user.module';
 import { SystemModule } from './module/system.module';
 import { AppService } from './service/app.service';
 import { DatabaseConfig } from './config/interfaces';
@@ -35,7 +35,7 @@ import { iocContainer } from './ioc';
       inject: [ConfigService],
     }),
     EntityManager,
-    UsersModule,
+    UserModule,
     SystemModule,
   ],
   controllers: [AppController],

@@ -1,13 +1,13 @@
-import { provide } from 'inversify-binding-decorators';
 import { inject } from 'inversify';
+import { provide } from 'inversify-binding-decorators';
 import { GetUserCommand, GetUserCommandInput, GetUserCommandOutput, CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
 
-import { User } from 'src/model/user';
 import { UserRepository } from 'src/repository/user.repository';
+import { User } from 'src/model/user';
 
-@provide(AccountService)
-export class AccountService {
-
+@provide(UserService)
+export class UserService {
+    
   @inject(UserRepository) private readonly userRepository: UserRepository;
 
   public async getUserByToken(token: string): Promise<User> {

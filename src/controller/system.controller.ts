@@ -1,11 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
-import { ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Controller, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-export class SimpleResponse {
-  @ApiProperty()
-  a: number;
-}
+import { SimpleResponse } from 'src/interface/apiResponse';
 
 @Controller('system')
 @ApiTags('System')
@@ -16,11 +12,8 @@ export class SystemController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, type: SimpleResponse})
   async healthy(
-    @Query('test1') test1: string,
-    // @Res() res: Response,
+    @Query('test') test: number,
   ): Promise<SimpleResponse> {
-    console.log({ test1 });
-    return { a: 10 };
-    // res.status(HttpStatus.OK).send();
+    return { a: test };
   }
 }
