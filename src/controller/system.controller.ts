@@ -10,10 +10,8 @@ export class SystemController {
 
   @Post('healthy')
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({ status: HttpStatus.OK, type: SimpleResponse})
-  async healthy(
-    @Query('test') test: number,
-  ): Promise<SimpleResponse> {
+  @ApiResponse({ status: HttpStatus.OK, type: SimpleResponse })
+  async healthy(@Query('test') test: number): Promise<SimpleResponse> {
     return { a: test };
   }
 }

@@ -6,10 +6,7 @@ import { User } from 'src/model/user';
 
 @provide(UserRepository)
 export class UserRepository {
-
-  constructor(
-    private manager: EntityManager,
-  ) {}
+  constructor(private manager: EntityManager) {}
 
   public async getByEmail(email: string): Promise<User> {
     const userEntity = await this.manager
@@ -24,11 +21,6 @@ export class UserRepository {
   }
 
   public convertToModel(userEntity: UserEntity): User {
-    return new User(
-      userEntity.id,
-      userEntity.accountId,
-      userEntity.email,
-    )
+    return new User(userEntity.id, userEntity.accountId, userEntity.email);
   }
-
 }

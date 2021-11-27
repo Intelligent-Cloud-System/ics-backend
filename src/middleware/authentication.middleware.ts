@@ -11,9 +11,13 @@ export class AuthenticationMiddleware implements NestMiddleware {
     Object.defineProperty(req, 'childContainer', { value: childContainer });
 
     const authHeader = req.headers['authorization'];
-    const accessToken: string = authHeader ? authHeader.split('Bearer ')[1] : '';
+    const accessToken: string = authHeader
+      ? authHeader.split('Bearer ')[1]
+      : '';
 
-    const user: User = await container.get(UserService).getUserByToken(accessToken);
+    const user: User = await container
+      .get(UserService)
+      .getUserByToken(accessToken);
     childContainer.bind<User>(User).toConstantValue(user);
 
     next();

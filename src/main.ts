@@ -19,13 +19,13 @@ async function bootstrap() {
     .setDescription(swagger.description)
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'authorization',
+      'authorization'
     )
     .build();
-    
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
+
   const port = configService.get('port');
 
   await app.listen(port);
