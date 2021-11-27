@@ -12,8 +12,9 @@ import dbConfig from './config/db.config';
 
 import { AuthenticationMiddleware } from './middleware/authentication.middleware';
 import * as Controllers from './controller';
+import { Connection, EntityManager } from 'typeorm';
 import { User } from './model/user';
-import { EntityManager } from 'typeorm';
+import { iocContainer } from './ioc';
 
 @Module({
   imports: [
@@ -38,9 +39,18 @@ import { EntityManager } from 'typeorm';
     SystemModule,
   ],
   controllers: [AppController],
-  providers: [AppService, User, Number, String],
+  providers: [AppService, User, String, Number],
 })
 export class AppModule {
+  constructor(
+    private connection: Connection,
+    private manager: EntityManager,
+  ) {
+    const container = iocContainer();
+
+    container.bind(Connection).toConstantValue(this.connection);
+    container.bind(EntityManager).toConstantValue(this.manager);
+  }
   configure(consumer: MiddlewareConsumer) {
     const controllers: Array<Type<any>> = Object.values(Controllers);
 
