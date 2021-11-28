@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { inject } from 'inversify';
+import { provide } from 'inversify-binding-decorators';
+import { User } from 'src/model/user';
 
-@Injectable()
+@provide(AppService)
 export class AppService {
-  getHello(): string {
+  constructor(@inject(User) private readonly user: User) {}
+
+  public async getHello(): Promise<string> {
+    console.log(this.user);
     return 'Hello World!';
   }
 }
