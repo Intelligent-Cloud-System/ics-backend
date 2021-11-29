@@ -32,9 +32,7 @@ export class UserRepository {
   }
 
   public async insertUser(user: User): Promise<User> {
-    const {
-      raw,
-    } = await this.manager
+    const { raw } = await this.manager
       .createQueryBuilder()
       .insert()
       .into(UserEntity)

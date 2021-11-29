@@ -43,7 +43,7 @@ import { iocContainer } from './ioc';
 })
 export class AppModule {
   constructor(
-    private connection: Connection, 
+    private connection: Connection,
     private manager: EntityManager,
     private configService: ConfigService
   ) {

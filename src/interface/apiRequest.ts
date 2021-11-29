@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterUserRequest {
   @ApiProperty()
@@ -6,7 +6,7 @@ export class RegisterUserRequest {
 
   @ApiProperty()
   lastName: string;
-  
+
   @ApiProperty()
   email: string;
 }

@@ -18,7 +18,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
     const userService = container.get(UserService);
 
     const user = await userService.getUserByToken(accessToken);
-    
+
     // Uncomment When register
     // userService.ensureUserExists(user);
 
