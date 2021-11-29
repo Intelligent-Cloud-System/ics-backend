@@ -12,8 +12,8 @@ export interface SwaggerConfig {
 }
 
 export interface AWSConfig {
-  region: string,
-  accessKeyId: string,
-  secretAccessKey: string,
-  userPoolId: string,
+  region: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  userPoolId: string;
 }
