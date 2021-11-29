@@ -39,11 +39,13 @@ const methodsAuthApi: MethodsAuthApi = keys.reduce(
   Object.create(null)
 );
 
-export const { GetAuth } = methodsAuthApi;
-export const { PostAuth } = methodsAuthApi;
-export const { PutAuth } = methodsAuthApi;
-export const { DeleteAuth } = methodsAuthApi;
-export const { PatchAuth } = methodsAuthApi;
-export const { AllAuth } = methodsAuthApi;
-export const { OptionsAuth } = methodsAuthApi;
-export const { HeadAuth } = methodsAuthApi;
+export const {
+  GetAuth,
+  PostAuth,
+  PutAuth,
+  DeleteAuth,
+  PatchAuth,
+  AllAuth,
+  OptionsAuth,
+  HeadAuth,
+} = methodsAuthApi;
