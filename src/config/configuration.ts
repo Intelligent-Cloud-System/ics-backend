@@ -3,5 +3,5 @@ export default () => ({
     title: 'ICS',
     description: 'Intelligent file storage',
   },
-  port: parseInt(process.env.PORT, 10) || 3000,
+  port: 5000,
 });

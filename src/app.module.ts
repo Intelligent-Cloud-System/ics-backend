@@ -42,10 +42,7 @@ import { iocContainer } from './ioc';
   providers: [AppService, User, String, Number],
 })
 export class AppModule {
-  constructor(
-    private connection: Connection,
-    private manager: EntityManager,
-  ) {
+  constructor(private connection: Connection, private manager: EntityManager) {
     const container = iocContainer();
 
     container.bind(Connection).toConstantValue(this.connection);
@@ -54,8 +51,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     const controllers: Array<Type<any>> = Object.values(Controllers);
 
-    consumer
-      .apply(AuthenticationMiddleware)
-      .forRoutes(...controllers);
+    consumer.apply(AuthenticationMiddleware).forRoutes(...controllers);
   }
 }

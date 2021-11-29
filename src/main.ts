@@ -13,19 +13,19 @@ async function bootstrap() {
 
   iocContainer().load(buildProviderModule());
 
-  const swagger: SwaggerConfig = configService.get('swagger');
+  const swagger: SwaggerConfig = configService.get('swagger') as SwaggerConfig;
   const config = new DocumentBuilder()
     .setTitle(swagger.title)
     .setDescription(swagger.description)
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'authorization',
+      'authorization'
     )
     .build();
-    
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
+
   const port = configService.get('port');
 
   await app.listen(port);
