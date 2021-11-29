@@ -10,3 +10,10 @@ export interface SwaggerConfig {
   title: string;
   description: string;
 }
+
+export interface AWSConfig {
+  region: string,
+  accessKeyId: string,
+  secretAccessKey: string,
+  userPoolId: string,
+}

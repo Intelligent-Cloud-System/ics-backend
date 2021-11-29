@@ -42,9 +42,14 @@ import { iocContainer } from './ioc';
   providers: [AppService, User, String, Number],
 })
 export class AppModule {
-  constructor(private connection: Connection, private manager: EntityManager) {
+  constructor(
+    private connection: Connection, 
+    private manager: EntityManager,
+    private configService: ConfigService
+  ) {
     const container = iocContainer();
 
+    container.bind(ConfigService).toConstantValue(this.configService);
     container.bind(Connection).toConstantValue(this.connection);
     container.bind(EntityManager).toConstantValue(this.manager);
   }

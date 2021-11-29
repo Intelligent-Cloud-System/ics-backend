@@ -13,23 +13,32 @@ import { UserRepository } from 'src/repository/user.repository';
 import { User } from 'src/model/user';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
 import { Result } from 'src/util/util';
+import { ConfigService } from '@nestjs/config';
+import { AWSConfig } from 'src/config/interfaces';
 
 @provide(UserService)
 export class UserService {
 
   private readonly client: CognitoIdentityProviderClient;
+  private readonly awsConfig: AWSConfig;
 
   constructor(
     @inject(UserRepository) private readonly userRepository: UserRepository,
+    @inject(ConfigService) private readonly configService: ConfigService,
   ) {
+    const awsConfig: AWSConfig = this.configService.get<AWSConfig>('aws') as AWSConfig;
+    this.awsConfig = awsConfig;
+
     this.client = new CognitoIdentityProviderClient({
-      region: 'eu-central-1',
+      region: awsConfig.region,
       credentials: {
-        accessKeyId: 'AKIAUIPOTL7COBENWWX6',
-        secretAccessKey: '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',
+        accessKeyId: awsConfig.accessKeyId,
+        secretAccessKey: awsConfig.secretAccessKey,
       },
     });
   }
+
+  public 
 
   public ensureUserExists(user?: User): void {
     if (!user) {
@@ -60,16 +69,14 @@ export class UserService {
   }
 
   private async checkCognitoUserExist(username: string): Promise<boolean> {
-    console.log({ username });
     const input: AdminGetUserCommandInput = {
-      UserPoolId: 'eu-central-1_dY4ZfiZEY',
+      UserPoolId: this.awsConfig.userPoolId,
       Username: username,
     };
 
     const command = new AdminGetUserCommand(input);
     try {
       const response = await this.client.send(command);
-      console.log(response);
       if (response) {
         return true;
       }
@@ -96,7 +103,7 @@ export class UserService {
     const user = new User(body.email, body.firstName, body.lastName);
 
     const insertedUser = await this.upsertUser(user);
-    console.log({ insertedUser });
+
     return insertedUser;
   }
 }
