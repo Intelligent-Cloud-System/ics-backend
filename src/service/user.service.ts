@@ -18,15 +18,16 @@ import { AWSConfig } from 'src/config/interfaces';
 
 @provide(UserService)
 export class UserService {
-
   private readonly client: CognitoIdentityProviderClient;
   private readonly awsConfig: AWSConfig;
 
   constructor(
     @inject(UserRepository) private readonly userRepository: UserRepository,
-    @inject(ConfigService) private readonly configService: ConfigService,
+    @inject(ConfigService) private readonly configService: ConfigService
   ) {
-    const awsConfig: AWSConfig = this.configService.get<AWSConfig>('aws') as AWSConfig;
+    const awsConfig: AWSConfig = this.configService.get<AWSConfig>(
+      'aws'
+    ) as AWSConfig;
     this.awsConfig = awsConfig;
 
     this.client = new CognitoIdentityProviderClient({
@@ -38,7 +39,7 @@ export class UserService {
     });
   }
 
-  public 
+  public;
 
   public ensureUserExists(user?: User): void {
     if (!user) {
@@ -64,7 +65,7 @@ export class UserService {
     }
   }
 
-  public async getUserByEmail(email: string): Promise<Result<User>>{
+  public async getUserByEmail(email: string): Promise<Result<User>> {
     return await this.userRepository.getByEmail(email);
   }
 
