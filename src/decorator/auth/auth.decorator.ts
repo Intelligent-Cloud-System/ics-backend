@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common/interfaces';
 import { applyDecorators } from '@nestjs/common';
 import { RequestMethod } from '@nestjs/common/enums/request-method.enum';
 import * as methodsApi from '@nestjs/common/decorators/http/request-mapping.decorator';
-import { MethodsAuthApi } from '../interface/decorator/auth.decorator.interface';
+import { MethodsAuthApi } from '../../interface/decorator/auth.decorator.interface';
 
 type HTTPFabricDecorator = (path?: string | string[]) => MethodDecorator;
 
@@ -39,4 +39,11 @@ const methodsAuthApi: MethodsAuthApi = keys.reduce(
   Object.create(null)
 );
 
-export default { ...methodsAuthApi };
+export const { GetAuth } = methodsAuthApi;
+export const { PostAuth } = methodsAuthApi;
+export const { PutAuth } = methodsAuthApi;
+export const { DeleteAuth } = methodsAuthApi;
+export const { PatchAuth } = methodsAuthApi;
+export const { AllAuth } = methodsAuthApi;
+export const { OptionsAuth } = methodsAuthApi;
+export const { HeadAuth } = methodsAuthApi;
