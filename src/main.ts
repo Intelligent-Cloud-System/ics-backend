@@ -13,7 +13,7 @@ async function bootstrap() {
 
   iocContainer().load(buildProviderModule());
 
-  const swagger: SwaggerConfig = configService.get('swagger');
+  const swagger: SwaggerConfig = configService.get('swagger') as SwaggerConfig;
   const config = new DocumentBuilder()
     .setTitle(swagger.title)
     .setDescription(swagger.description)

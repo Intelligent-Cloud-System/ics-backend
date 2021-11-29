@@ -15,10 +15,14 @@ export class AuthenticationMiddleware implements NestMiddleware {
       ? authHeader.split('Bearer ')[1]
       : '';
 
-    const user: User = await container
-      .get(UserService)
-      .getUserByToken(accessToken);
-    childContainer.bind<User>(User).toConstantValue(user);
+    const userService = container.get(UserService);
+
+    const user = await userService.getUserByToken(accessToken);
+
+    // Uncomment When register
+    // userService.ensureUserExists(user);
+
+    childContainer.bind<User>(User).toConstantValue(user as User);
 
     next();
   }
