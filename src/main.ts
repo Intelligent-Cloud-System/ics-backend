@@ -4,18 +4,27 @@ import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/interfaces';
+import { iocContainer } from './ioc';
+import { buildProviderModule } from 'inversify-binding-decorators';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  iocContainer().load(buildProviderModule());
+
   const swagger: SwaggerConfig = configService.get('swagger');
   const config = new DocumentBuilder()
     .setTitle(swagger.title)
     .setDescription(swagger.description)
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'authorization'
+    )
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document);
+  SwaggerModule.setup('api', app, document);
 
   const port = configService.get('port');
 

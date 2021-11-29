@@ -1,15 +1,21 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, Type } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './controller/app.controller';
-import { UsersModule } from './module/users.module';
+import { UserModule } from './module/user.module';
 import { SystemModule } from './module/system.module';
 import { FilesModule } from './module/files.module';
 import { AppService } from './service/app.service';
 import { DatabaseConfig } from './config/interfaces';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
+
+import { AuthenticationMiddleware } from './middleware/authentication.middleware';
+import * as Controllers from './controller';
+import { Connection, EntityManager } from 'typeorm';
+import { User } from './model/user';
+import { iocContainer } from './ioc';
 
 @Module({
   imports: [
@@ -29,11 +35,24 @@ import dbConfig from './config/db.config';
       }),
       inject: [ConfigService],
     }),
-    UsersModule,
+    EntityManager,
+    UserModule,
     SystemModule,
     FilesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, User, String, Number],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection, private manager: EntityManager) {
+    const container = iocContainer();
+
+    container.bind(Connection).toConstantValue(this.connection);
+    container.bind(EntityManager).toConstantValue(this.manager);
+  }
+  configure(consumer: MiddlewareConsumer) {
+    const controllers: Array<Type<any>> = Object.values(Controllers);
+
+    consumer.apply(AuthenticationMiddleware).forRoutes(...controllers);
+  }
+}
