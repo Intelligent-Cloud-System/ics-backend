@@ -7,7 +7,6 @@ export class AppService {
   constructor(@inject(User) private readonly user: User) {}
 
   public async getHello(): Promise<string> {
-    console.log(this.user);
     return 'Hello World!';
   }
 }

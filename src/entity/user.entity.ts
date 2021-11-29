@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('user')
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,27 +19,23 @@ export class UserEntity {
     type: 'varchar',
     length: 100,
     nullable: false,
+    name: 'first_name',
   })
-  name: string;
+  firstName: string;
 
   @Column({
     type: 'varchar',
     length: 100,
     nullable: false,
+    name: 'last_name',
   })
-  surname: string;
+  lastName: string;
 
   @Column({
     type: 'varchar',
     length: 100,
     nullable: false,
+    unique: true,
   })
   email: string;
-
-  @Column({
-    type: 'integer',
-    nullable: false,
-    name: 'account_id',
-  })
-  accountId: number;
 }
