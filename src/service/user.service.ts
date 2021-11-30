@@ -15,6 +15,7 @@ import { RegisterUserRequest } from 'src/interface/apiRequest';
 import { Result } from 'src/util/util';
 import { ConfigService } from '@nestjs/config';
 import { AWSConfig } from 'src/config/interfaces';
+import { iocContainer } from 'src/ioc';
 
 @provide(UserService)
 export class UserService {
@@ -39,7 +40,9 @@ export class UserService {
     });
   }
 
-  public;
+  public getCurrentUser(): User {
+    return iocContainer().get(User);
+  }
 
   public ensureUserExists(user?: User): void {
     if (!user) {
