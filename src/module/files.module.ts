@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { UserRepository } from 'src/repository/user.repository';
 import { UserService } from 'src/service/user.service';
 import { FilesController } from './../controller/files.controller';

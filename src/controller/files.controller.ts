@@ -4,12 +4,17 @@ import {
   Param,
   Post,
   UseInterceptors,
+  Res,
+  HttpStatus,
   UploadedFile,
 } from '@nestjs/common';
-import { FilesService } from './../service/files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { inject } from 'inversify';
+import { UploadFileResponse } from 'src/interface/apiResponse';
+import { Response } from 'express';
+
+import { FilesService } from './../service/files.service';
 
 @Controller('files')
 @ApiTags('File')
@@ -21,21 +26,37 @@ export class FilesController {
   @Get(':id')
   @ApiBearerAuth('authorization')
   async getHello(@Param('id') id: string): Promise<string> {
-    await this.filesService.writeFileUser('ss', Buffer.from('aa'));
     return 'Hello' + id;
   }
 
-  @Post()
+  @Post('upload')
   @ApiBearerAuth('authorization')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @UseInterceptors(FileInterceptor('file'))
-  async upload(@UploadedFile() file: Express.Multer.File) {
+  async upload(@Res() res: Response, @UploadedFile() file: Express.Multer.File): Promise<UploadFileResponse> {
     if (file) {
       const { originalname, buffer } = file;
       try {
         await this.filesService.writeFileUser(originalname, buffer);
-      } catch (error) {
-        return { error };
+      } catch(err) {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+        console.log(err);
+        return { writtenFile: null };
       }
+      return { writtenFile: originalname };
     }
+    res.status(HttpStatus.BAD_REQUEST);
+    return { writtenFile: null }
   }
 }

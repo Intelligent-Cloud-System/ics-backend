@@ -10,22 +10,28 @@ const STORAGE_PATH = path.join(process.cwd(), './storage/');
 
 @provide(FilesService)
 export class FilesService {
-  private dirPath;
 
   constructor(@inject(UserService) private readonly userService: UserService) {}
 
   async writeFileUser(fileName: string, buffer: Buffer): Promise<void> {
     const { email } = this.userService.getCurrentUser();
     const subDir = crypto.createHash('sha256').update(email).digest('hex');
-    this.dirPath = path.join(STORAGE_PATH, subDir);
+    const dirPath = path.join(STORAGE_PATH, subDir);
 
-    if (!existsSync(this.dirPath)) {
+    if (!existsSync(dirPath)) {
       try {
-        await fsp.mkdir(this.dirPath);
+        await fsp.mkdir(dirPath);
       } catch (err) {
         console.log(err);
+        return Promise.reject(err);
       }
     }
-    console.log();
+
+    const currentPath = path.join(dirPath, fileName);
+    try {
+      await fsp.writeFile(currentPath, buffer);
+    } catch (err) {
+      return Promise.reject(err);
+    }
   }
 }
