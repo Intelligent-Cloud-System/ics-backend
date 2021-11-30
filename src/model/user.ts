@@ -1,7 +1,5 @@
-import { provide } from 'inversify-binding-decorators';
 import { NEW_ID } from 'src/util/util';
 
-@provide(User)
 export class User {
   constructor(
     public readonly email: string,
