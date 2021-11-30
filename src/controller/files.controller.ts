@@ -7,6 +7,8 @@ import {
   Res,
   HttpStatus,
   UploadedFile,
+  BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -15,6 +17,7 @@ import { UploadFileResponse } from 'src/interface/apiResponse';
 import { Response } from 'express';
 
 import { FilesService } from './../service/files.service';
+import { UploadFileShema } from 'src/apishema/files.api.shema';
 
 @Controller('files')
 @ApiTags('File')
@@ -32,31 +35,19 @@ export class FilesController {
   @Post('upload')
   @ApiBearerAuth('authorization')
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
+  @ApiBody(UploadFileShema)
   @UseInterceptors(FileInterceptor('file'))
-  async upload(@Res() res: Response, @UploadedFile() file: Express.Multer.File): Promise<UploadFileResponse> {
+  async upload(@UploadedFile() file: Express.Multer.File): Promise<UploadFileResponse> {
     if (file) {
       const { originalname, buffer } = file;
       try {
         await this.filesService.writeFileUser(originalname, buffer);
+        return { writtenFile: originalname };
       } catch(err) {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR);
         console.log(err);
-        return { writtenFile: null };
+        throw new InternalServerErrorException(err);
       }
-      return { writtenFile: originalname };
     }
-    res.status(HttpStatus.BAD_REQUEST);
-    return { writtenFile: null }
+    throw new BadRequestException();
   }
 }
