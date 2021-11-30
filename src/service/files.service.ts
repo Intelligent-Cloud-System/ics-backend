@@ -1,9 +1,10 @@
 import * as crypto from 'crypto';
 import * as path from 'path';
+import * as fs from 'fs';
 import * as fsp from 'fs/promises';
-import { existsSync } from 'fs';
 import { inject } from 'inversify';
 import { provide } from 'inversify-binding-decorators';
+
 import { UserService } from './user.service';
 
 const STORAGE_PATH = path.join(process.cwd(), './storage/');
@@ -14,7 +15,7 @@ export class FilesService {
 
   async getListFiles() {
     const dirPath = this.resolveUserDir();
-    if (!existsSync(dirPath)) {
+    if (!fs.existsSync(dirPath)) {
       return Promise.reject(new Error('Not found user directory'));
     }
 
@@ -29,7 +30,7 @@ export class FilesService {
   async writeFileUser(fileName: string, buffer: Buffer): Promise<void> {
     const dirPath = this.resolveUserDir();
 
-    if (!existsSync(dirPath)) {
+    if (!fs.existsSync(dirPath)) {
       try {
         await fsp.mkdir(dirPath);
       } catch (err) {
@@ -44,6 +45,17 @@ export class FilesService {
     } catch (err) {
       return Promise.reject(err);
     }
+  }
+
+  streamFileUser(fileName: string): fs.ReadStream {
+    const dirPath = this.resolveUserDir();
+    const filePath = path.join(dirPath, fileName);
+    if (!fs.existsSync(filePath)) {
+      throw new Error('Not found file in user directory');
+    }
+
+    const file = fs.createReadStream(filePath);
+    return file;
   }
 
   private resolveUserDir(): string {

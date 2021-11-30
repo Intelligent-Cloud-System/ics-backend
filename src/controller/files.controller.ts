@@ -7,6 +7,8 @@ import {
   BadRequestException,
   InternalServerErrorException,
   ConflictException,
+  Param,
+  StreamableFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -56,5 +58,12 @@ export class FilesController {
       }
     }
     throw new BadRequestException();
+  }
+
+  @Get('download:filename')
+  @ApiBearerAuth('authorization')
+  download(@Param('filename') filename: string): StreamableFile {
+    const file = this.filesService.streamFileUser(filename);
+    return new StreamableFile(file);
   }
 }
