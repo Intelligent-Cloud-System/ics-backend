@@ -8,17 +8,25 @@ import {
 } from '@nestjs/common';
 import { FilesService } from './../service/files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { inject } from 'inversify';
 
 @Controller('files')
+@ApiTags('File')
 export class FilesController {
-  constructor(private readonly filesService: FilesService) {}
+  constructor(
+    @inject(FilesService) private readonly filesService: FilesService
+  ) {}
 
   @Get(':id')
-  getHello(@Param('id') id: string): string {
+  @ApiBearerAuth('authorization')
+  async getHello(@Param('id') id: string): Promise<string> {
+    await this.filesService.writeFileUser('ss', Buffer.from('aa'));
     return 'Hello' + id;
   }
 
   @Post()
+  @ApiBearerAuth('authorization')
   @UseInterceptors(FileInterceptor('file'))
   async upload(@UploadedFile() file: Express.Multer.File) {
     if (file) {
