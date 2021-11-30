@@ -1,8 +1,9 @@
-import { provide } from 'inversify-binding-decorators';
+import { Injectable } from '@nestjs/common';
+
 import { UserResponse } from 'src/interface/apiResponse';
 import { User } from 'src/model/user';
 
-@provide(UserFormatter)
+@Injectable()
 export class UserFormatter {
   public toUserResponse(user: User): UserResponse {
     return {

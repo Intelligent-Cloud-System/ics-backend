@@ -14,7 +14,8 @@ import { AuthenticationMiddleware } from './middleware/authentication.middleware
 import * as Controllers from './controller';
 import { Connection, EntityManager } from 'typeorm';
 import { User } from './model/user';
-import { iocContainer } from './ioc';
+import { UserService } from './service/user.service';
+import { UserRepository } from './repository/user.repository';
 
 @Module({
   imports: [
@@ -39,23 +40,15 @@ import { iocContainer } from './ioc';
     SystemModule,
   ],
   controllers: [AppController],
-  providers: [AppService, User, String, Number],
+  providers: [AppService, UserService, UserRepository, User, String, Number],
 })
 export class AppModule {
-  constructor(
-    private connection: Connection,
-    private manager: EntityManager,
-    private configService: ConfigService
-  ) {
-    const container = iocContainer();
-
-    container.bind(ConfigService).toConstantValue(this.configService);
-    container.bind(Connection).toConstantValue(this.connection);
-    container.bind(EntityManager).toConstantValue(this.manager);
+  constructor() {
   }
   configure(consumer: MiddlewareConsumer) {
     const controllers: Array<Type<any>> = Object.values(Controllers);
 
+    // TODO: list endpoint which requires auth
     consumer.apply(AuthenticationMiddleware).forRoutes(...controllers);
   }
 }

@@ -1,27 +1,22 @@
-import { NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { iocContainer } from 'src/ioc';
-import { User } from 'src/model/user';
 import { UserService } from 'src/service/user.service';
 
+@Injectable()
 export class AuthenticationMiddleware implements NestMiddleware {
-  async use(req: Request, res: Response, next: NextFunction) {
-    const container = iocContainer();
-    const childContainer = container.createChild();
-    Object.defineProperty(req, 'childContainer', { value: childContainer });
+  constructor(
+    private readonly userService: UserService,
+  ){}
 
+  async use(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];
     const accessToken: string = authHeader
       ? authHeader.split('Bearer ')[1]
       : '';
 
-    const userService = container.get(UserService);
+    const user = await this.userService.getUserByToken(accessToken);
 
-    const user = await userService.getUserByToken(accessToken);
-    // Uncomment When register
-    // userService.ensureUserExists(user);
-
-    iocContainer().bind<User>(User).toConstantValue(user!);
+    Object.defineProperty(req, 'user', { value: user });
 
     next();
   }
