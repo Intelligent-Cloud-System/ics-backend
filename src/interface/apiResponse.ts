@@ -17,3 +17,7 @@ export class UserResponse {
 export interface UploadFileResponse {
   writtenFile: string | null;
 }
+
+export interface ListFilesResponse {
+  files: string[];
+}
