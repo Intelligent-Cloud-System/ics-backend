@@ -28,7 +28,7 @@ export class FilesController {
 
   @Get('all')
   @ApiBearerAuth('authorization')
-  async list(@Req() req: Request): Promise<FileResponse[]> {
+  public async list(@Req() req: Request): Promise<FileResponse[]> {
     const user = (req as any).user;
     try {
       const files = (await this.filesService.getListFiles(user)) as File[];
@@ -49,7 +49,7 @@ export class FilesController {
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileShema)
   @UseInterceptors(FileInterceptor('file'))
-  async upload(
+  public async upload(
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File
   ): Promise<FileResponse> {
@@ -74,9 +74,9 @@ export class FilesController {
     throw new BadRequestException();
   }
 
-  @Get('download:filename')
+  @Get('download/:filename')
   @ApiBearerAuth('authorization')
-  download(
+  public download(
     @Req() req: Request,
     @Param('filename') filename: string
   ): StreamableFile {

@@ -14,7 +14,7 @@ const STORAGE_PATH = path.join(process.cwd(), './storage/');
 export class FilesService {
   constructor(private readonly fileRepository: FileRepository) {}
 
-  async getListFiles(user: User): Promise<Result<File>[]> {
+  public async getListFiles(user: User): Promise<Result<File>[]> {
     const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
       return Promise.reject(new Error('Not found user directory'));
@@ -28,7 +28,7 @@ export class FilesService {
     }
   }
 
-  async writeFileUser(
+  public async writeFileUser(
     fileName: string,
     buffer: Buffer,
     user: User
@@ -56,7 +56,7 @@ export class FilesService {
     }
   }
 
-  streamFileUser(fileName: string, user: User): fs.ReadStream {
+  public streamFileUser(fileName: string, user: User): fs.ReadStream {
     const dirPath = this.resolveUserDir(user);
     const filePath = path.join(dirPath, fileName);
     if (!fs.existsSync(filePath)) {

@@ -18,7 +18,9 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
   @ApiBearerAuth('authorization')
-  async register(@Body() body: RegisterUserRequest): Promise<UserResponse> {
+  public async register(
+    @Body() body: RegisterUserRequest
+  ): Promise<UserResponse> {
     const user = await this.userService.registerUser(body);
     return this.userFormatter.toUserResponse(user);
   }

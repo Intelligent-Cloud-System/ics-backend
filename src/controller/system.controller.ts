@@ -9,7 +9,7 @@ export class SystemController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK })
   @ApiBearerAuth('authorization')
-  async healthy(@Res() res: Response): Promise<void> {
+  public async healthy(@Res() res: Response): Promise<void> {
     res.status(HttpStatus.OK).send();
   }
 }

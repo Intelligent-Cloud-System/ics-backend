@@ -10,7 +10,7 @@ export class AppController {
 
   @Get('')
   @ApiBearerAuth('authorization')
-  async getHello(@Req() req: Request): Promise<string> {
+  public async getHello(@Req() req: Request): Promise<string> {
     console.log('user', (req as any).user);
     return this.appService.getHello();
   }
