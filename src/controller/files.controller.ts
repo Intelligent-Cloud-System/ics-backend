@@ -15,12 +15,11 @@ import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-import {
-  ListFilesResponse,
-  UploadFileResponse,
-} from '../interface/apiResponse';
+import { FileResponse } from '../interface/apiResponse';
 import { FilesService } from '../service/files.service';
 import { UploadFileShema } from '../apishema/files.api.shema';
+import { bytesToSize, getFileName } from '../util/file.utils';
+import { File } from '../model';
 
 @Controller('files')
 @ApiTags('File')
@@ -29,11 +28,17 @@ export class FilesController {
 
   @Get('all')
   @ApiBearerAuth('authorization')
-  async list(@Req() req: Request): Promise<ListFilesResponse> {
+  async list(@Req() req: Request): Promise<FileResponse[]> {
     const user = (req as any).user;
     try {
-      const files = await this.filesService.getListFiles(user);
-      return { files };
+      const files = (await this.filesService.getListFiles(user)) as File[];
+      const res = files.map(
+        (file): FileResponse => ({
+          name: getFileName(file.filePath),
+          size: bytesToSize(file.fileSize),
+        })
+      );
+      return res;
     } catch (err) {
       throw new ConflictException(err);
     }
@@ -47,13 +52,20 @@ export class FilesController {
   async upload(
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File
-  ): Promise<UploadFileResponse> {
+  ): Promise<FileResponse> {
     if (file) {
       const { originalname, buffer } = file;
       const user = (req as any).user;
       try {
-        await this.filesService.writeFileUser(originalname, buffer, user);
-        return { writtenFile: originalname };
+        const file = await this.filesService.writeFileUser(
+          originalname,
+          buffer,
+          user
+        );
+        return {
+          name: getFileName(file.filePath),
+          size: bytesToSize(file.fileSize),
+        };
       } catch (err) {
         console.log(err);
         throw new InternalServerErrorException(err);

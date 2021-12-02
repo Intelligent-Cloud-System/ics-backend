@@ -23,7 +23,6 @@ export class FileEntity {
 
   @Column({
     type: 'varchar',
-    length: 100,
     nullable: false,
     name: 'file_path',
   })
@@ -34,7 +33,7 @@ export class FileEntity {
     nullable: false,
     name: 'file_size',
   })
-  fileSize: BigInt;
+  fileSize: number;
 
   @Column({
     type: 'number',

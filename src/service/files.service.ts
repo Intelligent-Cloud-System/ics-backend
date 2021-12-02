@@ -6,6 +6,7 @@ import * as fsp from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 import { User, File } from '../model';
 import { FileRepository } from '../repository/file.repository';
+import { Result } from 'src/util/util';
 
 const STORAGE_PATH = path.join(process.cwd(), './storage/');
 
@@ -13,17 +14,14 @@ const STORAGE_PATH = path.join(process.cwd(), './storage/');
 export class FilesService {
   constructor(private readonly fileRepository: FileRepository) {}
 
-  async getListFiles(user: User) {
+  async getListFiles(user: User): Promise<Result<File>[]> {
     const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
       return Promise.reject(new Error('Not found user directory'));
     }
 
     try {
-      const files = await fsp.readdir(dirPath);
-
-      // const file = await this.fileRepository.updateFilePath(1, new File('121212', BigInt(1212), user.id));
-      // console.log(file);
+      const files = await this.fileRepository.getAllUserFiles(user.id);
       return files;
     } catch (err) {
       return Promise.reject(err);
@@ -34,7 +32,7 @@ export class FilesService {
     fileName: string,
     buffer: Buffer,
     user: User
-  ): Promise<void> {
+  ): Promise<File> {
     const dirPath = this.resolveUserDir(user);
 
     if (!fs.existsSync(dirPath)) {
@@ -47,8 +45,12 @@ export class FilesService {
     }
 
     const currentPath = path.join(dirPath, fileName);
+    const file = new File(currentPath, buffer.length, user.id);
+
     try {
       await fsp.writeFile(currentPath, buffer);
+      const writtenFile = await this.fileRepository.insertFile(file);
+      return writtenFile;
     } catch (err) {
       return Promise.reject(err);
     }
