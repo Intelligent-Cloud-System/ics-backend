@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
+import { FileRepository } from 'src/repository/file.repository';
 import { UserRepository } from 'src/repository/user.repository';
-import { UserService } from 'src/service/user.service';
 import { FilesController } from './../controller/files.controller';
 import { FilesService } from './../service/files.service';
 
 @Module({
   imports: [],
   controllers: [FilesController],
-  providers: [FilesService, UserService, UserRepository],
+  providers: [FilesService, UserRepository, FileRepository],
 })
 export class FilesModule {}

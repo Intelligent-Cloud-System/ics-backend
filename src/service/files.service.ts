@@ -4,12 +4,16 @@ import * as fs from 'fs';
 import * as fsp from 'fs/promises';
 
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/model/user';
+import { User, File } from '../model';
+import { FileRepository } from '../repository/file.repository';
 
 const STORAGE_PATH = path.join(process.cwd(), './storage/');
 
 @Injectable()
 export class FilesService {
+
+  constructor(private readonly fileRepository: FileRepository) {}
+
   async getListFiles(user: User) {
     const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
@@ -18,6 +22,7 @@ export class FilesService {
 
     try {
       const files = await fsp.readdir(dirPath);
+
       return files;
     } catch (err) {
       return Promise.reject(err);
