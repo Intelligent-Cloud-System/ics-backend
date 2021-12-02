@@ -1,11 +1,11 @@
-import { provide } from 'inversify-binding-decorators';
 import { EntityManager } from 'typeorm';
 
 import { UserEntity } from 'src/entity/user.entity';
 import { User } from 'src/model/user';
 import { Result } from 'src/util/util';
+import { Injectable } from '@nestjs/common';
 
-@provide(UserRepository)
+@Injectable()
 export class UserRepository {
   constructor(private manager: EntityManager) {}
 

@@ -1,5 +1,4 @@
-import { inject } from 'inversify';
-import { provide } from 'inversify-binding-decorators';
+import { Injectable } from '@nestjs/common';
 import {
   GetUserCommand,
   GetUserCommandInput,
@@ -15,16 +14,15 @@ import { RegisterUserRequest } from 'src/interface/apiRequest';
 import { Result } from 'src/util/util';
 import { ConfigService } from '@nestjs/config';
 import { AWSConfig } from 'src/config/interfaces';
-import { iocContainer } from 'src/ioc';
 
-@provide(UserService)
+@Injectable()
 export class UserService {
   private readonly client: CognitoIdentityProviderClient;
   private readonly awsConfig: AWSConfig;
 
   constructor(
-    @inject(UserRepository) private readonly userRepository: UserRepository,
-    @inject(ConfigService) private readonly configService: ConfigService
+    private readonly userRepository: UserRepository,
+    private readonly configService: ConfigService
   ) {
     const awsConfig: AWSConfig = this.configService.get<AWSConfig>(
       'aws'
@@ -38,10 +36,6 @@ export class UserService {
         secretAccessKey: awsConfig.secretAccessKey,
       },
     });
-  }
-
-  public getCurrentUser(): User {
-    return iocContainer().get(User);
   }
 
   public ensureUserExists(user?: User): void {

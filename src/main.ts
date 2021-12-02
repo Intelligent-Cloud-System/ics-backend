@@ -4,14 +4,10 @@ import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/interfaces';
-import { iocContainer } from './ioc';
-import { buildProviderModule } from 'inversify-binding-decorators';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-
-  iocContainer().load(buildProviderModule());
 
   const swagger: SwaggerConfig = configService.get('swagger') as SwaggerConfig;
   const config = new DocumentBuilder()
