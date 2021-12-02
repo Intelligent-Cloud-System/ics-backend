@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './controller/app.controller';
 import { UserModule } from './module/user.module';
 import { SystemModule } from './module/system.module';
+import { FilesModule } from './module/files.module';
 import { AppService } from './service/app.service';
 import { DatabaseConfig } from './config/interfaces';
 import configuration from './config/configuration';
@@ -36,13 +37,12 @@ import { UserRepository } from './repository/user.repository';
     }),
     UserModule,
     SystemModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserService, UserRepository, User, String, Number],
 })
 export class AppModule {
-  constructor() {
-  }
   configure(consumer: MiddlewareConsumer) {
     const controllers: Array<Type<any>> = Object.values(Controllers);
 

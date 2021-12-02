@@ -13,3 +13,8 @@ export class UserResponse {
   @ApiProperty()
   lastName: string;
 }
+
+export interface FileResponse {
+  name: string;
+  size: string;
+}

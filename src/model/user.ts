@@ -1,4 +1,4 @@
-import { NEW_ID } from 'src/util/util';
+import { NEW_ID } from '../util/util';
 
 export class User {
   constructor(

@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserFormatter } from 'src/formatter/user.formatter';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
@@ -11,13 +11,13 @@ import { UserService } from 'src/service/user.service';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly userFormatter: UserFormatter,
+    private readonly userFormatter: UserFormatter
   ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
-  async register(
+  public async register(
     @Body() body: RegisterUserRequest
   ): Promise<UserResponse> {
     const user = await this.userService.registerUser(body);
