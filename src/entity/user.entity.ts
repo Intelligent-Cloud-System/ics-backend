@@ -2,8 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { FileEntity } from './file.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -38,4 +40,7 @@ export class UserEntity {
     unique: true,
   })
   email: string;
+
+  @OneToMany(_ => FileEntity, file => file.user)
+  files: FileEntity[]
 }
