@@ -13,7 +13,7 @@ import dbConfig from './config/db.config';
 
 import { AuthenticationMiddleware } from './middleware/authentication.middleware';
 import * as Controllers from './controller';
-import { Connection, EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { User } from './model/user';
 import { UserService } from './service/user.service';
 import { UserRepository } from './repository/user.repository';
@@ -45,7 +45,6 @@ import { UserRepository } from './repository/user.repository';
   providers: [AppService, UserService, UserRepository, User, String, Number],
 })
 export class AppModule {
-  constructor() {}
   configure(consumer: MiddlewareConsumer) {
     const controllers: Array<Type<any>> = Object.values(Controllers);
 

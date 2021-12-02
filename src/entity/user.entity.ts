@@ -41,6 +41,6 @@ export class UserEntity {
   })
   email: string;
 
-  @OneToMany(_ => FileEntity, file => file.user)
-  files: FileEntity[]
+  @OneToMany(() => FileEntity, (file) => file.user)
+  files: FileEntity[];
 }

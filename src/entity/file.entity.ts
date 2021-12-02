@@ -31,8 +31,8 @@ export class FileEntity {
     nullable: false,
     name: 'file_size',
   })
-  fileSize: BigInt
+  fileSize: BigInt;
 
-  @ManyToOne(_ => UserEntity, user => user.files)
-  user: UserEntity
+  @ManyToOne(() => UserEntity, (user) => user.files)
+  user: UserEntity;
 }

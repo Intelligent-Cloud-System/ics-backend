@@ -15,7 +15,10 @@ import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-import { ListFilesResponse, UploadFileResponse } from '../interface/apiResponse';
+import {
+  ListFilesResponse,
+  UploadFileResponse,
+} from '../interface/apiResponse';
 import { FilesService } from '../service/files.service';
 import { UploadFileShema } from '../apishema/files.api.shema';
 
