@@ -2,19 +2,16 @@ import * as crypto from 'crypto';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as fsp from 'fs/promises';
-import { inject } from 'inversify';
-import { provide } from 'inversify-binding-decorators';
 
-import { UserService } from './user.service';
+import { Injectable } from '@nestjs/common';
+import { User } from 'src/model/user';
 
 const STORAGE_PATH = path.join(process.cwd(), './storage/');
 
-@provide(FilesService)
+@Injectable()
 export class FilesService {
-  constructor(@inject(UserService) private readonly userService: UserService) {}
-
-  async getListFiles() {
-    const dirPath = this.resolveUserDir();
+  async getListFiles(user: User) {
+    const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
       return Promise.reject(new Error('Not found user directory'));
     }
@@ -27,8 +24,12 @@ export class FilesService {
     }
   }
 
-  async writeFileUser(fileName: string, buffer: Buffer): Promise<void> {
-    const dirPath = this.resolveUserDir();
+  async writeFileUser(
+    fileName: string,
+    buffer: Buffer,
+    user: User
+  ): Promise<void> {
+    const dirPath = this.resolveUserDir(user);
 
     if (!fs.existsSync(dirPath)) {
       try {
@@ -47,8 +48,8 @@ export class FilesService {
     }
   }
 
-  streamFileUser(fileName: string): fs.ReadStream {
-    const dirPath = this.resolveUserDir();
+  streamFileUser(fileName: string, user: User): fs.ReadStream {
+    const dirPath = this.resolveUserDir(user);
     const filePath = path.join(dirPath, fileName);
     if (!fs.existsSync(filePath)) {
       throw new Error('Not found file in user directory');
@@ -58,8 +59,8 @@ export class FilesService {
     return file;
   }
 
-  private resolveUserDir(): string {
-    const { email } = this.userService.getCurrentUser();
+  private resolveUserDir(user: User): string {
+    const { email } = user;
     const subDir = crypto.createHash('sha256').update(email).digest('hex');
     return path.join(STORAGE_PATH, subDir);
   }

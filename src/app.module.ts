@@ -45,8 +45,7 @@ import { UserRepository } from './repository/user.repository';
   providers: [AppService, UserService, UserRepository, User, String, Number],
 })
 export class AppModule {
-  constructor() {
-  }
+  constructor() {}
   configure(consumer: MiddlewareConsumer) {
     const controllers: Array<Type<any>> = Object.values(Controllers);
 
