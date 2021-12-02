@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, Type } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod, Type } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -13,7 +13,6 @@ import dbConfig from './config/db.config';
 
 import { AuthenticationMiddleware } from './middleware/authentication.middleware';
 import * as Controllers from './controller';
-import { EntityManager } from 'typeorm';
 import { User } from './model/user';
 import { UserService } from './service/user.service';
 import { UserRepository } from './repository/user.repository';
@@ -36,7 +35,6 @@ import { UserRepository } from './repository/user.repository';
       }),
       inject: [ConfigService],
     }),
-    EntityManager,
     UserModule,
     SystemModule,
     FilesModule,
@@ -49,6 +47,12 @@ export class AppModule {
     const controllers: Array<Type<any>> = Object.values(Controllers);
 
     // TODO: list endpoint which requires auth
-    consumer.apply(AuthenticationMiddleware).forRoutes(...controllers);
+    consumer
+      .apply(AuthenticationMiddleware)
+      .exclude(
+        { path: '/system/healthy', method: RequestMethod.GET },
+        { path: '/users/register', method: RequestMethod.POST },
+      )
+      .forRoutes(...controllers);
   }
 }
