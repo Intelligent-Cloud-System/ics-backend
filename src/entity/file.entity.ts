@@ -10,8 +10,8 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Unique(['user_id, file_path'])
 @Entity('file')
+@Unique(['filePath', 'userId'])
 export class FileEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,7 +26,6 @@ export class FileEntity {
     length: 100,
     nullable: false,
     name: 'file_path',
-    unique: true
   })
   filePath: string;
 
@@ -40,11 +39,11 @@ export class FileEntity {
   @Column({
     type: 'number',
     nullable: false,
-    name: 'user_id'
+    name: 'user_id',
   })
-  userId: number
+  userId: number;
 
   @ManyToOne(() => UserEntity, (user) => user.files)
-  @JoinColumn({ name: "user_id" })
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 }

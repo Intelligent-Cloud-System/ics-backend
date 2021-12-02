@@ -1,5 +1,4 @@
 import { NEW_ID } from '../util/util';
-import { User } from './user';
 
 export class File {
   constructor(

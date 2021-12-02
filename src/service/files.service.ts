@@ -11,7 +11,6 @@ const STORAGE_PATH = path.join(process.cwd(), './storage/');
 
 @Injectable()
 export class FilesService {
-
   constructor(private readonly fileRepository: FileRepository) {}
 
   async getListFiles(user: User) {
@@ -23,6 +22,8 @@ export class FilesService {
     try {
       const files = await fsp.readdir(dirPath);
 
+      // const file = await this.fileRepository.updateFilePath(1, new File('121212', BigInt(1212), user.id));
+      // console.log(file);
       return files;
     } catch (err) {
       return Promise.reject(err);
