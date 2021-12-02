@@ -11,14 +11,14 @@ import { UserService } from 'src/service/user.service';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly userFormatter: UserFormatter,
+    private readonly userFormatter: UserFormatter
   ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
   @ApiBearerAuth('authorization')
-  async register(
+  public async register(
     @Body() body: RegisterUserRequest
   ): Promise<UserResponse> {
     const user = await this.userService.registerUser(body);
