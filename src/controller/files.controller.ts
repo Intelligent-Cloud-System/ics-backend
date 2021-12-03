@@ -1,15 +1,16 @@
 import {
-  Controller,
+  Req,
   Get,
   Post,
-  UseInterceptors,
+  Param,
+  Logger,
+  Controller,
   UploadedFile,
+  StreamableFile,
+  UseInterceptors,
+  ConflictException,
   BadRequestException,
   InternalServerErrorException,
-  ConflictException,
-  Param,
-  StreamableFile,
-  Req,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -24,6 +25,8 @@ import { File } from '../model';
 @Controller('files')
 @ApiTags('File')
 export class FilesController {
+  private readonly logger = new Logger(FilesController.name);
+
   constructor(private readonly filesService: FilesService) {}
 
   @Get('all')
@@ -40,6 +43,7 @@ export class FilesController {
       );
       return res;
     } catch (err) {
+      this.logger.error(err);
       throw new ConflictException(err);
     }
   }
@@ -67,7 +71,7 @@ export class FilesController {
           size: bytesToSize(file.fileSize),
         };
       } catch (err) {
-        console.log(err);
+        this.logger.error(err);
         throw new InternalServerErrorException(err);
       }
     }
