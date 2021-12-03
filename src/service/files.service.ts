@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as fsp from 'fs/promises';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { User, File } from '../model';
 import { FileRepository } from '../repository/file.repository';
 import { Result } from 'src/util/util';
@@ -12,6 +12,8 @@ const STORAGE_PATH = path.join(process.cwd(), './storage/');
 
 @Injectable()
 export class FilesService {
+  private readonly logger = new Logger(FilesService.name);
+
   constructor(private readonly fileRepository: FileRepository) {}
 
   public async getListFiles(user: User): Promise<Result<File>[]> {
@@ -39,7 +41,7 @@ export class FilesService {
       try {
         await fsp.mkdir(dirPath);
       } catch (err) {
-        console.log(err);
+        this.logger.log(err);
         return Promise.reject(err);
       }
     }
