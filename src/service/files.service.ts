@@ -13,7 +13,7 @@ const STORAGE_PATH = path.join(process.cwd(), './storage/');
 @Injectable()
 export class FilesService {
   private readonly logger = new Logger(FilesService.name);
-  
+
   constructor(private readonly fileRepository: FileRepository) {}
 
   public async getListFiles(user: User): Promise<Result<File>[]> {
