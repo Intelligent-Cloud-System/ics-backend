@@ -1,4 +1,4 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, Req, Logger } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 
@@ -7,6 +7,8 @@ import { ApplicationError } from 'src/shared/error/applicationError';
 
 @Controller()
 export class AppController {
+  private readonly logger = new Logger(AppController.name);
+
   constructor(private readonly appService: AppService) {}
 
   @Get('')

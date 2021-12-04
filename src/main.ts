@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/interfaces';
@@ -9,6 +10,7 @@ import { ErrorInterceptor } from './interceptor/error.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  const logger = new Logger(bootstrap.name);
 
   const swagger: SwaggerConfig = configService.get('swagger') as SwaggerConfig;
   const config = new DocumentBuilder()
@@ -19,8 +21,15 @@ async function bootstrap() {
       'authorization'
     )
     .build();
+    
+  const options: SwaggerDocumentOptions =  {
+    operationIdFactory: (
+      controllerKey: string,
+      methodKey: string
+    ) => methodKey
+  };
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('api', app, document);
 
   app.useGlobalInterceptors(new ErrorInterceptor());
@@ -29,6 +38,6 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  logger.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();

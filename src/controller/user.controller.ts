@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserFormatter } from 'src/formatter/user.formatter';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
@@ -17,7 +17,6 @@ export class UserController {
   @Post('register')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
-  @ApiBearerAuth('authorization')
   public async register(
     @Body() body: RegisterUserRequest
   ): Promise<UserResponse> {
