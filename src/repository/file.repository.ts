@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { FileEntity } from '../entity/file.entity';
 import { File } from '../model';
-import { Result } from '../util/util';
+import { Result } from '../shared/util/util';
 
 @Injectable()
 export class FileRepository {

@@ -1,4 +1,4 @@
-import { NEW_ID } from '../util/util';
+import { NEW_ID } from '../shared/util/util';
 
 export class File {
   constructor(

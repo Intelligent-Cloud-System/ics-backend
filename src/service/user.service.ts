@@ -11,7 +11,7 @@ import {
 import { UserRepository } from 'src/repository/user.repository';
 import { User } from 'src/model/user';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
-import { Result } from 'src/util/util';
+import { Result } from 'src/shared/util/util';
 import { ConfigService } from '@nestjs/config';
 import { AWSConfig } from 'src/config/interfaces';
 

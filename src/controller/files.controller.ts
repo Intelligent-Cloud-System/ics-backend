@@ -18,7 +18,7 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileResponse } from '../interface/apiResponse';
 import { FilesService } from '../service/files.service';
 import { UploadFileShema } from '../apishema/files.api.shema';
-import { bytesToSize, getFileName } from '../util/file.utils';
+import { bytesToSize, getFileName } from '../shared/util/file.utils';
 import { File } from '../model';
 
 @Controller('files')
