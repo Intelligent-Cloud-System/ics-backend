@@ -31,7 +31,7 @@ export class ErrorInterceptor implements NestInterceptor {
               }))
           }
 
-          return throwError(() => {err});
+          return throwError(() => err);
         }),
       );
   }
