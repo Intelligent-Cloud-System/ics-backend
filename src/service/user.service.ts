@@ -14,6 +14,7 @@ import { RegisterUserRequest } from 'src/interface/apiRequest';
 import { Result } from 'src/shared/util/util';
 import { ConfigService } from '@nestjs/config';
 import { AWSConfig } from 'src/config/interfaces';
+import { ApplicationError } from 'src/shared/error/applicationError';
 
 @Injectable()
 export class UserService {
@@ -40,7 +41,7 @@ export class UserService {
 
   public ensureUserExists(user?: User): void {
     if (!user) {
-      throw new Error('User does not exist');
+      throw new UserDoesNotExistsError();
     }
   }
 
@@ -58,7 +59,7 @@ export class UserService {
         return user;
       }
     } else {
-      throw new Error('Not valid token');
+      throw new ApplicationError('Not valid token');
     }
   }
 
@@ -95,7 +96,7 @@ export class UserService {
   public async registerUser(body: RegisterUserRequest): Promise<User> {
     const userExist = await this.checkCognitoUserExist(body.email);
     if (!userExist) {
-      throw new Error('Cognito user does not exist');
+      throw new ApplicationError('Cognito user does not exist');
     }
 
     const user = new User(body.email, body.firstName, body.lastName);
@@ -105,3 +106,5 @@ export class UserService {
     return insertedUser;
   }
 }
+
+export class UserDoesNotExistsError extends ApplicationError {}

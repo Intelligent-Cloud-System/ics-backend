@@ -5,8 +5,7 @@ import {
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
-import { Response } from 'express';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { ApplicationError } from 'src/shared/error/applicationError';
