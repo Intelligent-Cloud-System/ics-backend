@@ -22,12 +22,8 @@ export class FilesService {
       return Promise.reject(new Error('Not found user directory'));
     }
 
-    try {
-      const files = await this.fileRepository.getAllUserFiles(user.id);
-      return files;
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    const files = await this.fileRepository.getAllUserFiles(user.id);
+    return files;
   }
 
   public async writeFileUser(
@@ -37,25 +33,15 @@ export class FilesService {
   ): Promise<File> {
     const dirPath = this.resolveUserDir(user);
 
-    if (!fs.existsSync(dirPath)) {
-      try {
-        await fsp.mkdir(dirPath);
-      } catch (err) {
-        this.logger.log(err);
-        return Promise.reject(err);
-      }
-    }
+    if (!fs.existsSync(dirPath)) await fsp.mkdir(dirPath);
 
     const currentPath = path.join(dirPath, fileName);
     const file = new File(currentPath, buffer.length, user.id);
 
-    try {
-      await fsp.writeFile(currentPath, buffer);
-      const writtenFile = await this.fileRepository.insertFile(file);
-      return writtenFile;
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    await fsp.writeFile(currentPath, buffer);
+    const writtenFile = await this.fileRepository.insertFile(file);
+    return writtenFile;
+
   }
 
   public streamFileUser(fileName: string, user: User): fs.ReadStream {
