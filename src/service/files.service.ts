@@ -6,7 +6,7 @@ import * as fsp from 'fs/promises';
 import { Injectable, Logger } from '@nestjs/common';
 import { User, File } from '../model';
 import { FileRepository } from '../repository/file.repository';
-import { Result } from 'src/util/util';
+import { Result } from 'src/shared/util/util';
 
 const STORAGE_PATH = path.join(process.cwd(), './storage/');
 

@@ -3,6 +3,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 
 import { AppService } from '../service/app.service';
+import { ApplicationError } from 'src/shared/error/applicationError';
 
 @Controller()
 export class AppController {
@@ -13,7 +14,8 @@ export class AppController {
   @Get('')
   @ApiBearerAuth('authorization')
   public async getHello(@Req() req: Request): Promise<string> {
-    this.logger.log('user', (req as any).user);
     return this.appService.getHello();
   }
 }
+
+export class TestError extends ApplicationError {};

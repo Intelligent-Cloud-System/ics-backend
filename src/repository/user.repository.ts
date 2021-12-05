@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { UserEntity } from '../entity/user.entity';
 import { User } from '../model/user';
-import { Result } from '../util/util';
+import { Result } from '../shared/util/util';
 
 @Injectable()
 export class UserRepository {
