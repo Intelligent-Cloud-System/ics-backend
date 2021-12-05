@@ -36,10 +36,7 @@ export class FilesService {
 
     if (!fs.existsSync(dirPath)) await fsp.mkdir(dirPath);
 
-    const currentPath = path.join(dirPath, fileName);
-    if (!currentPath.startsWith(dirPath)) {
-      throw new ApplicationError('Attempt at path traversal attack');
-    }
+    const currentPath = this.getFilePath(dirPath, fileName);
 
     const file = new File(currentPath, buffer.length, user.id);
     await fsp.writeFile(currentPath, buffer);
@@ -52,11 +49,7 @@ export class FilesService {
 
   public async deleteFileUser(fileName: string, user: User) {
     const dirPath = this.resolveUserDir(user);
-    const currentPath = path.join(dirPath, fileName);
-
-    if (!currentPath.startsWith(dirPath)) {
-      throw new ApplicationError('Attempt at path traversal attack');
-    }
+    const currentPath = this.getFilePath(dirPath, fileName);
 
     const file = await this.fileRepository.getByPath(currentPath);
     if (!file) {
@@ -74,12 +67,12 @@ export class FilesService {
 
   public streamFileUser(fileName: string, user: User): fs.ReadStream {
     const dirPath = this.resolveUserDir(user);
-    const filePath = path.join(dirPath, fileName);
-    if (!fs.existsSync(filePath)) {
+    const currentPath = this.getFilePath(dirPath, fileName);
+    if (!fs.existsSync(currentPath)) {
       throw new ApplicationError('Not found file in user directory');
     }
 
-    const file = fs.createReadStream(filePath);
+    const file = fs.createReadStream(currentPath);
     return file;
   }
 
@@ -87,5 +80,13 @@ export class FilesService {
     const { email } = user;
     const subDir = crypto.createHash('sha256').update(email).digest('hex');
     return path.join(STORAGE_PATH, subDir);
+  }
+
+  private getFilePath(dirPath: string, fileName: string) {
+    const filePath = path.join(dirPath, fileName);
+    if (!filePath.startsWith(dirPath)) {
+      throw new ApplicationError('Attempt at path traversal attack');
+    }
+    return filePath;
   }
 }
