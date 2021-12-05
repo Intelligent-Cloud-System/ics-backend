@@ -14,7 +14,10 @@ export class UserResponse {
   lastName: string;
 }
 
-export interface FileResponse {
+export class FileResponse {
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   size: string;
 }

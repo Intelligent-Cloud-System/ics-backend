@@ -11,10 +11,17 @@ import {
   ConflictException,
   BadRequestException,
   InternalServerErrorException,
+  HttpStatus,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { FileResponse } from '../interface/apiResponse';
 import { FilesService } from '../service/files.service';
@@ -31,6 +38,7 @@ export class FilesController {
 
   @Get('all')
   @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
     const user = (req as any).user;
     try {
@@ -50,6 +58,7 @@ export class FilesController {
 
   @Post('upload')
   @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileShema)
   @UseInterceptors(FileInterceptor('file'))
@@ -71,7 +80,6 @@ export class FilesController {
           size: bytesToSize(file.fileSize),
         };
       } catch (err) {
-        this.logger.error(err);
         throw new InternalServerErrorException(err);
       }
     }
