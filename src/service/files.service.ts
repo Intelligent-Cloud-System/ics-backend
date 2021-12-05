@@ -37,15 +37,17 @@ export class FilesService {
     if (!fs.existsSync(dirPath)) await fsp.mkdir(dirPath);
 
     const currentPath = path.join(dirPath, fileName);
-    const file = new File(currentPath, buffer.length, user.id);
-
-    if (await this.fileRepository.getByPath(file.filePath)) {
-      throw new ApplicationError('Such a file already exists');
+    if (!currentPath.startsWith(dirPath)) {
+      throw new ApplicationError('Attempt at path traversal attack');
     }
 
+    const file = new File(currentPath, buffer.length, user.id);
     await fsp.writeFile(currentPath, buffer);
-    const writtenFile = await this.fileRepository.insertFile(file);
-    return writtenFile;
+    if (await this.fileRepository.getByPath(file.filePath)) {
+      return await this.fileRepository.updateFile(file);
+    }
+
+    return await this.fileRepository.insertFile(file);
   }
 
   public streamFileUser(fileName: string, user: User): fs.ReadStream {

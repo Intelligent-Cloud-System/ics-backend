@@ -62,21 +62,20 @@ export class FileRepository {
     return (await this.getById(raw[0].id)) as File;
   }
 
-  public async updateFile(id: number, newFile: File): Promise<File> {
-    if (await this.getById(id)) {
-      const { raw } = await this.manager
-        .createQueryBuilder()
-        .update(FileEntity)
-        .set({
-          filePath: newFile.filePath,
-          fileSize: newFile.fileSize,
-        })
-        .where('id = :id', { id })
-        .execute();
+  public async updateFile(file: File): Promise<File> {
+    const { raw } = await this.manager
+      .createQueryBuilder()
+      .update(FileEntity)
+      .set({
+        fileSize: file.fileSize,
+      })
+      .where('file_path = :path and user_id = :userId', {
+        path: file.filePath,
+        userId: file.userId,
+      })
+      .execute();
 
-      return (await this.getById(raw[0].id)) as File;
-    }
-    return await this.insertFile(newFile);
+    return (await this.getByPath(file.filePath)) as File;
   }
 
   public async deleteFileById(id: number): Promise<void> {
