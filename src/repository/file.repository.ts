@@ -73,9 +73,10 @@ export class FileRepository {
         path: file.filePath,
         userId: file.userId,
       })
+      .returning('*')
       .execute();
 
-    return (await this.getByPath(file.filePath)) as File;
+    return (await this.getById(raw[0].id)) as File;
   }
 
   public async deleteFileById(id: number): Promise<void> {
