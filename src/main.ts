@@ -1,5 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger';
+import {
+  SwaggerModule,
+  DocumentBuilder,
+  SwaggerDocumentOptions,
+} from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 
@@ -21,12 +25,9 @@ async function bootstrap() {
       'authorization'
     )
     .build();
-    
-  const options: SwaggerDocumentOptions =  {
-    operationIdFactory: (
-      controllerKey: string,
-      methodKey: string
-    ) => methodKey
+
+  const options: SwaggerDocumentOptions = {
+    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
   };
 
   const document = SwaggerModule.createDocument(app, config, options);

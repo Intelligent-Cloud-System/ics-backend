@@ -18,4 +18,4 @@ export class AppController {
   }
 }
 
-export class TestError extends ApplicationError {};
+export class TestError extends ApplicationError {}

@@ -5,7 +5,6 @@ import { Response } from 'express';
 @Controller('system')
 @ApiTags('System')
 export class SystemController {
-
   @Get('healthy')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK })
