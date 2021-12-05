@@ -50,6 +50,28 @@ export class FilesService {
     return await this.fileRepository.insertFile(file);
   }
 
+  public async deleteFileUser(fileName: string, user: User) {
+    const dirPath = this.resolveUserDir(user);
+    const currentPath = path.join(dirPath, fileName);
+
+    if (!currentPath.startsWith(dirPath)) {
+      throw new ApplicationError('Attempt at path traversal attack');
+    }
+
+    const file = await this.fileRepository.getByPath(currentPath);
+    if (!file) {
+      throw new ApplicationError('Not found file in user directory');
+    }
+
+    const deletedFile = await this.fileRepository.deleteFileById(file.id);
+    if (await this.fileRepository.getById(deletedFile.id)) {
+      throw new ApplicationError(`Can't delete file ${fileName}`);
+    }
+
+    await fsp.unlink(currentPath);
+    return deletedFile;
+  }
+
   public streamFileUser(fileName: string, user: User): fs.ReadStream {
     const dirPath = this.resolveUserDir(user);
     const filePath = path.join(dirPath, fileName);

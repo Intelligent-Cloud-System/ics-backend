@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Param,
+  Delete,
   Logger,
   Controller,
   UploadedFile,
@@ -95,5 +96,20 @@ export class FilesController {
     const user = (req as any).user;
     const file = this.filesService.streamFileUser(filename, user);
     return new StreamableFile(file);
+  }
+
+  @Delete('delete/:filename')
+  @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
+  public async delete(
+    @Req() req: Request,
+    @Param('filename') filename: string
+  ): Promise<FileResponse> {
+    const user = (req as any).user;
+    const deletedFile = await this.filesService.deleteFileUser(filename, user);
+    return {
+      name: getFileName(deletedFile.filePath),
+      size: bytesToSize(deletedFile.fileSize),
+    };
   }
 }

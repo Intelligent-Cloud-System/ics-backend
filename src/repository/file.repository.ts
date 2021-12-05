@@ -79,18 +79,16 @@ export class FileRepository {
     return (await this.getById(raw[0].id)) as File;
   }
 
-  public async deleteFileById(id: number): Promise<void> {
-    if (await this.getById(id)) {
-      const { raw } = await this.manager
-        .createQueryBuilder()
-        .delete()
-        .from(FileEntity)
-        .where('id = :id', { id })
-        .execute();
+  public async deleteFileById(id: number): Promise<File> {
+    const { raw } = await this.manager
+      .createQueryBuilder()
+      .delete()
+      .from(FileEntity)
+      .where('id = :id', { id })
+      .returning('*')
+      .execute();
 
-      if (await this.getById(raw[0].id))
-        return Promise.reject('Error when deleting an existing file');
-    }
+    return raw[0] as File;
   }
 
   private convertToModel(fileEntity?: FileEntity): Result<File> {
@@ -98,7 +96,8 @@ export class FileRepository {
       return new File(
         fileEntity.filePath,
         fileEntity.fileSize,
-        fileEntity.userId
+        fileEntity.userId,
+        fileEntity.id
       );
     }
   }
