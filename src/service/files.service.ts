@@ -38,10 +38,13 @@ export class FilesService {
     const currentPath = path.join(dirPath, fileName);
     const file = new File(currentPath, buffer.length, user.id);
 
+    if (await this.fileRepository.getByPath(file.filePath)) {
+      throw new Error('Such a file already exists');
+    }
+
     await fsp.writeFile(currentPath, buffer);
     const writtenFile = await this.fileRepository.insertFile(file);
     return writtenFile;
-
   }
 
   public streamFileUser(fileName: string, user: User): fs.ReadStream {

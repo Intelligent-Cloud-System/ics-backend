@@ -48,8 +48,6 @@ export class FileRepository {
   }
 
   public async insertFile(file: File): Promise<File> {
-    if (await this.getByPath(file.filePath))
-      return Promise.reject('Such a file already exists');
     const { raw } = await this.manager
       .createQueryBuilder()
       .insert()
