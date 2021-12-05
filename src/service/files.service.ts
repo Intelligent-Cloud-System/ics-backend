@@ -7,6 +7,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { User, File } from '../model';
 import { FileRepository } from '../repository/file.repository';
 import { Result } from 'src/shared/util/util';
+import { ApplicationError } from '../shared/error/applicationError';
 
 const STORAGE_PATH = path.join(process.cwd(), './storage/');
 
@@ -19,7 +20,7 @@ export class FilesService {
   public async getListFiles(user: User): Promise<Result<File>[]> {
     const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
-      return Promise.reject(new Error('Not found user directory'));
+      throw new ApplicationError('Not found user directory');
     }
 
     const files = await this.fileRepository.getAllUserFiles(user.id);
@@ -39,7 +40,7 @@ export class FilesService {
     const file = new File(currentPath, buffer.length, user.id);
 
     if (await this.fileRepository.getByPath(file.filePath)) {
-      throw new Error('Such a file already exists');
+      throw new ApplicationError('Such a file already exists');
     }
 
     await fsp.writeFile(currentPath, buffer);
@@ -51,7 +52,7 @@ export class FilesService {
     const dirPath = this.resolveUserDir(user);
     const filePath = path.join(dirPath, fileName);
     if (!fs.existsSync(filePath)) {
-      throw new Error('Not found file in user directory');
+      throw new ApplicationError('Not found file in user directory');
     }
 
     const file = fs.createReadStream(filePath);
