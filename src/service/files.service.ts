@@ -27,7 +27,7 @@ export class FilesService {
     return files;
   }
 
-  public async writeFileUser(
+  public async upsertFileUser(
     fileName: string,
     buffer: Buffer,
     user: User
@@ -38,42 +38,42 @@ export class FilesService {
 
     const currentPath = this.getFilePath(dirPath, fileName);
 
-    const file = new File(currentPath, buffer.length, user.id);
+    const file = await this.fileRepository.getByPath(currentPath);
     await fsp.writeFile(currentPath, buffer);
-    if (await this.fileRepository.getByPath(file.filePath)) {
-      return await this.fileRepository.updateFile(file);
+    if (file?.id) {
+      return await this.fileRepository.updateFile(file.id, buffer.length);
     }
 
-    return await this.fileRepository.insertFile(file);
+    return await this.fileRepository.insertFile(
+      new File(currentPath, buffer.length, user.id)
+    );
   }
 
-  public async deleteFileUser(fileName: string, user: User) {
-    const dirPath = this.resolveUserDir(user);
-    const currentPath = this.getFilePath(dirPath, fileName);
+  public async deleteFileUser(id: number, user: User) {
+    const file = await this.fileRepository.getById(id);
 
-    const file = await this.fileRepository.getByPath(currentPath);
-    if (!file) {
+    if (!(file && this.ensureUserFile(file, user))) {
       throw new ApplicationError('Not found file in user directory');
     }
 
     const deletedFile = await this.fileRepository.deleteFileById(file.id);
     if (await this.fileRepository.getById(deletedFile.id)) {
-      throw new ApplicationError(`Can't delete file ${fileName}`);
+      throw new ApplicationError(`Can't delete file with id: ${id}`);
     }
 
-    await fsp.unlink(currentPath);
+    await fsp.unlink(file.filePath);
     return deletedFile;
   }
 
-  public streamFileUser(fileName: string, user: User): fs.ReadStream {
-    const dirPath = this.resolveUserDir(user);
-    const currentPath = this.getFilePath(dirPath, fileName);
-    if (!fs.existsSync(currentPath)) {
+  public async streamFileUser(id: number, user: User): Promise<fs.ReadStream> {
+    const file = await this.fileRepository.getById(id);
+
+    if (!(file && this.ensureUserFile(file, user))) {
       throw new ApplicationError('Not found file in user directory');
     }
 
-    const file = fs.createReadStream(currentPath);
-    return file;
+    const stream = fs.createReadStream(file.filePath);
+    return stream;
   }
 
   private resolveUserDir(user: User): string {
@@ -88,5 +88,9 @@ export class FilesService {
       throw new ApplicationError('Attempt at path traversal attack');
     }
     return filePath;
+  }
+
+  private ensureUserFile(file: File, user: User): boolean {
+    return file.userId === user.id && fs.existsSync(file.filePath);
   }
 }

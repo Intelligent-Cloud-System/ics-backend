@@ -6,13 +6,13 @@ import {
   Delete,
   Logger,
   Controller,
+  HttpStatus,
   UploadedFile,
   StreamableFile,
   UseInterceptors,
   ConflictException,
   BadRequestException,
   InternalServerErrorException,
-  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -24,7 +24,7 @@ import {
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { FileResponse } from '../interface/apiResponse';
+import { FileDeleteResponse, FileResponse } from '../interface/apiResponse';
 import { FilesService } from '../service/files.service';
 import { UploadFileShema } from '../apishema/files.api.shema';
 import { bytesToSize, getFileName } from '../shared/util/file.utils';
@@ -46,6 +46,7 @@ export class FilesController {
       const files = (await this.filesService.getListFiles(user)) as File[];
       const res = files.map(
         (file): FileResponse => ({
+          id: file.id,
           name: getFileName(file.filePath),
           size: bytesToSize(file.fileSize),
         })
@@ -71,12 +72,13 @@ export class FilesController {
       const { originalname, buffer } = file;
       const user = (req as any).user;
       try {
-        const file = await this.filesService.writeFileUser(
+        const file = await this.filesService.upsertFileUser(
           originalname,
           buffer,
           user
         );
         return {
+          id: file.id,
           name: getFileName(file.filePath),
           size: bytesToSize(file.fileSize),
         };
@@ -87,29 +89,28 @@ export class FilesController {
     throw new BadRequestException();
   }
 
-  @Get('download/:filename')
+  @Get('download/:id')
   @ApiBearerAuth('authorization')
-  public download(
+  public async download(
     @Req() req: Request,
-    @Param('filename') filename: string
-  ): StreamableFile {
+    @Param('id') id: number
+  ): Promise<StreamableFile> {
     const user = (req as any).user;
-    const file = this.filesService.streamFileUser(filename, user);
+    const file = await this.filesService.streamFileUser(id, user);
     return new StreamableFile(file);
   }
 
-  @Delete('delete/:filename')
+  @Delete('delete/:id')
   @ApiBearerAuth('authorization')
-  @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
+  @ApiResponse({ status: HttpStatus.OK, type: FileDeleteResponse })
   public async delete(
     @Req() req: Request,
-    @Param('filename') filename: string
-  ): Promise<FileResponse> {
+    @Param('id') id: number
+  ): Promise<FileDeleteResponse> {
     const user = (req as any).user;
-    const deletedFile = await this.filesService.deleteFileUser(filename, user);
+    const deletedFile = await this.filesService.deleteFileUser(id, user);
     return {
-      name: getFileName(deletedFile.filePath),
-      size: bytesToSize(deletedFile.fileSize),
+      id: deletedFile.id,
     };
   }
 }

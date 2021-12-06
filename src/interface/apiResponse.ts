@@ -16,8 +16,16 @@ export class UserResponse {
 
 export class FileResponse {
   @ApiProperty()
+  id: number;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty()
   size: string;
+}
+
+export class FileDeleteResponse {
+  @ApiProperty()
+  id: number;
 }
