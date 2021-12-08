@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, RequestMethod, Type } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  RequestMethod,
+  Type,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -51,7 +56,7 @@ export class AppModule {
       .apply(AuthenticationMiddleware)
       .exclude(
         { path: '/system/healthy', method: RequestMethod.GET },
-        { path: '/users/register', method: RequestMethod.POST },
+        { path: '/users/register', method: RequestMethod.POST }
       )
       .forRoutes(...controllers);
   }

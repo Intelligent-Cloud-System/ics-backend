@@ -48,8 +48,6 @@ export class FileRepository {
   }
 
   public async insertFile(file: File): Promise<File> {
-    if (await this.getByPath(file.filePath))
-      return Promise.reject('Such a file already exists');
     const { raw } = await this.manager
       .createQueryBuilder()
       .insert()
@@ -64,35 +62,27 @@ export class FileRepository {
     return (await this.getById(raw[0].id)) as File;
   }
 
-  public async updateFile(id: number, newFile: File): Promise<File> {
-    if (await this.getById(id)) {
-      const { raw } = await this.manager
-        .createQueryBuilder()
-        .update(FileEntity)
-        .set({
-          filePath: newFile.filePath,
-          fileSize: newFile.fileSize,
-        })
-        .where('id = :id', { id })
-        .execute();
+  public async updateFile(id: number, fileSize: number): Promise<File> {
+    await this.manager
+      .createQueryBuilder()
+      .update(FileEntity)
+      .set({ fileSize })
+      .where('id = :id', { id })
+      .execute();
 
-      return (await this.getById(raw[0].id)) as File;
-    }
-    return await this.insertFile(newFile);
+    return (await this.getById(id)) as File;
   }
 
-  public async deleteFileById(id: number): Promise<void> {
-    if (await this.getById(id)) {
-      const { raw } = await this.manager
-        .createQueryBuilder()
-        .delete()
-        .from(FileEntity)
-        .where('id = :id', { id })
-        .execute();
+  public async deleteFileById(id: number): Promise<File> {
+    const { raw } = await this.manager
+      .createQueryBuilder()
+      .delete()
+      .from(FileEntity)
+      .where('id = :id', { id })
+      .returning('*')
+      .execute();
 
-      if (await this.getById(raw[0].id))
-        return Promise.reject('Error when deleting an existing file');
-    }
+    return raw[0] as File;
   }
 
   private convertToModel(fileEntity?: FileEntity): Result<File> {
@@ -100,7 +90,8 @@ export class FileRepository {
       return new File(
         fileEntity.filePath,
         fileEntity.fileSize,
-        fileEntity.userId
+        fileEntity.userId,
+        fileEntity.id
       );
     }
   }

@@ -14,7 +14,18 @@ export class UserResponse {
   lastName: string;
 }
 
-export interface FileResponse {
+export class FileResponse {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   size: string;
+}
+
+export class FileDeleteResponse {
+  @ApiProperty()
+  id: number;
 }

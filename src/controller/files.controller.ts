@@ -3,53 +3,53 @@ import {
   Get,
   Post,
   Param,
-  Logger,
+  Delete,
   Controller,
+  HttpStatus,
   UploadedFile,
   StreamableFile,
   UseInterceptors,
-  ConflictException,
-  BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-import { FileResponse } from '../interface/apiResponse';
+import { FileDeleteResponse, FileResponse } from '../interface/apiResponse';
 import { FilesService } from '../service/files.service';
 import { UploadFileShema } from '../apishema/files.api.shema';
 import { bytesToSize, getFileName } from '../shared/util/file.utils';
 import { File } from '../model';
+import { Request } from 'src/shared/request';
 
 @Controller('files')
 @ApiTags('File')
 export class FilesController {
-  private readonly logger = new Logger(FilesController.name);
-
   constructor(private readonly filesService: FilesService) {}
 
   @Get('all')
   @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
-    const user = (req as any).user;
-    try {
-      const files = (await this.filesService.getListFiles(user)) as File[];
-      const res = files.map(
-        (file): FileResponse => ({
-          name: getFileName(file.filePath),
-          size: bytesToSize(file.fileSize),
-        })
-      );
-      return res;
-    } catch (err) {
-      this.logger.error(err);
-      throw new ConflictException(err);
-    }
+    const user = req.user;
+    const files = (await this.filesService.getListFiles(user)) as File[];
+    const res = files.map(
+      (file): FileResponse => ({
+        id: file.id,
+        name: getFileName(file.filePath),
+        size: bytesToSize(file.fileSize),
+      })
+    );
+    return res;
   }
 
   @Post('upload')
   @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileShema)
   @UseInterceptors(FileInterceptor('file'))
@@ -57,35 +57,42 @@ export class FilesController {
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File
   ): Promise<FileResponse> {
-    if (file) {
-      const { originalname, buffer } = file;
-      const user = (req as any).user;
-      try {
-        const file = await this.filesService.writeFileUser(
-          originalname,
-          buffer,
-          user
-        );
-        return {
-          name: getFileName(file.filePath),
-          size: bytesToSize(file.fileSize),
-        };
-      } catch (err) {
-        this.logger.error(err);
-        throw new InternalServerErrorException(err);
-      }
-    }
-    throw new BadRequestException();
+    const { originalname, buffer } = file;
+    const user = req.user;
+    const usertedFile = await this.filesService.upsertFileUser(
+      originalname,
+      buffer,
+      user
+    );
+    return {
+      id: usertedFile.id,
+      name: getFileName(usertedFile.filePath),
+      size: bytesToSize(usertedFile.fileSize),
+    };
   }
 
-  @Get('download/:filename')
+  @Get('download/:id')
   @ApiBearerAuth('authorization')
-  public download(
+  public async download(
     @Req() req: Request,
-    @Param('filename') filename: string
-  ): StreamableFile {
-    const user = (req as any).user;
-    const file = this.filesService.streamFileUser(filename, user);
+    @Param('id') id: number
+  ): Promise<StreamableFile> {
+    const user = req.user;
+    const file = await this.filesService.streamFileUser(id, user);
     return new StreamableFile(file);
+  }
+
+  @Delete('delete/:id')
+  @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: FileDeleteResponse })
+  public async delete(
+    @Req() req: Request,
+    @Param('id') id: number
+  ): Promise<FileDeleteResponse> {
+    const user = req.user;
+    const deletedFile = await this.filesService.deleteFileUser(id, user);
+    return {
+      id: deletedFile.id,
+    };
   }
 }
