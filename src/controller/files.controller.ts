@@ -21,7 +21,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { FileDeleteResponse, FileResponse } from '../interface/apiResponse';
@@ -29,6 +28,7 @@ import { FilesService } from '../service/files.service';
 import { UploadFileShema } from '../apishema/files.api.shema';
 import { bytesToSize, getFileName } from '../shared/util/file.utils';
 import { File } from '../model';
+import { Request } from 'src/shared/request';
 
 @Controller('files')
 @ApiTags('File')
