@@ -63,15 +63,14 @@ export class FileRepository {
   }
 
   public async updateFile(id: number, fileSize: number): Promise<File> {
-    const { raw } = await this.manager
+    await this.manager
       .createQueryBuilder()
       .update(FileEntity)
       .set({ fileSize })
       .where('id = :id', { id })
-      .returning('*')
       .execute();
 
-    return (await this.getById(raw[0].id)) as File;
+    return (await this.getById(id)) as File;
   }
 
   public async deleteFileById(id: number): Promise<File> {
