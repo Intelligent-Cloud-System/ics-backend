@@ -17,14 +17,14 @@ export class FilesService {
 
   constructor(private readonly fileRepository: FileRepository) {}
 
-  public async getListFiles(user: User): Promise<Result<File>[]> {
+  public async getListFiles(user: User): Promise<File[]> {
     const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
       throw new ApplicationError('Not found user directory');
     }
 
     const files = await this.fileRepository.getAllUserFiles(user.id);
-    return files;
+    return files as File[];
   }
 
   public async upsertFileUser(

@@ -10,9 +10,6 @@ import {
   UploadedFile,
   StreamableFile,
   UseInterceptors,
-  ConflictException,
-  BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -42,20 +39,15 @@ export class FilesController {
   @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
     const user = (req as any).user;
-    try {
-      const files = (await this.filesService.getListFiles(user)) as File[];
-      const res = files.map(
-        (file): FileResponse => ({
-          id: file.id,
-          name: getFileName(file.filePath),
-          size: bytesToSize(file.fileSize),
-        })
-      );
-      return res;
-    } catch (err) {
-      this.logger.error(err);
-      throw new ConflictException(err);
-    }
+    const files = (await this.filesService.getListFiles(user)) as File[];
+    const res = files.map(
+      (file): FileResponse => ({
+        id: file.id,
+        name: getFileName(file.filePath),
+        size: bytesToSize(file.fileSize),
+      })
+    );
+    return res;
   }
 
   @Post('upload')
@@ -68,25 +60,18 @@ export class FilesController {
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File
   ): Promise<FileResponse> {
-    if (file) {
-      const { originalname, buffer } = file;
-      const user = (req as any).user;
-      try {
-        const file = await this.filesService.upsertFileUser(
-          originalname,
-          buffer,
-          user
-        );
-        return {
-          id: file.id,
-          name: getFileName(file.filePath),
-          size: bytesToSize(file.fileSize),
-        };
-      } catch (err) {
-        throw new InternalServerErrorException(err);
-      }
-    }
-    throw new BadRequestException();
+    const { originalname, buffer } = file;
+    const user = (req as any).user;
+    const usertedFile = await this.filesService.upsertFileUser(
+      originalname,
+      buffer,
+      user
+    );
+    return {
+      id: usertedFile.id,
+      name: getFileName(usertedFile.filePath),
+      size: bytesToSize(usertedFile.fileSize),
+    };
   }
 
   @Get('download/:id')
