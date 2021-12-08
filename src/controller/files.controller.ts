@@ -4,7 +4,6 @@ import {
   Post,
   Param,
   Delete,
-  Logger,
   Controller,
   HttpStatus,
   UploadedFile,
@@ -30,15 +29,13 @@ import { Request } from 'src/shared/request';
 @Controller('files')
 @ApiTags('File')
 export class FilesController {
-  private readonly logger = new Logger(FilesController.name);
-
   constructor(private readonly filesService: FilesService) {}
 
   @Get('all')
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
-    const user = (req as any).user;
+    const user = req.user;
     const files = (await this.filesService.getListFiles(user)) as File[];
     const res = files.map(
       (file): FileResponse => ({
@@ -61,7 +58,7 @@ export class FilesController {
     @UploadedFile() file: Express.Multer.File
   ): Promise<FileResponse> {
     const { originalname, buffer } = file;
-    const user = (req as any).user;
+    const user = req.user;
     const usertedFile = await this.filesService.upsertFileUser(
       originalname,
       buffer,
@@ -80,7 +77,7 @@ export class FilesController {
     @Req() req: Request,
     @Param('id') id: number
   ): Promise<StreamableFile> {
-    const user = (req as any).user;
+    const user = req.user;
     const file = await this.filesService.streamFileUser(id, user);
     return new StreamableFile(file);
   }
@@ -92,7 +89,7 @@ export class FilesController {
     @Req() req: Request,
     @Param('id') id: number
   ): Promise<FileDeleteResponse> {
-    const user = (req as any).user;
+    const user = req.user;
     const deletedFile = await this.filesService.deleteFileUser(id, user);
     return {
       id: deletedFile.id,
