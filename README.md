@@ -17,4 +17,4 @@ In the future it would be ideal to write a library which will simplify using our
 ## Licence
 
 [![license](https://img.shields.io/github/license/intelligent-cloud-system/ics-backend)](https://github.com/Intelligent-Cloud-System/ics-backend/main/LICENCE)
-##### MIT Ⓒ Scopics contributors
+##### MIT Ⓒ ICS contributors
