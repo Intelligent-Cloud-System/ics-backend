@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-import { AppService } from '../service/app.service';
+import { AppService } from 'src/service/app.service';
 import { ApplicationError } from 'src/shared/error/applicationError';
 
 @Controller()
