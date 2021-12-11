@@ -34,7 +34,7 @@ export class UserController {
   }
 
   /**
-   * This is probably the solution we will need in the future 
+   * This is probably the solution we will need in the future
    * when migrating to web sockets
    */
   @Get('current')
