@@ -19,11 +19,11 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { FileDeleteResponse, FileResponse } from '../interface/apiResponse';
-import { FilesService } from '../service/files.service';
-import { UploadFileShema } from '../apishema/files.api.shema';
-import { bytesToSize, getFileName } from '../shared/util/file.utils';
-import { File } from '../model';
+import { FileDeleteResponse, FileResponse } from 'src/interface/apiResponse';
+import { FilesService } from 'src/service/files.service';
+import { UploadFileShema } from 'src/apishema/files.api.shema';
+import { bytesToSize, getFileName } from 'src/shared/util/file.utils';
+import { File } from 'src/model';
 import { Request } from 'src/shared/request';
 
 @Controller('files')

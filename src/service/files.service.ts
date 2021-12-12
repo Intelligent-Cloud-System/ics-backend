@@ -4,9 +4,9 @@ import * as fs from 'fs';
 import * as fsp from 'fs/promises';
 
 import { Injectable } from '@nestjs/common';
-import { User, File } from '../model';
-import { FileRepository } from '../repository/file.repository';
-import { ApplicationError } from '../shared/error/applicationError';
+import { User, File } from 'src/model';
+import { FileRepository } from 'src/repository/file.repository';
+import { ApplicationError } from 'src/shared/error/applicationError';
 
 const STORAGE_PATH = path.join(process.cwd(), './storage/');
 
