@@ -42,7 +42,6 @@ export class UserController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
   public async currentUser(@Req() req: Request): Promise<UserResponse> {
-    const userResponse = await this.userService.getUserByEmail(req.user.email);
-    return userResponse as UserResponse;
+    return this.userFormatter.toUserResponse(req.user);
   }
 }
