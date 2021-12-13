@@ -10,11 +10,16 @@ import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/interfaces';
 import { ErrorInterceptor } from './interceptor/error.interceptor';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const logger = new Logger(bootstrap.name);
+
+  const cors: CorsOptions = configService.get('swagger') as CorsOptions;
+
+  app.enableCors(cors);
 
   const swagger: SwaggerConfig = configService.get('swagger') as SwaggerConfig;
   const config = new DocumentBuilder()
