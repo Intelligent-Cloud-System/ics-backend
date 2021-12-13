@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 
-import { FileEntity } from '../entity/file.entity';
-import { File } from '../model';
-import { Result } from '../shared/util/util';
+import { FileEntity } from 'src/entity/file.entity';
+import { File } from 'src/model';
+import { Result } from 'src/shared/util/util';
 
 @Injectable()
 export class FileRepository {

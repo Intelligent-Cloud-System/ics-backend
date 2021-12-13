@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { UserService } from '../service/user.service';
-import { UserController } from '../controller/user.controller';
+import { UserService } from 'src/service/user.service';
+import { UserController } from 'src/controller/user.controller';
 import { UserRepository } from 'src/repository/user.repository';
 import { UserFormatter } from 'src/formatter/user.formatter';
 
