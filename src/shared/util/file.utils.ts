@@ -11,7 +11,7 @@ const bytesToSize = (bytes: number): string => {
     Math.floor(Math.log(bytes) / Math.log(1024)).toString(),
     10
   );
-  if (i === 0) return `${bytes} ${sizes[i]})`;
+  if (i === 0) return `${bytes} ${sizes[i]}`;
   return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
 };
 

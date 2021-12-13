@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { FileRepository } from 'src/repository/file.repository';
-import { UserRepository } from 'src/repository/user.repository';
-import { FilesController } from './../controller/files.controller';
-import { FilesService } from './../service/files.service';
+import { FilesController } from 'src/controller/files.controller';
+import { FilesService } from 'src/service/files.service';
+import { FilesFormatter } from 'src/formatter/file.formatter';
 
 @Module({
   imports: [],
   controllers: [FilesController],
-  providers: [FilesService, UserRepository, FileRepository],
+  providers: [FilesService, FileRepository, FilesFormatter],
 })
 export class FilesModule {}
