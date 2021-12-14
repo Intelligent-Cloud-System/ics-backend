@@ -20,31 +20,26 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { FileDeleteResponse, FileResponse } from 'src/interface/apiResponse';
-import { FilesService } from 'src/service/files.service';
 import { UploadFileShema } from 'src/apishema/files.api.shema';
-import { bytesToSize, getFileName } from 'src/shared/util/file.utils';
-import { File } from 'src/model';
+import { FilesFormatter } from 'src/formatter/file.formatter';
+import { FilesService } from 'src/service/files.service';
 import { Request } from 'src/shared/request';
 
 @Controller('files')
 @ApiTags('File')
 export class FilesController {
-  constructor(private readonly filesService: FilesService) {}
+  constructor(
+    private readonly filesService: FilesService,
+    private readonly filesFormatter: FilesFormatter
+  ) {}
 
   @Get('all')
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
-    const user = req.user;
-    const files = (await this.filesService.getListFiles(user)) as File[];
-    const res = files.map(
-      (file): FileResponse => ({
-        id: file.id,
-        name: getFileName(file.filePath),
-        size: bytesToSize(file.fileSize),
-      })
-    );
-    return res;
+    const { user } = req;
+    const files = await this.filesService.getListFiles(user);
+    return this.filesFormatter.toFilesResponce(files);
   }
 
   @Post('upload')
@@ -58,17 +53,13 @@ export class FilesController {
     @UploadedFile() file: Express.Multer.File
   ): Promise<FileResponse> {
     const { originalname, buffer } = file;
-    const user = req.user;
-    const usertedFile = await this.filesService.upsertFileUser(
+    const { user } = req;
+    const upsertedFile = await this.filesService.upsertFileUser(
       originalname,
       buffer,
       user
     );
-    return {
-      id: usertedFile.id,
-      name: getFileName(usertedFile.filePath),
-      size: bytesToSize(usertedFile.fileSize),
-    };
+    return this.filesFormatter.toFileResponce(upsertedFile);
   }
 
   @Get('download/:id')
@@ -77,7 +68,7 @@ export class FilesController {
     @Req() req: Request,
     @Param('id') id: number
   ): Promise<StreamableFile> {
-    const user = req.user;
+    const { user } = req;
     const file = await this.filesService.streamFileUser(id, user);
     return new StreamableFile(file);
   }
@@ -89,10 +80,8 @@ export class FilesController {
     @Req() req: Request,
     @Param('id') id: number
   ): Promise<FileDeleteResponse> {
-    const user = req.user;
+    const { user } = req;
     const deletedFile = await this.filesService.deleteFileUser(id, user);
-    return {
-      id: deletedFile.id,
-    };
+    return this.filesFormatter.toFileDeleteResponce(deletedFile);
   }
 }
