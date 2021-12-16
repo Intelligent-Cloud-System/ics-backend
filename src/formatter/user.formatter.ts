@@ -11,6 +11,7 @@ export class UserFormatter {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      role: user.role,
     };
   }
 }

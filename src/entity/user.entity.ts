@@ -7,6 +7,11 @@ import {
 } from 'typeorm';
 import { FileEntity } from './file.entity';
 
+export enum UserRole {
+  User = 'User',
+  OrganizationAdmin = 'OrganizationAdmin',
+}
+
 @Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn()
@@ -40,6 +45,13 @@ export class UserEntity {
     unique: true,
   })
   email: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.User,
+  })
+  role: UserRole;
 
   @OneToMany(() => FileEntity, (file) => file.user)
   files: FileEntity[];

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from 'src/entity/user.entity';
 
 export class UserResponse {
   @ApiProperty()
@@ -12,6 +13,9 @@ export class UserResponse {
 
   @ApiProperty()
   lastName: string;
+
+  @ApiProperty()
+  role: UserRole;
 }
 
 export class FileResponse {

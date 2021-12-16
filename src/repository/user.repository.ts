@@ -52,6 +52,7 @@ export class UserRepository {
         userEntity.email,
         userEntity.firstName,
         userEntity.lastName,
+        userEntity.role,
         userEntity.id
       );
     }
