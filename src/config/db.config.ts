@@ -8,4 +8,5 @@ export default registerAs('db', () => ({
   username: process.env.DB_USER_NAME,
   password: process.env.DB_USER_PASSWORD,
   synchronize: false,
+  entities: ['dist/entity/**/*.{ts,js}'],
 }));
