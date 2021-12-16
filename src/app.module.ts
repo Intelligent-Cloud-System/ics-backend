@@ -34,9 +34,6 @@ import { UserRepository } from './repository/user.repository';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         ...configService.get<DatabaseConfig>('db'),
-        type: 'postgres',
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
       }),
       inject: [ConfigService],
     }),

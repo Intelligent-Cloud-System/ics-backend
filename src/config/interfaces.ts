@@ -4,6 +4,8 @@ export interface DatabaseConfig {
   username: string;
   password: string;
   database: string;
+  synchronize: boolean;
+  entities: Array<string>;
 }
 
 export interface SwaggerConfig {
