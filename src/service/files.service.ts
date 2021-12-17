@@ -17,7 +17,7 @@ export class FilesService {
   public async getListFiles(user: User): Promise<Array<File>> {
     const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
-      throw new ApplicationError('Not found user directory');
+      throw new DirectoryNotExistsError('Not found user directory');
     }
 
     const files = await this.fileRepository.getAllUserFiles(user.id);
@@ -50,12 +50,12 @@ export class FilesService {
     const file = await this.fileRepository.getById(id);
 
     if (!(file && this.ensureUserFile(file, user))) {
-      throw new ApplicationError('Not found file in user directory');
+      throw new FileNotExistsError('Not found file in user directory');
     }
 
     const deletedFile = await this.fileRepository.deleteFileById(file.id);
     if (await this.fileRepository.getById(deletedFile.id)) {
-      throw new ApplicationError(`Can't delete file with id: ${id}`);
+      throw new FileNotExistsError(`Can't delete file with id: ${id}`);
     }
 
     await fsp.unlink(file.filePath);
@@ -74,7 +74,7 @@ export class FilesService {
     const file = await this.fileRepository.getById(id);
 
     if (!(file && this.ensureUserFile(file, user))) {
-      throw new ApplicationError('Not found file in user directory');
+      throw new FileNotExistsError('Not found file in user directory');
     }
 
     const stream = fs.createReadStream(file.filePath);
@@ -90,7 +90,7 @@ export class FilesService {
   private getFilePath(dirPath: string, fileName: string) {
     const filePath = path.join(dirPath, fileName);
     if (!filePath.startsWith(dirPath)) {
-      throw new ApplicationError('Attempt at path traversal attack');
+      throw new IllegalUserBehaviorError('Attempt at path traversal attack');
     }
     return filePath;
   }
@@ -99,3 +99,7 @@ export class FilesService {
     return file.userId === user.id && fs.existsSync(file.filePath);
   }
 }
+
+export class FileNotExistsError extends ApplicationError {}
+export class DirectoryNotExistsError extends ApplicationError {}
+export class IllegalUserBehaviorError extends ApplicationError {}
