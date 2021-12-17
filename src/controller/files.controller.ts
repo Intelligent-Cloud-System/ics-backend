@@ -1,6 +1,7 @@
 import {
   Req,
   Get,
+  Body,
   Post,
   Param,
   Delete,
@@ -9,7 +10,6 @@ import {
   UploadedFile,
   StreamableFile,
   UseInterceptors,
-  Body,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
