@@ -12,6 +12,6 @@ export class RegisterUserRequest {
 }
 
 export class DeleteFileRequest {
-  @ApiProperty()
+  @ApiProperty({ isArray: true, type: Number })
   ids: Array<number>;
 }
