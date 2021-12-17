@@ -9,6 +9,7 @@ import {
   UploadedFile,
   StreamableFile,
   UseInterceptors,
+  Body,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -24,6 +25,7 @@ import { UploadFileShema } from 'src/apishema/files.api.shema';
 import { FilesFormatter } from 'src/formatter/file.formatter';
 import { FilesService } from 'src/service/files.service';
 import { Request } from 'src/shared/request';
+import { DeleteFileRequest } from 'src/interface/apiRequest';
 
 @Controller('files')
 @ApiTags('File')
@@ -73,15 +75,16 @@ export class FilesController {
     return new StreamableFile(file);
   }
 
-  @Delete('delete/:id')
+  @Delete('delete')
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FileDeleteResponse })
   public async delete(
     @Req() req: Request,
-    @Param('id') id: number
-  ): Promise<FileDeleteResponse> {
+    @Body() body: DeleteFileRequest
+  ): Promise<Array<FileDeleteResponse>> {
     const { user } = req;
-    const deletedFile = await this.filesService.deleteFileUser(id, user);
-    return this.filesFormatter.toFileDeleteResponce(deletedFile);
+    const { ids } = body;
+    const deletedFiles = await this.filesService.deleteFilesByIds(ids, user);
+    return deletedFiles.map(this.filesFormatter.toFileDeleteResponce);
   }
 }

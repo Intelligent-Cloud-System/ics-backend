@@ -14,7 +14,7 @@ const STORAGE_PATH = path.join(process.cwd(), './storage/');
 export class FilesService {
   constructor(private readonly fileRepository: FileRepository) {}
 
-  public async getListFiles(user: User): Promise<File[]> {
+  public async getListFiles(user: User): Promise<Array<File>> {
     const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
       throw new ApplicationError('Not found user directory');
@@ -46,7 +46,7 @@ export class FilesService {
     );
   }
 
-  public async deleteFileUser(id: number, user: User) {
+  public async deleteFileUser(id: number, user: User): Promise<File> {
     const file = await this.fileRepository.getById(id);
 
     if (!(file && this.ensureUserFile(file, user))) {
@@ -60,6 +60,14 @@ export class FilesService {
 
     await fsp.unlink(file.filePath);
     return deletedFile;
+  }
+
+  public deleteFilesByIds(
+    ids: Array<number>,
+    user: User
+  ): Promise<Array<File>> {
+    const deletedFiles = ids.map((id) => this.deleteFileUser(id, user));
+    return Promise.all(deletedFiles);
   }
 
   public async streamFileUser(id: number, user: User): Promise<fs.ReadStream> {

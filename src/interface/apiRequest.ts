@@ -10,3 +10,8 @@ export class RegisterUserRequest {
   @ApiProperty()
   email: string;
 }
+
+export class DeleteFileRequest {
+  @ApiProperty()
+  ids: Array<number>;
+}
