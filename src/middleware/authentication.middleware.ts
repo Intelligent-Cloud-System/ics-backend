@@ -1,6 +1,7 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from 'src/service/user.service';
+import { ApplicationError } from '../shared/error/applicationError';
 
 @Injectable()
 export class AuthenticationMiddleware implements NestMiddleware {
@@ -12,10 +13,16 @@ export class AuthenticationMiddleware implements NestMiddleware {
       ? authHeader.split('Bearer ')[1]
       : '';
 
-    const user = await this.userService.getUserByToken(accessToken);
+    try {
+      const user = await this.userService.getUserByToken(accessToken);
 
-    Object.defineProperty(req, 'user', { value: user });
+      Object.defineProperty(req, 'user', { value: user });
 
-    next();
+      next();
+    } catch (e) {
+      throw new UnauthorizedError('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
   }
 }
+
+export class UnauthorizedError extends ApplicationError {}
