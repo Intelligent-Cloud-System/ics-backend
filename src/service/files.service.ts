@@ -17,7 +17,7 @@ export class FilesService {
   public async getListFiles(user: User): Promise<Array<File>> {
     const dirPath = this.resolveUserDir(user);
     if (!fs.existsSync(dirPath)) {
-      throw new DirectoryNotExistsError('Not found user directory');
+      return [];
     }
 
     const files = await this.fileRepository.getAllUserFiles(user.id);
@@ -101,5 +101,4 @@ export class FilesService {
 }
 
 export class FileNotExistsError extends ApplicationError {}
-export class DirectoryNotExistsError extends ApplicationError {}
 export class IllegalUserBehaviorError extends ApplicationError {}
