@@ -66,6 +66,7 @@ export class FilesController {
 
   @Get('download/:id')
   @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: StreamableFile })
   public async download(
     @Req() req: Request,
     @Param('id') id: number
