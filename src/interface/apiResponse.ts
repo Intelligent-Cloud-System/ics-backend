@@ -26,7 +26,7 @@ export class FileResponse {
   name: string;
 
   @ApiProperty()
-  size: string;
+  size: number;
 }
 
 export class FileDeleteResponse {

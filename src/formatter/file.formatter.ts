@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { FileResponse, FileDeleteResponse } from 'src/interface/apiResponse';
-import { bytesToSize, getFileName } from 'src/shared/util/file.utils';
+import { getFileName } from 'src/shared/util/file.utils';
 import { File } from 'src/model';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class FilesFormatter {
     return {
       id: file.id,
       name: getFileName(file.filePath),
-      size: bytesToSize(file.fileSize),
+      size: file.fileSize,
     };
   }
 
