@@ -29,6 +29,11 @@ export class FileResponse {
   size: number;
 }
 
+export class FileLinkResponse {
+  @ApiProperty()
+  link: string;
+}
+
 export class FileDeleteResponse {
   @ApiProperty()
   id: number;

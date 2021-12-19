@@ -8,8 +8,9 @@ import {
   Controller,
   HttpStatus,
   UploadedFile,
-  StreamableFile,
   UseInterceptors,
+  Res,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -19,11 +20,16 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 
-import { FileDeleteResponse, FileResponse } from 'src/interface/apiResponse';
+import {
+  FileDeleteResponse,
+  FileLinkResponse,
+  FileResponse,
+} from 'src/interface/apiResponse';
 import { UploadFileShema } from 'src/apishema/files.api.shema';
-import { FilesFormatter } from 'src/formatter/file.formatter';
-import { FilesService } from 'src/service/files.service';
+import { FileFormatter } from 'src/formatter/file.formatter';
+import { FileService } from 'src/service/file.service';
 import { Request } from 'src/shared/request';
 import { DeleteFileRequest } from 'src/interface/apiRequest';
 
@@ -31,8 +37,8 @@ import { DeleteFileRequest } from 'src/interface/apiRequest';
 @ApiTags('File')
 export class FilesController {
   constructor(
-    private readonly filesService: FilesService,
-    private readonly filesFormatter: FilesFormatter
+    private readonly fileService: FileService,
+    private readonly fileFormatter: FileFormatter
   ) {}
 
   @Get('all')
@@ -40,8 +46,8 @@ export class FilesController {
   @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
     const { user } = req;
-    const files = await this.filesService.getListFiles(user);
-    return this.filesFormatter.toFilesResponce(files);
+    const files = await this.fileService.getListFiles(user);
+    return this.fileFormatter.toFilesResponse(files);
   }
 
   @Post('upload')
@@ -56,24 +62,43 @@ export class FilesController {
   ): Promise<FileResponse> {
     const { originalname, buffer } = file;
     const { user } = req;
-    const upsertedFile = await this.filesService.upsertFileUser(
+    const upsertedFile = await this.fileService.upsertFileUser(
       originalname,
       buffer,
       user
     );
-    return this.filesFormatter.toFileResponce(upsertedFile);
+    return this.fileFormatter.toFileResponse(upsertedFile);
   }
 
-  @Get('download/:id')
+  @Get(':id/link')
   @ApiBearerAuth('authorization')
-  @ApiResponse({ status: HttpStatus.OK, type: StreamableFile })
-  public async download(
+  @ApiResponse({ status: HttpStatus.OK, type: FileLinkResponse })
+  public async getFileLink(
     @Req() req: Request,
     @Param('id') id: number
-  ): Promise<StreamableFile> {
+  ): Promise<FileLinkResponse> {
     const { user } = req;
-    const file = await this.filesService.streamFileUser(id, user);
-    return new StreamableFile(file);
+    const file = await this.fileService.getById(id);
+    this.fileService.ensureFileBelongsToUser(file, user);
+
+    const encryptFileInfo = this.fileService.getFileLink(file);
+
+    return this.fileFormatter.toFileLinkResponse(
+      encryptFileInfo.link,
+      encryptFileInfo.iv
+    );
+  }
+
+  @Get('download/:fileLink')
+  @ApiResponse({ status: HttpStatus.OK })
+  public async download(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('fileLink') fileLink: string,
+    @Query('iv') iv: string
+  ): Promise<void> {
+    const file = await this.fileService.getFileByLink(fileLink, iv);
+    res.download(file.filePath);
   }
 
   @Delete('delete')
@@ -85,7 +110,7 @@ export class FilesController {
   ): Promise<Array<FileDeleteResponse>> {
     const { user } = req;
     const { ids } = body;
-    const deletedFiles = await this.filesService.deleteFilesByIds(ids, user);
-    return deletedFiles.map(this.filesFormatter.toFileDeleteResponce);
+    const deletedFiles = await this.fileService.deleteFilesByIds(ids, user);
+    return deletedFiles.map(this.fileFormatter.toFileDeleteResponce);
   }
 }

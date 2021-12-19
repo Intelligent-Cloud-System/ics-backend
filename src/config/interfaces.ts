@@ -19,3 +19,9 @@ export interface AWSConfig {
   secretAccessKey: string;
   userPoolId: string;
 }
+
+export interface FileConfig {
+  secretKey: Array<number>;
+  algorithm: string;
+  separator: string;
+}

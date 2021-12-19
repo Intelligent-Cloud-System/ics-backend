@@ -53,7 +53,8 @@ export class AppModule {
       .apply(AuthenticationMiddleware)
       .exclude(
         { path: '/system/healthy', method: RequestMethod.GET },
-        { path: '/users/register', method: RequestMethod.POST }
+        { path: '/users/register', method: RequestMethod.POST },
+        { path: '/files/download/(.*)', method: RequestMethod.GET }
       )
       .forRoutes(...controllers);
   }
