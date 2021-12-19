@@ -2,7 +2,6 @@
 /dist
 /node_modules
 /src/config/configuration.ts
-/src/config/orm.config.ts
 
 # Logs
 logs

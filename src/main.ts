@@ -6,11 +6,11 @@ import {
 } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/interfaces';
 import { ErrorInterceptor } from './interceptor/error.interceptor';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

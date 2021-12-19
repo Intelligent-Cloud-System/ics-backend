@@ -28,7 +28,7 @@ export class FileFormatter {
     return files.map(this.toFileResponse);
   }
 
-  public toFileDeleteResponce(file: File): FileDeleteResponse {
+  public toFileDeleteResponse(file: File): FileDeleteResponse {
     return {
       id: file.id,
     };

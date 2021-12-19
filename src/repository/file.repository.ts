@@ -33,7 +33,7 @@ export class FileRepository {
     }
   }
 
-  public async getAllUserFiles(userId: number): Promise<Result<File>[]> {
+  public async getAllUserFiles(userId: number): Promise<File[]> {
     const filesEntity = await this.manager
       .getRepository(FileEntity)
       .createQueryBuilder()
@@ -41,7 +41,7 @@ export class FileRepository {
       .getMany();
 
     if (filesEntity && filesEntity.length) {
-      return filesEntity.map(this.convertToModel);
+      return filesEntity.map(this.convertToModel) as File[];
     }
 
     return [];

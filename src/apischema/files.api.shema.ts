@@ -1,4 +1,4 @@
-export const UploadFileShema = {
+export const UploadFileSchema = {
   schema: {
     type: 'object',
     properties: {

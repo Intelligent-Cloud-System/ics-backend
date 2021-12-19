@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   Res,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -27,7 +28,7 @@ import {
   FileLinkResponse,
   FileResponse,
 } from 'src/interface/apiResponse';
-import { UploadFileShema } from 'src/apishema/files.api.shema';
+import { UploadFileSchema } from 'src/apischema/files.api.shema';
 import { FileFormatter } from 'src/formatter/file.formatter';
 import { FileService } from 'src/service/file.service';
 import { Request } from 'src/shared/request';
@@ -35,13 +36,14 @@ import { DeleteFileRequest } from 'src/interface/apiRequest';
 
 @Controller('files')
 @ApiTags('File')
-export class FilesController {
+export class FileController {
   constructor(
     private readonly fileService: FileService,
     private readonly fileFormatter: FileFormatter
   ) {}
 
   @Get('all')
+  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
@@ -51,10 +53,11 @@ export class FilesController {
   }
 
   @Post('upload')
+  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
   @ApiConsumes('multipart/form-data')
-  @ApiBody(UploadFileShema)
+  @ApiBody(UploadFileSchema)
   @UseInterceptors(FileInterceptor('file'))
   public async upload(
     @Req() req: Request,
@@ -71,6 +74,7 @@ export class FilesController {
   }
 
   @Get(':id/link')
+  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FileLinkResponse })
   public async getFileLink(
@@ -90,6 +94,7 @@ export class FilesController {
   }
 
   @Get('download/:fileLink')
+  @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK })
   public async download(
     @Req() req: Request,
@@ -111,6 +116,6 @@ export class FilesController {
     const { user } = req;
     const { ids } = body;
     const deletedFiles = await this.fileService.deleteFilesByIds(ids, user);
-    return deletedFiles.map(this.fileFormatter.toFileDeleteResponce);
+    return deletedFiles.map(this.fileFormatter.toFileDeleteResponse);
   }
 }

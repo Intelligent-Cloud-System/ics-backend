@@ -18,8 +18,6 @@ export interface FileLinkInfo {
   expiresAt: Date;
 }
 
-export const STORAGE_PATH = path.join(process.cwd(), './storage/');
-
 @Injectable()
 export class FileService {
   constructor(
@@ -63,31 +61,26 @@ export class FileService {
     if (!fs.existsSync(dirPath)) await fsp.mkdir(dirPath);
 
     const currentPath = this.getFilePath(dirPath, fileName);
-
-    const file = await this.fileRepository.getByPath(currentPath);
     await fsp.writeFile(currentPath, buffer);
-    if (file?.id) {
-      return await this.fileRepository.updateFile(file.id, buffer.length);
-    }
 
-    return await this.fileRepository.insertFile(
-      new File(currentPath, buffer.length, user.id)
-    );
+    let file = await this.fileRepository.getByPath(currentPath);
+
+    if (file) {
+      return await this.fileRepository.updateFile(file.id, buffer.length);
+    } else {
+      file = new File(currentPath, buffer.length, user.id);
+      return await this.fileRepository.insertFile(file);
+    }
   }
 
   public async deleteFileUser(id: number, user: User): Promise<File> {
-    const file = await this.fileRepository.getById(id);
+    const file = await this.getById(id);
 
-    if (!(file && this.ensureUserFile(file, user))) {
-      throw new FileNotExistsError('Not found file in user directory');
-    }
+    this.ensureFileBelongsToUser(file, user);
 
     const deletedFile = await this.fileRepository.deleteFileById(file.id);
-    if (await this.fileRepository.getById(deletedFile.id)) {
-      throw new FileNotExistsError(`Can't delete file with id: ${id}`);
-    }
-
     await fsp.unlink(file.filePath);
+
     return deletedFile;
   }
 
@@ -126,6 +119,7 @@ export class FileService {
     };
   }
 
+  // TODO: make it more flexible
   private getExpiresAtDate(): Date {
     const dateNow = new Date();
     const oneMinute = 60 * 1000;
@@ -172,6 +166,7 @@ export class FileService {
   public async getFileByLink(link: string, ivStr: string): Promise<File> {
     const linkInfo = this.decodeLink(link, ivStr);
 
+    // TODO: Make facade for Date
     if (linkInfo.expiresAt.getTime() < new Date().getTime()) {
       throw new LinkHasExpiredError();
     }
@@ -186,21 +181,20 @@ export class FileService {
   }
 
   private resolveUserDir(user: User): string {
+    const fileConfig = this.configService.get<FileConfig>('file') as FileConfig;
+    const storageFolder = fileConfig.storageFolder;
+
     const { email } = user;
     const subDir = crypto.createHash('sha256').update(email).digest('hex');
-    return path.join(STORAGE_PATH, subDir);
+    return path.join(process.cwd(), storageFolder, subDir);
   }
 
   private getFilePath(dirPath: string, fileName: string) {
     const filePath = path.join(dirPath, fileName);
     if (!filePath.startsWith(dirPath)) {
-      throw new IllegalUserBehaviorError('Attempt at path traversal attack');
+      throw new IllegalPathError('Attempt at path traversal attack');
     }
     return filePath;
-  }
-
-  private ensureUserFile(file: File, user: User): boolean {
-    return file.userId === user.id && fs.existsSync(file.filePath);
   }
 }
 
@@ -209,4 +203,4 @@ export class UnableToParseLinkError extends ApplicationError {}
 export class FileDoesNotBelongToUser extends ApplicationError {}
 export class WrongFileLinkError extends ApplicationError {}
 export class LinkHasExpiredError extends ApplicationError {}
-export class IllegalUserBehaviorError extends ApplicationError {}
+export class IllegalPathError extends ApplicationError {}

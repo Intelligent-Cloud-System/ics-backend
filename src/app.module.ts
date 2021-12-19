@@ -4,15 +4,12 @@ import {
   RequestMethod,
   Type,
 } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppController } from './controller/app.controller';
 import { UserModule } from './module/user.module';
 import { SystemModule } from './module/system.module';
 import { FilesModule } from './module/files.module';
-import { AppService } from './service/app.service';
-import { DatabaseConfig } from './config/interfaces';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
 
@@ -21,28 +18,21 @@ import * as Controllers from './controller';
 import { User } from './model/user';
 import { UserService } from './service/user.service';
 import { UserRepository } from './repository/user.repository';
+import { DatabaseConfig } from './config/interfaces';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [configuration, dbConfig],
-      envFilePath: ['.env'],
+      load: [configuration],
       isGlobal: true,
       cache: true,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        ...configService.get<DatabaseConfig>('db'),
-      }),
-      inject: [ConfigService],
-    }),
+    TypeOrmModule.forRoot(dbConfig() as DatabaseConfig),
     UserModule,
     SystemModule,
     FilesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, UserService, UserRepository, User, String, Number],
+  providers: [UserService, UserRepository],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

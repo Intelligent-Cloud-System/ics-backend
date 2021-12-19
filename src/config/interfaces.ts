@@ -24,4 +24,5 @@ export interface FileConfig {
   secretKey: Array<number>;
   algorithm: string;
   separator: string;
+  storageFolder: string;
 }

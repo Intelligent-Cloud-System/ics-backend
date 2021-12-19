@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   GetUserCommand,
   GetUserCommandInput,
@@ -12,7 +13,6 @@ import { UserRepository } from 'src/repository/user.repository';
 import { User } from 'src/model/user';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
 import { Result } from 'src/shared/util/util';
-import { ConfigService } from '@nestjs/config';
 import { AWSConfig } from 'src/config/interfaces';
 import { ApplicationError } from 'src/shared/error/applicationError';
 
@@ -39,13 +39,7 @@ export class UserService {
     });
   }
 
-  public ensureUserExists(user?: User): void {
-    if (!user) {
-      throw new UserDoesNotExistsError();
-    }
-  }
-
-  public async getUserByToken(token: string): Promise<Result<User>> {
+  public async getUserByToken(token: string): Promise<User> {
     const input: GetUserCommandInput = {
       AccessToken: token,
     };
@@ -58,9 +52,9 @@ export class UserService {
       if (user) {
         return user;
       }
-    } else {
-      throw new ApplicationError('Not valid token');
     }
+
+    throw new NotValidTokenError('Not valid token');
   }
 
   public async getUserByEmail(email: string): Promise<Result<User>> {
@@ -96,7 +90,7 @@ export class UserService {
   public async registerUser(body: RegisterUserRequest): Promise<User> {
     const userExist = await this.checkCognitoUserExist(body.email);
     if (!userExist) {
-      throw new ApplicationError('Cognito user does not exist');
+      throw new UserDoesNotExistsError('Cognito user does not exist');
     }
 
     const user = new User(body.email, body.firstName, body.lastName);
@@ -107,4 +101,5 @@ export class UserService {
   }
 }
 
+export class NotValidTokenError extends ApplicationError {}
 export class UserDoesNotExistsError extends ApplicationError {}
