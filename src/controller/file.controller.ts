@@ -97,7 +97,6 @@ export class FileController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK })
   public async download(
-    @Req() req: Request,
     @Res() res: Response,
     @Param('fileLink') fileLink: string,
     @Query('iv') iv: string
