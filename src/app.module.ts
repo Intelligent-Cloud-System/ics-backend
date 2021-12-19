@@ -15,7 +15,6 @@ import dbConfig from './config/db.config';
 
 import { AuthenticationMiddleware } from './middleware/authentication.middleware';
 import * as Controllers from './controller';
-import { User } from './model/user';
 import { UserService } from './service/user.service';
 import { UserRepository } from './repository/user.repository';
 import { DatabaseConfig } from './config/interfaces';
