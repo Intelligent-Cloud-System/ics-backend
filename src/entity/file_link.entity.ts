@@ -4,38 +4,39 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
-
+import { FileEntity } from './file.entity';
 import { UserEntity } from './user.entity';
-import { FileLinkEntity } from './file_link.entity';
 
-@Entity('file')
-@Unique(['filePath', 'userId'])
-export class FileEntity {
+@Entity('link')
+export class FileLinkEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @CreateDateColumn({
     nullable: true,
+    name: 'created_at',
   })
-  cteatedAt: Date;
+  createdAt: Date;
 
   @Column({
-    type: 'varchar',
-    nullable: false,
-    name: 'file_path',
+    nullable: true,
+    name: 'expires_at',
+    type: 'date',
   })
-  filePath: string;
+  expiresAt: Date;
 
   @Column({
-    type: 'bigint',
+    type: 'number',
     nullable: false,
-    name: 'file_size',
+    name: 'file_id',
   })
-  fileSize: number;
+  fileId: number;
+
+  @ManyToOne(() => FileEntity, (file) => file.file_links)
+  @JoinColumn({ name: 'file_id' })
+  file: FileEntity;
 
   @Column({
     type: 'number',
@@ -44,10 +45,7 @@ export class FileEntity {
   })
   userId: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.files)
+  @ManyToOne(() => UserEntity, (user) => user.file_links)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
-
-  @OneToMany(() => FileLinkEntity, (link) => link.file)
-  file_links: FileLinkEntity[];
 }
