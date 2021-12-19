@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
-import { FileResponse, FileDeleteResponse } from 'src/interface/apiResponse';
+import {
+  FileResponse,
+  FileDeleteResponse,
+  FileLinkResponse,
+} from 'src/interface/apiResponse';
 import { getFileName } from 'src/shared/util/file.utils';
 import { File } from 'src/model';
 
 @Injectable()
-export class FilesFormatter {
-  public toFileResponce(file: File): FileResponse {
+export class FileFormatter {
+  public toFileResponse(file: File): FileResponse {
     return {
       id: file.id,
       name: getFileName(file.filePath),
@@ -14,8 +18,14 @@ export class FilesFormatter {
     };
   }
 
-  public toFilesResponce(files: File[]): FileResponse[] {
-    return files.map(this.toFileResponce);
+  public toFileLinkResponse(fileLink: string, iv: string): FileLinkResponse {
+    return {
+      link: `/files/download/${fileLink}?iv=${iv}`,
+    };
+  }
+
+  public toFilesResponse(files: File[]): FileResponse[] {
+    return files.map(this.toFileResponse);
   }
 
   public toFileDeleteResponce(file: File): FileDeleteResponse {

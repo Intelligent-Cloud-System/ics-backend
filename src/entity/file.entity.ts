@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
-import { FileLinkEntity } from './file_link.entity';
 
 @Entity('file')
 @Unique(['filePath', 'userId'])
@@ -48,7 +47,4 @@ export class FileEntity {
   @ManyToOne(() => UserEntity, (user) => user.files)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
-
-  @OneToMany(() => FileLinkEntity, (link) => link.file)
-  file_links: FileLinkEntity[];
 }

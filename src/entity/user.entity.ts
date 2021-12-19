@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { FileEntity } from './file.entity';
-import { FileLinkEntity } from './file_link.entity';
 
 export enum UserRole {
   User = 'User',
@@ -57,7 +56,4 @@ export class UserEntity {
 
   @OneToMany(() => FileEntity, (file) => file.user)
   files: FileEntity[];
-
-  @OneToMany(() => FileLinkEntity, (link) => link.user)
-  file_links: FileLinkEntity[];
 }
