@@ -30,7 +30,7 @@ import {
 } from 'src/interface/apiResponse';
 import { UploadFileSchema } from 'src/apischema/files.api.shema';
 import { FileFormatter } from 'src/formatter/file.formatter';
-import { FileService } from 'src/service/files.service';
+import { FileService } from 'src/service/file.service';
 import { Request } from 'src/shared/request';
 import { DeleteFileRequest } from 'src/interface/apiRequest';
 
