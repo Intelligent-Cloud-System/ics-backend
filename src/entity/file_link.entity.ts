@@ -9,7 +9,7 @@ import {
 import { FileEntity } from './file.entity';
 import { UserEntity } from './user.entity';
 
-@Entity('link')
+@Entity('file_link')
 export class FileLinkEntity {
   @PrimaryGeneratedColumn()
   id: number;
