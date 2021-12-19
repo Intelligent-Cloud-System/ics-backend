@@ -20,8 +20,9 @@ export class FileEntity {
 
   @CreateDateColumn({
     nullable: true,
+    name: 'created_at',
   })
-  cteatedAt: Date;
+  createdAt: Date;
 
   @Column({
     type: 'varchar',
