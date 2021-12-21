@@ -2,9 +2,9 @@
 
 <p align="center"><img src="https://raw.githubusercontent.com/MaksGovor/Images/master/Intelligent%20Cloud%20System-logos_transparent.png" width=444 height=253 /></p>
 
-<p align="center">The idea of the project is to create storage service which can be configured very fast.
-Clients should be able to create create a user, give him permissions and get credential for this user(token, maybe something more in the future). They will do it on our website.
-In the future it would be ideal to write a library which will simplify using our library.</p>
+<p align="center">The idea of the project is to create cloud system which is ideal for companies.
+It's very convinient to use out system for companies because you can handle storage between team members, easily share files and give everybody his unique permissions.
+It's also good for simple users, you don't need to create company account, you can just use it as a user.</p>
 
 ## Authors
 
