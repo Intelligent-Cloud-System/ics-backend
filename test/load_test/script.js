@@ -14,29 +14,14 @@
 import http from "k6/http";
 import { group, check, sleep } from "k6";
 
-const BASE_URL = "/";
+const BASE_URL = "http://127.0.0.1:5000";
 // Sleep duration between successive requests.
 // You might want to edit the value of this variable or remove calls to the sleep function on the script.
 const SLEEP_DURATION = 0.1;
 // Global variables should be initialized.
 
 export default function() {
-    group("/users/register", () => {
-
-        // Request No. 1
-        {
-            let url = BASE_URL + `/users/register`;
-            // TODO: edit the parameters of the request body.
-            let body = {"firstName": "string", "lastName": "string", "email": "string"};
-            let params = {headers: {"Content-Type": "application/json", "Accept": "application/json"}};
-            let request = http.post(url, JSON.stringify(body), params);
-
-            check(request, {
-                "": (r) => r.status === 200
-            });
-        }
-    });
-
+    // TODO: Dima
     group("/files/download/{fileLink}", () => {
         let fileLink = 'TODO_EDIT_THE_FILELINK'; // specify value as there is no example value for this parameter in OpenAPI spec
         let iv = 'TODO_EDIT_THE_IV'; // specify value as there is no example value for this parameter in OpenAPI spec
@@ -52,23 +37,7 @@ export default function() {
         }
     });
 
-    group("/files/delete", () => {
-
-        // Request No. 1
-        {
-            let url = BASE_URL + `/files/delete`;
-            // TODO: edit the parameters of the request body.
-            let body = {"ids": "list"};
-            let params = {headers: {"Content-Type": "application/json", "Accept": "application/json"}};
-            // this is a DELETE method request - if params are also set, empty body must be passed
-            let request = http.del(url, {} , params);
-
-            check(request, {
-                "": (r) => r.status === 200
-            });
-        }
-    });
-
+    // TODO: Andriy
     group("/users/current", () => {
 
         // Request No. 1
@@ -82,6 +51,7 @@ export default function() {
         }
     });
 
+    // TODO: Maks
     group("/files/upload", () => {
 
         // Request No. 1
@@ -98,6 +68,7 @@ export default function() {
         }
     });
 
+    //TODO: Dima
     group("/files/{id}/link", () => {
         let id = 'TODO_EDIT_THE_ID'; // specify value as there is no example value for this parameter in OpenAPI spec
 
@@ -112,6 +83,7 @@ export default function() {
         }
     });
 
+    //TODO: Maks
     group("/system/healthy", () => {
 
         // Request No. 1
@@ -125,6 +97,7 @@ export default function() {
         }
     });
 
+    //TODO: Andriy
     group("/files/all", () => {
 
         // Request No. 1
