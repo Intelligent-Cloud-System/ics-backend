@@ -1,0 +1,15 @@
+{
+  "name": "load_test",
+  "version": "1.0.0",
+  "description": "Load testing for ics-backend",
+  "main": "index.js",
+  "author": "ICS",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "k6:generate": "openapi-generator generate -i http://127.0.0.1:5000/api-json -g k6 -o ./"
+  },
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "2.4.21"
+  }
+}
