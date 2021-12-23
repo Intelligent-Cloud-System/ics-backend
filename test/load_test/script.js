@@ -56,9 +56,7 @@ export default function () {
     }
   });
 
-  // TODO: Maks
   group('/files/upload', () => {
-    // Request No. 1
     {
       const url = BASE_URL + `/files/upload`;
       const fd = new FormData();
@@ -103,9 +101,7 @@ export default function () {
     }
   });
 
-  //TODO: Maks
   group('/system/healthy', () => {
-    // Request No. 1
     {
       const url = BASE_URL + `/system/healthy`;
       const res = http.get(url);
