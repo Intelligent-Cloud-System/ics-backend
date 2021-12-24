@@ -48,10 +48,22 @@ export default function () {
     // Request No. 1
     {
       let url = BASE_URL + `/users/current`;
-      let request = http.get(url);
+      let request = http.get(url, {
+          headers: {
+            Authorization: testConfig.token,
+          },
+        }
+      );
 
       check(request, {
-        '': (r) => r.status === 200,
+        'get user current status was 200': (r) => r.status === 200,
+        'user current id === 1': (r) => {
+          const data = r.json();
+          return (
+            data.hasOwnProperty('id') &&
+            Object.getOwnPropertyDescriptor(data, 'id').value === 1
+          );
+        }
       });
     }
   });
@@ -65,14 +77,14 @@ export default function () {
         'file',
         http.file(binFile, `${name}.md`, 'text/markdown; charset=UTF-8')
       );
-  
+
       const postResponse = http.post(urlToUpload, fd.body(), {
         headers: {
           'Content-Type': 'multipart/form-data; boundary=' + fd.boundary,
           Authorization: testConfig.token,
         },
       });
-  
+
       if (
         check(postResponse, {
           'upload status was 200': (r) => r.status === 200,
@@ -92,7 +104,7 @@ export default function () {
             Authorization: testConfig.token,
           },
         });
-  
+
         check(delResponse, {
           'del status was 200': (r) => r.status === 200,
           'check delete id === upload id': (r) => {
@@ -138,10 +150,21 @@ export default function () {
     // Request No. 1
     {
       let url = BASE_URL + `/files/all`;
-      let request = http.get(url);
+      let request = http.get(url, {
+          headers: {
+            Authorization: testConfig.token,
+          },
+        }
+      );
 
       check(request, {
-        '': (r) => r.status === 200,
+        'get all files': (r) => r.status === 200,
+        'user has uploaded files': (r) => {
+          const data = r.json();
+          return (
+            data.length > 0
+          );
+        }
       });
     }
   });
