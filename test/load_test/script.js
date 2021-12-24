@@ -56,74 +56,7 @@ export default function () {
     }
   });
 
-  group('/files/upload', () => {
-    {
-      const url = BASE_URL + `/files/upload`;
-      const name = (Math.random() + 1).toString(36).substring(7);
-      const fd = new FormData();
-      fd.append(
-        'file',
-        http.file(binFile, `${name}.md`, 'text/markdown; charset=UTF-8')
-      );
-
-      const params = {
-        headers: {
-          'Content-Type': 'multipart/form-data; boundary=' + fd.boundary,
-          Authorization: testConfig.token,
-        },
-      };
-      const response = http.post(url, fd.body(), params);
-
-      check(response, {
-        'status was 200': (r) => r.status === 200,
-        'check upload has id': (r) => {
-          const data = r.json();
-          return data.hasOwnProperty('id');
-        },
-      });
-    }
-  });
-
-  //TODO: Dima
-  group('/files/{id}/link', () => {
-    let id = 'TODO_EDIT_THE_ID'; // specify value as there is no example value for this parameter in OpenAPI spec
-
-    // Request No. 1
-    {
-      let url = BASE_URL + `/files/${id}/link`;
-      let request = http.get(url);
-
-      check(request, {
-        '': (r) => r.status === 200,
-      });
-    }
-  });
-
-  group('/system/healthy', () => {
-    {
-      const url = BASE_URL + `/system/healthy`;
-      const response = http.get(url);
-
-      check(response, {
-        'status was 200': (r) => r.status === 200,
-      });
-    }
-  });
-
-  //TODO: Andriy
-  group('/files/all', () => {
-    // Request No. 1
-    {
-      let url = BASE_URL + `/files/all`;
-      let request = http.get(url);
-
-      check(request, {
-        '': (r) => r.status === 200,
-      });
-    }
-  });
-
-  group('upload-delete', () => {
+  group('/files/upload & /files/delete', () => {
     {
       const urlToUpload = BASE_URL + `/files/upload`;
       const name = (Math.random() + 1).toString(36).substring(7);
@@ -171,6 +104,45 @@ export default function () {
           },
         });
       }
+    }
+  });
+
+  //TODO: Dima
+  group('/files/{id}/link', () => {
+    let id = 'TODO_EDIT_THE_ID'; // specify value as there is no example value for this parameter in OpenAPI spec
+
+    // Request No. 1
+    {
+      let url = BASE_URL + `/files/${id}/link`;
+      let request = http.get(url);
+
+      check(request, {
+        '': (r) => r.status === 200,
+      });
+    }
+  });
+
+  group('/system/healthy', () => {
+    {
+      const url = BASE_URL + `/system/healthy`;
+      const response = http.get(url);
+
+      check(response, {
+        'status was 200': (r) => r.status === 200,
+      });
+    }
+  });
+
+  //TODO: Andriy
+  group('/files/all', () => {
+    // Request No. 1
+    {
+      let url = BASE_URL + `/files/all`;
+      let request = http.get(url);
+
+      check(request, {
+        '': (r) => r.status === 200,
+      });
     }
   });
 }
