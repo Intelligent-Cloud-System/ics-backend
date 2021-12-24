@@ -107,7 +107,7 @@ export class FileController {
 
   @Delete('delete')
   @ApiBearerAuth('authorization')
-  @ApiResponse({ status: HttpStatus.OK, type: FileDeleteResponse })
+  @ApiResponse({ status: HttpStatus.OK, type: [FileDeleteResponse] })
   public async delete(
     @Req() req: Request,
     @Body() body: DeleteFileRequest
