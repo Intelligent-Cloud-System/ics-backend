@@ -59,10 +59,11 @@ export default function () {
   group('/files/upload', () => {
     {
       const url = BASE_URL + `/files/upload`;
+      const name = (Math.random() + 1).toString(36).substring(7);
       const fd = new FormData();
       fd.append(
         'file',
-        http.file(binFile, 'README.md', 'text/markdown; charset=UTF-8')
+        http.file(binFile, `${name}.md`, 'text/markdown; charset=UTF-8')
       );
 
       const params = {
@@ -71,16 +72,13 @@ export default function () {
           Authorization: testConfig.token,
         },
       };
-      const request = http.post(url, fd.body(), params);
+      const response = http.post(url, fd.body(), params);
 
-      check(request, {
+      check(response, {
         'status was 200': (r) => r.status === 200,
-        'file check correct responce': (r) => {
+        'check upload has id': (r) => {
           const data = r.json();
-          return (
-            data.hasOwnProperty('id') &&
-            Object.getOwnPropertyDescriptor(data, 'id').value > 0
-          );
+          return data.hasOwnProperty('id');
         },
       });
     }
@@ -104,9 +102,9 @@ export default function () {
   group('/system/healthy', () => {
     {
       const url = BASE_URL + `/system/healthy`;
-      const res = http.get(url);
+      const response = http.get(url);
 
-      check(res, {
+      check(response, {
         'status was 200': (r) => r.status === 200,
       });
     }
@@ -122,6 +120,57 @@ export default function () {
       check(request, {
         '': (r) => r.status === 200,
       });
+    }
+  });
+
+  group('upload-delete', () => {
+    {
+      const urlToUpload = BASE_URL + `/files/upload`;
+      const name = (Math.random() + 1).toString(36).substring(7);
+      const fd = new FormData();
+      fd.append(
+        'file',
+        http.file(binFile, `${name}.md`, 'text/markdown; charset=UTF-8')
+      );
+  
+      const postResponse = http.post(urlToUpload, fd.body(), {
+        headers: {
+          'Content-Type': 'multipart/form-data; boundary=' + fd.boundary,
+          Authorization: testConfig.token,
+        },
+      });
+  
+      if (
+        check(postResponse, {
+          'upload status was 200': (r) => r.status === 200,
+          'check upload has id': (r) => {
+            const data = r.json();
+            return data.hasOwnProperty('id');
+          },
+        })
+      ) {
+        const { id } = postResponse.json();
+        const urlToDelete = BASE_URL + `/files/delete`;
+        const body = JSON.stringify({ ids: [id] });
+        const delResponse = http.del(urlToDelete, body, {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: testConfig.token,
+          },
+        });
+  
+        check(delResponse, {
+          'del status was 200': (r) => r.status === 200,
+          'check delete id === upload id': (r) => {
+            const data = r.json()[0];
+            return (
+              data.hasOwnProperty('id') &&
+              Object.getOwnPropertyDescriptor(data, 'id').value === id
+            );
+          },
+        });
+      }
     }
   });
 }
