@@ -28,28 +28,12 @@ export const options = {
 const binFile = open('./README.md', 'b');
 
 export default function () {
-  // TODO: Dima
-  group('/files/download/{fileLink}', () => {
-    let fileLink = 'TODO_EDIT_THE_FILELINK'; // specify value as there is no example value for this parameter in OpenAPI spec
-    let iv = 'TODO_EDIT_THE_IV'; // specify value as there is no example value for this parameter in OpenAPI spec
-
-    // Request No. 1
-    {
-      let url = BASE_URL + `/files/download/${fileLink}?iv=${iv}`;
-      let request = http.get(url);
-
-      check(request, {
-        '': (r) => r.status === 200,
-      });
-    }
-  });
-
   // TODO: Andriy
   group('/users/current', () => {
     // Request No. 1
     {
-      let url = BASE_URL + `/users/current`;
-      let request = http.get(url, {
+      const url = BASE_URL + `/users/current`;
+      const request = http.get(url, {
           headers: {
             Authorization: testConfig.token,
           },
@@ -122,12 +106,12 @@ export default function () {
 
   //TODO: Dima
   group('/files/{id}/link', () => {
-    let id = '16'; // specify value as there is no example value for this parameter in OpenAPI spec
+    const id = '16'; // specify value as there is no example value for this parameter in OpenAPI spec
 
     // Request No. 1
     {
-      let url = BASE_URL + `/files/${id}/link`;
-      let request = http.get(url, {
+      const url = BASE_URL + `/files/${id}/link`;
+      const request = http.get(url, {
           headers: {
             Authorization: testConfig.token,
           },
@@ -159,8 +143,8 @@ export default function () {
   group('/files/all', () => {
     // Request No. 1
     {
-      let url = BASE_URL + `/files/all`;
-      let request = http.get(url, {
+      const url = BASE_URL + `/files/all`;
+      const request = http.get(url, {
           headers: {
             Authorization: testConfig.token,
           },
