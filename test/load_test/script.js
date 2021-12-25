@@ -18,25 +18,28 @@ import { FormData } from 'https://jslib.k6.io/formdata/0.0.2/index.js';
 const BASE_URL = 'http://127.0.0.1:5000';
 // Sleep duration between successive requests.
 // You might want to edit the value of this variable or remove calls to the sleep function on the script.
-const SLEEP_DURATION = 0.1;
+export const SLEEP_DURATION = 0.5;
 
 // Global variables should be initialized.
 export const options = {
-  stages: [{ duration: '1s', target: 0 }],
+  stages: [
+    { duration: '30s', target: 10 },
+    { duration: '1m30s', target: 10 },
+    { duration: '3m', target: 35 },
+    { duration: '15s', target: 0 },
+  ],
 };
 const binFile = open('./README.md', 'b');
 
 export default function () {
   group('/users/current', () => {
-    // Request No. 1
     {
       const url = BASE_URL + `/users/current`;
       const request = http.get(url, {
-          headers: {
-            Authorization: testConfig.token,
-          },
-        }
-      );
+        headers: {
+          Authorization: testConfig.token,
+        },
+      });
 
       check(request, {
         'get user current status was 200': (r) => r.status === 200,
@@ -46,7 +49,7 @@ export default function () {
             data.hasOwnProperty('id') &&
             Object.getOwnPropertyDescriptor(data, 'id').value === 1
           );
-        }
+        },
       });
     }
   });
@@ -103,21 +106,19 @@ export default function () {
   });
 
   group('/files/{id}/link', () => {
-    const id = '16'; // specify value as there is no example value for this parameter in OpenAPI spec
+    const id = '4'; // specify value as there is no example value for this parameter in OpenAPI spec
 
-    // Request No. 1
     {
       const url = BASE_URL + `/files/${id}/link`;
       const request = http.get(url, {
-          headers: {
-            Authorization: testConfig.token,
-          },
-        }
-      );
+        headers: {
+          Authorization: testConfig.token,
+        },
+      });
 
       check(request, {
-        'upload status was 200': (r) => r.status === 200,
-        'check upload has id': (r) => {
+        'status was 200': (r) => r.status === 200,
+        'check response has link': (r) => {
           const data = r.json();
           return data.hasOwnProperty('link');
         },
@@ -137,24 +138,20 @@ export default function () {
   });
 
   group('/files/all', () => {
-    // Request No. 1
     {
       const url = BASE_URL + `/files/all`;
       const request = http.get(url, {
-          headers: {
-            Authorization: testConfig.token,
-          },
-        }
-      );
+        headers: {
+          Authorization: testConfig.token,
+        },
+      });
 
       check(request, {
         'get all files': (r) => r.status === 200,
         'user has uploaded files': (r) => {
           const data = r.json();
-          return (
-            data.length > 0
-          );
-        }
+          return data.length > 0;
+        },
       });
     }
   });
