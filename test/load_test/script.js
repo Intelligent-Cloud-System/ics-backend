@@ -14,7 +14,6 @@ import http from 'k6/http';
 import { group, check } from 'k6';
 import { testConfig } from './loadtest.config.js';
 import { FormData } from 'https://jslib.k6.io/formdata/0.0.2/index.js';
-import * as fs from 'fs';
 
 const BASE_URL = 'http://127.0.0.1:5000';
 // Sleep duration between successive requests.
@@ -28,7 +27,6 @@ export const options = {
 const binFile = open('./README.md', 'b');
 
 export default function () {
-  // TODO: Andriy
   group('/users/current', () => {
     // Request No. 1
     {
@@ -104,7 +102,6 @@ export default function () {
     }
   });
 
-  //TODO: Dima
   group('/files/{id}/link', () => {
     const id = '16'; // specify value as there is no example value for this parameter in OpenAPI spec
 
@@ -139,7 +136,6 @@ export default function () {
     }
   });
 
-  //TODO: Andriy
   group('/files/all', () => {
     // Request No. 1
     {
