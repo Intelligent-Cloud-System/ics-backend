@@ -25,6 +25,7 @@ export class FileService {
     private readonly configService: ConfigService
   ) {}
 
+  // TODO: Create permission service
   public ensureFileBelongsToUser(file: File, user: User): void {
     if (file.userId !== user.id) {
       throw new FileDoesNotBelongToUser();
@@ -78,6 +79,7 @@ export class FileService {
 
     this.ensureFileBelongsToUser(file, user);
 
+    // TODO: remove it and use deleteFilesByIds
     const deletedFile = await this.fileRepository.deleteFileById(file.id);
     await fsp.unlink(file.filePath);
 
