@@ -12,7 +12,11 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { createPresignedPost, PresignedPost, PresignedPostOptions } from '@aws-sdk/s3-presigned-post';
+import {
+  createPresignedPost,
+  PresignedPost,
+  PresignedPostOptions,
+} from '@aws-sdk/s3-presigned-post';
 
 import { AWSConfig, S3Config } from '../config/interfaces';
 import path from 'path';
@@ -45,7 +49,10 @@ export class StorageService {
     });
   }
 
-  public async getSignedGetUrl(key: string, expiresIn: number): Promise<string> {
+  public async getSignedGetUrl(
+    key: string,
+    expiresIn: number
+  ): Promise<string> {
     const input: GetObjectCommandInput = {
       Bucket: this.configService.get('aws.s3.bucket'),
       Key: key,
@@ -74,7 +81,11 @@ export class StorageService {
     return urlsResponse;
   }
 
-  public async getSignedPostUrl(file: FileInfo, folder: string, expiresIn: number): Promise<PresignedPost> {
+  public async getSignedPostUrl(
+    file: FileInfo,
+    folder: string,
+    expiresIn: number
+  ): Promise<PresignedPost> {
     const key = path.join(folder, file.name);
 
     const options: PresignedPostOptions = {
@@ -87,7 +98,10 @@ export class StorageService {
     return await createPresignedPost(this.client, options);
   }
 
-  public async getSignedPostUrls(files: Array<FileInfo>, folder: string): Promise<SignedPostUrlsResponse> {
+  public async getSignedPostUrls(
+    files: Array<FileInfo>,
+    folder: string
+  ): Promise<SignedPostUrlsResponse> {
     const s3Config = this.configService.get('aws.s3') as S3Config;
     const expiresIn = s3Config.linkTtl;
 

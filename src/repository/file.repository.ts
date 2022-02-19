@@ -63,7 +63,12 @@ export class FileRepository {
   }
 
   public async updateFile(id: number, fileSize: number): Promise<File> {
-    await this.manager.createQueryBuilder().update(FileEntity).set({ fileSize }).where('id = :id', { id }).execute();
+    await this.manager
+      .createQueryBuilder()
+      .update(FileEntity)
+      .set({ fileSize })
+      .where('id = :id', { id })
+      .execute();
 
     return (await this.getById(id)) as File;
   }
@@ -82,7 +87,12 @@ export class FileRepository {
 
   private convertToModel(fileEntity?: FileEntity): Result<File> {
     if (fileEntity) {
-      return new File(fileEntity.filePath, fileEntity.fileSize, fileEntity.userId, fileEntity.id);
+      return new File(
+        fileEntity.filePath,
+        fileEntity.fileSize,
+        fileEntity.userId,
+        fileEntity.id
+      );
     }
   }
 }

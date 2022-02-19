@@ -1,4 +1,10 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { FileEntity } from './file.entity';
 
 export enum UserRole {

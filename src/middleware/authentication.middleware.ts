@@ -9,7 +9,9 @@ export class AuthenticationMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];
-    const accessToken: string = authHeader ? authHeader.split('Bearer ')[1] : '';
+    const accessToken: string = authHeader
+      ? authHeader.split('Bearer ')[1]
+      : '';
 
     try {
       const user = await this.userService.getUserByToken(accessToken);

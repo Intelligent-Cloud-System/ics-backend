@@ -48,7 +48,13 @@ export class UserRepository {
 
   public convertToModel(userEntity?: UserEntity): Result<User> {
     if (userEntity) {
-      return new User(userEntity.email, userEntity.firstName, userEntity.lastName, userEntity.role, userEntity.id);
+      return new User(
+        userEntity.email,
+        userEntity.firstName,
+        userEntity.lastName,
+        userEntity.role,
+        userEntity.id
+      );
     }
   }
 }

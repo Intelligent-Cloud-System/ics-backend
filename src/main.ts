@@ -1,5 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger';
+import {
+  SwaggerModule,
+  DocumentBuilder,
+  SwaggerDocumentOptions,
+} from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
@@ -21,7 +25,10 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle(swagger.title)
     .setDescription(swagger.description)
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'authorization')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'authorization'
+    )
     .build();
 
   const options: SwaggerDocumentOptions = {
