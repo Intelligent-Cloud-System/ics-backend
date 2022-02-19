@@ -74,19 +74,13 @@ export class StorageService {
     return urlsResponse;
   }
 
-  public async getSignedPostUrl(
-    file: FileInfo,
-    folder: string,
-    expiresIn: number,
-  ): Promise<PresignedPost> {
+  public async getSignedPostUrl(file: FileInfo, folder: string, expiresIn: number): Promise<PresignedPost> {
     const key = path.join(folder, file.name);
 
     const options: PresignedPostOptions = {
       Bucket: this.configService.get('aws.s3.bucket') as string,
       Key: key,
-      Conditions: [
-        ['content-length-range', 0, file.size],
-      ],
+      Conditions: [['content-length-range', 0, file.size]],
       Expires: expiresIn,
     };
 
