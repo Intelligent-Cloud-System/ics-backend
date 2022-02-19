@@ -12,11 +12,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
-import {
-  createPresignedPost,
-  PresignedPost,
-  PresignedPostOptions,
-} from '@aws-sdk/s3-presigned-post';
+import { createPresignedPost, PresignedPost, PresignedPostOptions } from '@aws-sdk/s3-presigned-post';
 
 import { AWSConfig, S3Config } from '../config/interfaces';
 import path from 'path';
@@ -60,7 +56,11 @@ export class StorageService {
     return await getSignedUrl(this.client, command, { expiresIn });
   }
 
-  public async getSignedGetUrls(filenames: Array<string>, folderPath: string): Promise<Record<string, string>> {
+  public async getSignedGetUrls(
+    filenames: Array<string>,
+    folderPath: string,
+    expiresIn: number
+  ): Promise<Record<string, string>> {
     const urlsResponse: SignedGetUrlsResponse = {};
 
     const promises = filenames.map(async (filename: string): Promise<void> => {
