@@ -13,11 +13,17 @@ export interface SwaggerConfig {
   description: string;
 }
 
+export interface S3Config {
+  bucket: string;
+  linkTtl: number;
+}
+
 export interface AWSConfig {
   region: string;
   accessKeyId: string;
   secretAccessKey: string;
   userPoolId: string;
+  s3: S3Config;
 }
 
 export interface FileConfig {
