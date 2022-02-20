@@ -6,7 +6,7 @@ export interface FileProperties {
   userId: number;
   folder: string;
   filename: string;
-  size?: number
+  size?: number;
 }
 
 export class FileFactory {
