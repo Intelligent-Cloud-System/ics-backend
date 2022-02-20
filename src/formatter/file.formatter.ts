@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  FileResponse,
-  FileDeleteResponse,
-  FileLinkResponse,
-} from 'src/interface/apiResponse';
+import { FileResponse, FileDeleteResponse, FileLinkResponse } from 'src/interface/apiResponse';
 import { getFileName } from 'src/shared/util/file.utils';
 import { File } from 'src/model';
 
