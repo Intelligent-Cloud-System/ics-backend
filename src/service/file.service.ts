@@ -20,11 +20,9 @@ export interface FileLinkInfo {
 
 @Injectable()
 export class FileService {
-  constructor(
-    private readonly fileRepository: FileRepository,
-    private readonly configService: ConfigService
-  ) {}
+  constructor(private readonly fileRepository: FileRepository, private readonly configService: ConfigService) {}
 
+  // TODO: Create permission service
   public ensureFileBelongsToUser(file: File, user: User): void {
     if (file.userId !== user.id) {
       throw new FileDoesNotBelongToUser();
@@ -51,11 +49,7 @@ export class FileService {
     return files as File[];
   }
 
-  public async upsertFileUser(
-    fileName: string,
-    buffer: Buffer,
-    user: User
-  ): Promise<File> {
+  public async upsertFileUser(fileName: string, buffer: Buffer, user: User): Promise<File> {
     const dirPath = this.resolveUserDir(user);
 
     if (!fs.existsSync(dirPath)) await fsp.mkdir(dirPath);
@@ -78,16 +72,14 @@ export class FileService {
 
     this.ensureFileBelongsToUser(file, user);
 
+    // TODO: remove it and use deleteFilesByIds
     const deletedFile = await this.fileRepository.deleteFileById(file.id);
     await fsp.unlink(file.filePath);
 
     return deletedFile;
   }
 
-  public deleteFilesByIds(
-    ids: Array<number>,
-    user: User
-  ): Promise<Array<File>> {
+  public deleteFilesByIds(ids: Array<number>, user: User): Promise<Array<File>> {
     const deletedFiles = ids.map((id) => this.deleteFileUser(id, user));
     return Promise.all(deletedFiles);
   }
@@ -96,19 +88,10 @@ export class FileService {
     const fileConfig = this.configService.get<FileConfig>('file') as FileConfig;
 
     const expiresAt = this.getExpiresAtDate();
-    const fileKey = [
-      file.id,
-      file.userId,
-      file.filePath,
-      expiresAt.toISOString(),
-    ].join(fileConfig.separator);
+    const fileKey = [file.id, file.userId, file.filePath, expiresAt.toISOString()].join(fileConfig.separator);
 
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv(
-      fileConfig.algorithm,
-      Buffer.from(fileConfig.secretKey),
-      iv
-    );
+    const cipher = crypto.createCipheriv(fileConfig.algorithm, Buffer.from(fileConfig.secretKey), iv);
 
     let encrypted = cipher.update(fileKey);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
@@ -129,18 +112,12 @@ export class FileService {
 
   private decodeLink(link: string, ivStr: string): FileLinkInfo {
     try {
-      const fileConfig = this.configService.get<FileConfig>(
-        'file'
-      ) as FileConfig;
+      const fileConfig = this.configService.get<FileConfig>('file') as FileConfig;
 
       const iv = Buffer.from(ivStr, 'hex');
       const encryptedText = Buffer.from(link, 'hex');
 
-      const decipher = crypto.createDecipheriv(
-        fileConfig.algorithm,
-        Buffer.from(fileConfig.secretKey),
-        iv
-      );
+      const decipher = crypto.createDecipheriv(fileConfig.algorithm, Buffer.from(fileConfig.secretKey), iv);
 
       let decrypted = decipher.update(encryptedText);
       decrypted = Buffer.concat([decrypted, decipher.final()]);
