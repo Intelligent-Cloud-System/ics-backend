@@ -14,19 +14,14 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { createPresignedPost, PresignedPost, PresignedPostOptions } from '@aws-sdk/s3-presigned-post';
 
-import { AWSConfig, S3Config } from '../config/interfaces';
-import path from 'path';
-
-export interface SignedGetUrlsResponse {
-  [key: string]: string;
-}
+import { AWSConfig } from '../config/interfaces';
 
 export interface SignedPostUrlsResponse {
   [key: string]: PresignedPost;
 }
 
 export interface FileInfo {
-  name: string;
+  key: string;
   size: number;
 }
 
@@ -45,7 +40,10 @@ export class StorageService {
     });
   }
 
-  public async getSignedGetUrl(key: string, expiresIn: number): Promise<string> {
+  public async getSignedGetUrl(
+    key: string,
+    expiresIn: number = this.configService.get('aws.s3.linkTtl') as number
+  ): Promise<string> {
     const input: GetObjectCommandInput = {
       Bucket: this.configService.get('aws.s3.bucket'),
       Key: key,
@@ -56,17 +54,16 @@ export class StorageService {
     return await getSignedUrl(this.client, command, { expiresIn });
   }
 
+  // returns Map<file.key, url>
   public async getSignedGetUrls(
-    filenames: Array<string>,
-    folderPath: string,
-    expiresIn: number
-  ): Promise<Record<string, string>> {
-    const urlsResponse: SignedGetUrlsResponse = {};
+    keys: Array<string>,
+    expiresIn: number = this.configService.get('aws.s3.linkTtl') as number
+  ): Promise<Map<string, string>> {
+    const urlsResponse: Map<string, string> = new Map<string, string>();
 
-    const promises = filenames.map(async (filename: string): Promise<void> => {
-      const key = path.join(folderPath, filename);
+    const promises = keys.map(async (key: string): Promise<void> => {
       const url = await this.getSignedGetUrl(key, expiresIn);
-      urlsResponse[filename] = url;
+      urlsResponse.set(key, url);
     });
 
     await Promise.all(promises);
@@ -74,12 +71,13 @@ export class StorageService {
     return urlsResponse;
   }
 
-  public async getSignedPostUrl(file: FileInfo, folder: string, expiresIn: number): Promise<PresignedPost> {
-    const key = path.join(folder, file.name);
-
+  public async getSignedPostUrl(
+    file: FileInfo,
+    expiresIn: number = this.configService.get('aws.s3.linkTtl') as number
+  ): Promise<PresignedPost> {
     const options: PresignedPostOptions = {
       Bucket: this.configService.get('aws.s3.bucket') as string,
-      Key: key,
+      Key: file.key,
       Conditions: [['content-length-range', 0, file.size]],
       Expires: expiresIn,
     };
@@ -87,15 +85,16 @@ export class StorageService {
     return await createPresignedPost(this.client, options);
   }
 
-  public async getSignedPostUrls(files: Array<FileInfo>, folder: string): Promise<SignedPostUrlsResponse> {
-    const s3Config = this.configService.get('aws.s3') as S3Config;
-    const expiresIn = s3Config.linkTtl;
-
-    const urlsResponse: SignedPostUrlsResponse = {};
+  // returns Map<file.key, PresignedPost>
+  public async getSignedPostUrls(
+    files: Array<FileInfo>,
+    expiresIn: number = this.configService.get('aws.s3.linkTtl') as number
+  ): Promise<Map<string, PresignedPost>> {
+    const urlsResponse: Map<string, PresignedPost> = new Map<string, PresignedPost>();
 
     const promises = files.map(async (file: FileInfo): Promise<void> => {
-      const url = await this.getSignedPostUrl(file, folder, expiresIn);
-      urlsResponse[file.name] = url;
+      const url = await this.getSignedPostUrl(file, expiresIn);
+      urlsResponse.set(file.key, url);
     });
 
     await Promise.all(promises);
