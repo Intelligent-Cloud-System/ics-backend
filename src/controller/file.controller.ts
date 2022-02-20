@@ -13,13 +13,7 @@ import {
   Query,
   HttpCode,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiConsumes,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import fs from 'fs';
 import { FileFastifyInterceptor } from 'fastify-file-interceptor';
@@ -54,10 +48,7 @@ export class FileController {
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileSchema)
   @UseInterceptors(FileFastifyInterceptor('file'))
-  public async upload(
-    @Req() req: Request,
-    @UploadedFile() file: Express.Multer.File
-  ): Promise<FileResponse> {
+  public async upload(@Req() req: Request, @UploadedFile() file: Express.Multer.File): Promise<FileResponse> {
     const { originalname, buffer } = file;
     const { user } = req;
     const upsertedFile = await this.fileService.upsertFileUser(originalname, buffer, user);
