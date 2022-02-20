@@ -16,10 +16,6 @@ import { createPresignedPost, PresignedPost, PresignedPostOptions } from '@aws-s
 
 import { AWSConfig } from '../config/interfaces';
 
-export interface SignedGetUrlsResponse {
-  [key: string]: string;
-}
-
 export interface SignedPostUrlsResponse {
   [key: string]: PresignedPost;
 }
@@ -58,15 +54,16 @@ export class StorageService {
     return await getSignedUrl(this.client, command, { expiresIn });
   }
 
+  // returns Map<file.key, url>
   public async getSignedGetUrls(
     keys: Array<string>,
     expiresIn: number = this.configService.get('aws.s3.linkTtl') as number
-  ): Promise<Record<string, string>> {
-    const urlsResponse: SignedGetUrlsResponse = {};
+  ): Promise<Map<string, string>> {
+    const urlsResponse: Map<string, string> = new Map<string, string>();
 
     const promises = keys.map(async (key: string): Promise<void> => {
       const url = await this.getSignedGetUrl(key, expiresIn);
-      urlsResponse[key] = url;
+      urlsResponse.set(key, url);
     });
 
     await Promise.all(promises);
@@ -88,15 +85,16 @@ export class StorageService {
     return await createPresignedPost(this.client, options);
   }
 
+  // returns Map<file.key, PresignedPost>
   public async getSignedPostUrls(
     files: Array<FileInfo>,
     expiresIn: number = this.configService.get('aws.s3.linkTtl') as number
-  ): Promise<SignedPostUrlsResponse> {
-    const urlsResponse: SignedPostUrlsResponse = {};
+  ): Promise<Map<string, PresignedPost>> {
+    const urlsResponse: Map<string, PresignedPost> = new Map<string, PresignedPost>();
 
     const promises = files.map(async (file: FileInfo): Promise<void> => {
       const url = await this.getSignedPostUrl(file, expiresIn);
-      urlsResponse[file.key] = url;
+      urlsResponse.set(file.key, url);
     });
 
     await Promise.all(promises);
