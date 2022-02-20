@@ -1,8 +1,8 @@
-import { NEW_ID } from 'src/shared/util/util';
 import path from 'path';
 
-export class File {
+import { NEW_ID } from 'src/shared/util/util';
 
+export class File {
   public name: string;
   public basename: string;
   public ext: string;
@@ -13,7 +13,7 @@ export class File {
     public readonly userId: number,
     public size: string,
     public readonly id: number = NEW_ID,
-    public readonly createdAt: Date = new Date(),
+    public readonly createdAt: Date = new Date()
   ) {
     const parsed = path.parse(key);
     this.name = parsed.name;
