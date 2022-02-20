@@ -17,7 +17,10 @@ import {
 } from '@nestjs/platform-fastify';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter()
+  );
   const configService = app.get(ConfigService);
   const logger = new Logger(bootstrap.name);
 

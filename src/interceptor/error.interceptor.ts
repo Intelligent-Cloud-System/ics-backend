@@ -3,6 +3,7 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  HttpException,
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -15,15 +16,17 @@ export class ErrorInterceptor implements NestInterceptor {
     return next.handle().pipe(
       catchError((err) => {
         if (err instanceof ApplicationError) {
-          const response = context.switchToHttp().getResponse();
-
-          return new Observable(() =>
-            response.status(err.statusCode).json({
-              id: err.id,
-              message: err.message,
-              statusCode: err.statusCode,
-              data: err.data,
-            })
+          return throwError(
+            () =>
+              new HttpException(
+                {
+                  id: err.id,
+                  message: err.message,
+                  statusCode: err.statusCode,
+                  data: err.data,
+                },
+                err.statusCode
+              )
           );
         }
 
