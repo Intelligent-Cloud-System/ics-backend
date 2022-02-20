@@ -14,7 +14,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { createPresignedPost, PresignedPost, PresignedPostOptions } from '@aws-sdk/s3-presigned-post';
 
-import { AWSConfig, S3Config } from '../config/interfaces';
+import { AWSConfig } from '../config/interfaces';
 
 export interface SignedGetUrlsResponse {
   [key: string]: string;
@@ -90,7 +90,7 @@ export class StorageService {
 
   public async getSignedPostUrls(
     files: Array<FileInfo>,
-    expiresIn: number = this.configService.get('aws.s3.linkTtl') as number,
+    expiresIn: number = this.configService.get('aws.s3.linkTtl') as number
   ): Promise<SignedPostUrlsResponse> {
     const urlsResponse: SignedPostUrlsResponse = {};
 
