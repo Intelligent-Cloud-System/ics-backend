@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { UserService } from 'src/service/user.service';
 import { ApplicationError } from '../shared/error/applicationError';
 
@@ -7,7 +7,7 @@ import { ApplicationError } from '../shared/error/applicationError';
 export class AuthenticationMiddleware implements NestMiddleware {
   constructor(private readonly userService: UserService) {}
 
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: FastifyRequest, res: FastifyReply, next: () => void) {
     const authHeader = req.headers['authorization'];
     const accessToken: string = authHeader
       ? authHeader.split('Bearer ')[1]

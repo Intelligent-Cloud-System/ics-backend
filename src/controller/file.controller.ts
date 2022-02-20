@@ -20,8 +20,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
+
+import fs from 'fs';
+import { FileFastifyInterceptor } from 'fastify-file-interceptor';
+import { FastifyReply } from 'fastify';
 
 import {
   FileDeleteResponse,
@@ -58,7 +60,7 @@ export class FileController {
   @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileSchema)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileFastifyInterceptor('file'))
   public async upload(
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File
@@ -97,12 +99,13 @@ export class FileController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK })
   public async download(
-    @Res() res: Response,
+    @Res() res: FastifyReply,
     @Param('fileLink') fileLink: string,
     @Query('iv') iv: string
   ): Promise<void> {
     const file = await this.fileService.getFileByLink(fileLink, iv);
-    res.download(file.filePath);
+    const stream = fs.createReadStream(file.filePath);
+    res.type('file').send(stream);
   }
 
   @Delete('delete')

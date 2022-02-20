@@ -11,9 +11,13 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/interfaces';
 import { ErrorInterceptor } from './interceptor/error.interceptor';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
   const configService = app.get(ConfigService);
   const logger = new Logger(bootstrap.name);
 

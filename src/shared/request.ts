@@ -1,6 +1,6 @@
 import { User } from 'src/model';
-import { Request as eRequest } from 'express';
+import { FastifyRequest } from "fastify";
 
-export interface Request extends eRequest {
+export interface Request extends FastifyRequest {
   user: User;
 }
