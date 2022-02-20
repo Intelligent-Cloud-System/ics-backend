@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { NEW_ID } from 'src/shared/util/util';
+import { NEW_ID, ZERO } from 'src/shared/util/util';
 
 export class File {
   public name: string;
@@ -11,7 +11,8 @@ export class File {
   constructor(
     public readonly key: string,
     public readonly userId: number,
-    public size: string,
+    // file size in bytes
+    public size: number = ZERO,
     public readonly id: number = NEW_ID,
     public readonly createdAt: Date = new Date()
   ) {
