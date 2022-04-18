@@ -20,7 +20,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 
 import {
@@ -47,7 +46,7 @@ export class FileController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
-    const { user } = req;
+    const { user } = req.raw;
     const files = await this.fileService.getListFiles(user);
     return this.fileFormatter.toFilesResponse(files);
   }
@@ -58,13 +57,12 @@ export class FileController {
   @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileSchema)
-  @UseInterceptors(FileInterceptor('file'))
   public async upload(
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File
   ): Promise<FileResponse> {
     const { originalname, buffer } = file;
-    const { user } = req;
+    const { user } = req.raw;
     const upsertedFile = await this.fileService.upsertFileUser(
       originalname,
       buffer,
@@ -81,7 +79,7 @@ export class FileController {
     @Req() req: Request,
     @Param('id') id: number
   ): Promise<FileLinkResponse> {
-    const { user } = req;
+    const { user } = req.raw;
     const file = await this.fileService.getById(id);
     this.fileService.ensureFileBelongsToUser(file, user);
 
@@ -112,7 +110,7 @@ export class FileController {
     @Req() req: Request,
     @Body() body: DeleteFileRequest
   ): Promise<Array<FileDeleteResponse>> {
-    const { user } = req;
+    const { user } = req.raw;
     const { ids } = body;
     const deletedFiles = await this.fileService.deleteFilesByIds(ids, user);
     return deletedFiles.map(this.fileFormatter.toFileDeleteResponse);

@@ -42,6 +42,6 @@ export class UserController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
   public async currentUser(@Req() req: Request): Promise<UserResponse> {
-    return this.userFormatter.toUserResponse(req.user);
+    return this.userFormatter.toUserResponse(req.raw.user);
   }
 }
