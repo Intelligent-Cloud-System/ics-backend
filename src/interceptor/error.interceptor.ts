@@ -18,7 +18,7 @@ export class ErrorInterceptor implements NestInterceptor {
           const response = context.switchToHttp().getResponse();
 
           return new Observable(() =>
-            response.status(err.statusCode).json({
+            response.status(err.statusCode).type('json').send({
               id: err.id,
               message: err.message,
               statusCode: err.statusCode,

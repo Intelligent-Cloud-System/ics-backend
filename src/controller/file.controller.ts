@@ -12,6 +12,7 @@ import {
   Res,
   Query,
   HttpCode,
+  StreamableFile,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,7 +21,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+
+import * as fs from 'fs';
+import { FileFastifyInterceptor, MulterFile } from 'fastify-file-interceptor';
+import { FastifyReply } from 'fastify';
 
 import {
   FileDeleteResponse,
@@ -57,9 +61,10 @@ export class FileController {
   @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileSchema)
+  @UseInterceptors(FileFastifyInterceptor('file'))
   public async upload(
     @Req() req: Request,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file: MulterFile
   ): Promise<FileResponse> {
     const { originalname, buffer } = file;
     const { user } = req.raw;
@@ -95,12 +100,16 @@ export class FileController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK })
   public async download(
-    @Res() res: Response,
+    @Res() res: FastifyReply,
     @Param('fileLink') fileLink: string,
     @Query('iv') iv: string
   ): Promise<void> {
     const file = await this.fileService.getFileByLink(fileLink, iv);
-    res.download(file.filePath);
+
+    // Temporary solution (must be replaced with a link from aws.s3)
+    const stream = fs.createReadStream(file.filePath);
+    res.type('stream').send(stream);
+    // res.download(file.filePath);
   }
 
   @Delete('delete')
