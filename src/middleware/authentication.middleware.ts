@@ -11,9 +11,7 @@ export class AuthenticationMiddleware
 
   async use(req: FastifyRequest, res: FastifyReply, next: () => void) {
     const authHeader = req.headers['authorization'];
-    const accessToken: string = authHeader
-      ? authHeader.split('Bearer ')[1]
-      : '';
+    const accessToken: string = authHeader ? authHeader.split('Bearer ')[1] : '';
 
     try {
       const user = await this.userService.getUserByToken(accessToken);

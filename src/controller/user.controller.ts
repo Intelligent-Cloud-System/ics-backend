@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserFormatter } from 'src/formatter/user.formatter';
@@ -18,17 +10,12 @@ import { Request } from 'src/shared/request';
 @Controller('users')
 @ApiTags('User')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly userFormatter: UserFormatter
-  ) {}
+  constructor(private readonly userService: UserService, private readonly userFormatter: UserFormatter) {}
 
   @Post('register')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
-  public async register(
-    @Body() body: RegisterUserRequest
-  ): Promise<UserResponse> {
+  public async register(@Body() body: RegisterUserRequest): Promise<UserResponse> {
     const user = await this.userService.registerUser(body);
     return this.userFormatter.toUserResponse(user);
   }
