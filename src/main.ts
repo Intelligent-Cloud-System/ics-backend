@@ -24,7 +24,7 @@ async function bootstrap() {
   );
   const configService = app.get(ConfigService);
   const logger = new Logger(bootstrap.name);
-  
+
   const cors: CorsOptions = configService.get('swagger') as CorsOptions;
 
   app.enableCors(cors);
