@@ -26,7 +26,7 @@ export class UserService {
     this.awsConfig = awsConfig;
 
     this.client = new CognitoIdentityProviderClient({
-      region: awsConfig.region,
+      region: awsConfig.cognito.region,
       credentials: {
         accessKeyId: awsConfig.accessKeyId,
         secretAccessKey: awsConfig.secretAccessKey,
@@ -58,7 +58,7 @@ export class UserService {
 
   private async checkCognitoUserExist(username: string): Promise<boolean> {
     const input: AdminGetUserCommandInput = {
-      UserPoolId: this.awsConfig.userPoolId,
+      UserPoolId: this.awsConfig.cognito.userPoolId,
       Username: username,
     };
 
