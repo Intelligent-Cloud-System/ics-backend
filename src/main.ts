@@ -11,10 +11,7 @@ import { SwaggerConfig } from './config/interfaces';
 import { ErrorInterceptor } from './interceptor/error.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({ maxParamLength: 1000 })
-  );
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ maxParamLength: 1000 }));
   const configService = app.get(ConfigService);
   const logger = new Logger(bootstrap.name);
 

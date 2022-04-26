@@ -4,9 +4,7 @@ import { UserService } from 'src/service/user.service';
 import { ApplicationError } from '../shared/error/applicationError';
 
 @Injectable()
-export class AuthenticationMiddleware
-  implements NestMiddleware<FastifyRequest, FastifyReply>
-{
+export class AuthenticationMiddleware implements NestMiddleware<FastifyRequest, FastifyReply> {
   constructor(private readonly userService: UserService) {}
 
   async use(req: FastifyRequest, res: FastifyReply, next: () => void) {
