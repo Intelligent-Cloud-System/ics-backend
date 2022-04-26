@@ -12,10 +12,13 @@ import {
   Res,
   Query,
   HttpCode,
+  StreamableFile,
 } from '@nestjs/common';
+
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
+import { FileFastifyInterceptor, MulterFile } from 'fastify-file-interceptor';
+import { FastifyReply } from 'fastify';
+import * as fs from 'fs';
 
 import { FileDeleteResponse, FileLinkResponse, FileResponse } from 'src/interface/apiResponse';
 import { UploadFileSchema } from 'src/apischema/files.api.shema';
@@ -34,7 +37,7 @@ export class FileController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: [FileResponse] })
   public async list(@Req() req: Request): Promise<FileResponse[]> {
-    const { user } = req;
+    const { user } = req.raw;
     const files = await this.fileService.getListFiles(user);
     return this.fileFormatter.toFilesResponse(files);
   }
@@ -45,11 +48,12 @@ export class FileController {
   @ApiResponse({ status: HttpStatus.OK, type: FileResponse })
   @ApiConsumes('multipart/form-data')
   @ApiBody(UploadFileSchema)
-  @UseInterceptors(FileInterceptor('file'))
-  public async upload(@Req() req: Request, @UploadedFile() file: Express.Multer.File): Promise<FileResponse> {
+  @UseInterceptors(FileFastifyInterceptor('file'))
+  public async upload(@Req() req: Request, @UploadedFile() file: MulterFile): Promise<FileResponse> {
     const { originalname, buffer } = file;
-    const { user } = req;
+    const { user } = req.raw;
     const upsertedFile = await this.fileService.upsertFileUser(originalname, buffer, user);
+
     return this.fileFormatter.toFileResponse(upsertedFile);
   }
 
@@ -58,7 +62,7 @@ export class FileController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FileLinkResponse })
   public async getFileLink(@Req() req: Request, @Param('id') id: number): Promise<FileLinkResponse> {
-    const { user } = req;
+    const { user } = req.raw;
     const file = await this.fileService.getById(id);
     this.fileService.ensureFileBelongsToUser(file, user);
 
@@ -71,19 +75,23 @@ export class FileController {
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK })
   public async download(
-    @Res() res: Response,
+    @Res() res: FastifyReply,
     @Param('fileLink') fileLink: string,
     @Query('iv') iv: string
   ): Promise<void> {
     const file = await this.fileService.getFileByLink(fileLink, iv);
-    res.download(file.filePath);
+
+    // Temporary solution (must be replaced with a link from aws.s3)
+    const stream = fs.createReadStream(file.filePath);
+    res.type('stream').send(stream);
+    // res.download(file.filePath);
   }
 
   @Delete('delete')
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: [FileDeleteResponse] })
   public async delete(@Req() req: Request, @Body() body: DeleteFileRequest): Promise<Array<FileDeleteResponse>> {
-    const { user } = req;
+    const { user } = req.raw;
     const { ids } = body;
     const deletedFiles = await this.fileService.deleteFilesByIds(ids, user);
     return deletedFiles.map(this.fileFormatter.toFileDeleteResponse);

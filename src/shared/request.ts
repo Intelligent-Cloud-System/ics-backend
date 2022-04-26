@@ -1,6 +1,10 @@
 import { User } from 'src/model';
-import { Request as eRequest } from 'express';
+import { FastifyRequest, RawRequestDefaultExpression } from 'fastify';
 
-export interface Request extends eRequest {
+interface RawRequest extends RawRequestDefaultExpression {
   user: User;
+}
+
+export interface Request extends FastifyRequest {
+  raw: RawRequest;
 }
