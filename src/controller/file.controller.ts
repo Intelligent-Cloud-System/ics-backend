@@ -23,7 +23,7 @@ import * as fs from 'fs';
 import { FileDeleteResponse, FileLinkResponse, FileResponse } from 'src/interface/apiResponse';
 import { UploadFileSchema } from 'src/apischema/files.api.shema';
 import { FileFormatter } from 'src/formatter/file.formatter';
-import { FileService } from 'src/service/file.service';
+import { FileService } from 'src/service/file/file.service';
 import { Request } from 'src/shared/request';
 import { DeleteFileRequest } from 'src/interface/apiRequest';
 
