@@ -6,13 +6,9 @@ import { User } from '../../model';
 
 @Injectable()
 export class FileManagerService {
+  constructor(private readonly storageService: StorageService) {}
 
-  constructor(
-    private readonly storageService: StorageService
-  ) {
-  }
-
-  public async createFolder (user: User, location: string, name: string): Promise<Folder> {
+  public async createFolder(user: User, location: string, name: string): Promise<Folder> {
     const folder = FolderFactory.from({
       userId: user.id,
       organizationId: user.id,

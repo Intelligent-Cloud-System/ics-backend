@@ -4,10 +4,9 @@ import { FolderResponse } from '../../interface/apiResponse';
 
 @Injectable()
 export class FileManagerFormatter {
-
-  public async toFolderResponse (folder: Folder): Promise<FolderResponse> {
+  public async toFolderResponse(folder: Folder): Promise<FolderResponse> {
     return {
       path: folder.path,
-    }
+    };
   }
 }

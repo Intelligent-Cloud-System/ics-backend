@@ -9,9 +9,7 @@ export class Folder {
   key has the following structure:
   organization/{organizationId}/user/{userId}/{path}
   */
-  constructor(
-    public readonly key: string,
-  ) {
+  constructor(public readonly key: string) {
     const splitKey = key.split('/');
 
     const userId = parseInt(splitKey[1]);

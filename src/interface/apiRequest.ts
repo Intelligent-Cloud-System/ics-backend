@@ -16,5 +16,5 @@ export class CreateFolderRequest {
   location: string;
 
   @ApiProperty({ type: String })
-  name: string
+  name: string;
 }
