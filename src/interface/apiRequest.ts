@@ -11,7 +11,10 @@ export class RegisterUserRequest {
   email: string;
 }
 
-export class DeleteFileRequest {
-  @ApiProperty({ isArray: true, type: Number })
-  ids: Array<number>;
+export class CreateFolderRequest {
+  @ApiProperty({ type: String })
+  location: string;
+
+  @ApiProperty({ type: String })
+  name: string
 }

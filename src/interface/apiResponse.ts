@@ -18,23 +18,7 @@ export class UserResponse {
   role: UserRole;
 }
 
-export class FileResponse {
+export class FolderResponse {
   @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  size: number;
-}
-
-export class FileLinkResponse {
-  @ApiProperty()
-  link: string;
-}
-
-export class FileDeleteResponse {
-  @ApiProperty()
-  id: number;
+  path: string;
 }
