@@ -20,7 +20,7 @@ export default () => ({
   },
   swagger: {
     title: 'ICS',
-    description: 'Intelligent file_manager storage',
+    description: 'Intelligent file storage',
   },
   aws: {
     region: 'your-aws-region',
