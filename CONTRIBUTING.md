@@ -4,9 +4,7 @@
 
 Before open pull request please follow checklist:
 
-- [ ] all existing tests pass (npm t)
-- [ ] tests that cover the new functionality are written and passed
-- [ ] the style and format of the code corresponds to the style of the organization (npm run fmt)
+- [ ] the style and format of the code corresponds to the style of the organization (yarn lint:test)
 
 ## Issues
 
@@ -34,4 +32,4 @@ Telegram:
 
 - Uryn Dmytro: https://t.me/tedi4t
 - Govoruha Maxim: https://t.me/Maksgovorrr
-- Gonchar Andriy: https://t.me/Hemingwai
+- Grybenko Yegor: https://t.me/YAGoOaR
