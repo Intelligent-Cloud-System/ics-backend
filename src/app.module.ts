@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserModule } from './module/user.module';
 import { SystemModule } from './module/system.module';
-import { FilesModule } from './module/files.module';
+import { FileManagerModule } from './module/file_manager.module';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
 
@@ -24,7 +24,7 @@ import { DatabaseConfig } from './config/interfaces';
     TypeOrmModule.forRoot(dbConfig() as DatabaseConfig),
     UserModule,
     SystemModule,
-    FilesModule,
+    FileManagerModule,
   ],
   providers: [UserService, UserRepository],
 })
