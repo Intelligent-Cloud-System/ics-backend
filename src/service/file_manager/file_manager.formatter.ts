@@ -1,12 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { Folder } from '../../model/folder';
-import { FolderResponse } from '../../interface/apiResponse';
+import { File } from '../../model/file';
+import { FileResponse, FolderResponse, ListResponse } from '../../interface/apiResponse';
 
 @Injectable()
 export class FileManagerFormatter {
-  public async toFolderResponse(folder: Folder): Promise<FolderResponse> {
+  public toFolderResponse(folder: Folder): FolderResponse {
     return {
-      path: folder.path,
+      path: folder.getPath(),
     };
+  }
+
+  public toFileResponse(file: File): FileResponse {
+    return {
+      size: file.size,
+      lastModifiedAt: file.lastModifiedAt,
+      basename: file.basename,
+    }
+  }
+
+  public toListResponse(folders: Array<Folder>, files: Array<File>): ListResponse {
+    return {
+      files: files.map(file => this.toFileResponse(file)),
+      folders: folders.map(folder => this.toFolderResponse(folder)),
+    }
   }
 }

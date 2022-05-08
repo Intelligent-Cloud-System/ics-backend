@@ -23,7 +23,6 @@ import { createPresignedPost, PresignedPost, PresignedPostOptions } from '@aws-s
 
 import { ConfigService } from '@nestjs/config';
 import { AWSConfig, S3Config } from '../../config/interfaces';
-import { Result } from '../../shared/util/util';
 
 export type PutObjectCommandInputBody = Readable | string | Uint8Array | Buffer;
 
@@ -123,16 +122,18 @@ export class StorageService {
     return files;
   }
 
-  public async getFolderFiles(folder: string): Promise<Result<_Object[]>> {
+  public async getFolderObjects(folder: string, delimiter?: string): Promise<ListObjectsCommandOutput> {
     const input: ListObjectsCommandInput = {
       Bucket: this.s3Config.bucket,
+      Delimiter: delimiter,
+      EncodingType: 'url',
       Prefix: folder,
     };
     const command = new ListObjectsCommand(input);
 
     const response: ListObjectsCommandOutput = await this.client.send(command);
 
-    return response.Contents;
+    return response;
   }
 
   public async deleteFile(key: string): Promise<void> {
@@ -147,8 +148,10 @@ export class StorageService {
   }
 
   public async deleteFolder(folder: string): Promise<void> {
-    const files = await this.getFolderFiles(folder);
-    const Objects: ObjectIdentifier[] = files?.filter((file) => !!file.Key).map((file) => ({ Key: file.Key })) || [];
+    const objects = await this.getFolderObjects(folder);
+    const Objects: ObjectIdentifier[] = (objects.Contents || [])
+      .filter((file) => !!file.Key)
+      .map((file) => ({ Key: file.Key })) || [];
 
     const input: DeleteObjectsCommandInput = {
       Bucket: this.s3Config.bucket,

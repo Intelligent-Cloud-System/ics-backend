@@ -22,3 +22,22 @@ export class FolderResponse {
   @ApiProperty()
   path: string;
 }
+
+export class FileResponse {
+  @ApiProperty()
+  size: number;
+
+  @ApiProperty()
+  lastModifiedAt: Date;
+
+  @ApiProperty()
+  basename: string;
+}
+
+export class ListResponse {
+  @ApiProperty({ type: FolderResponse, isArray: true })
+  folders: Array<FolderResponse>
+
+  @ApiProperty({ type: FileResponse, isArray: true })
+  files: Array<FileResponse>
+}

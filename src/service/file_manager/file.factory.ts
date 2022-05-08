@@ -1,5 +1,5 @@
+import * as path from 'path';
 import { File } from '../../model/';
-import path from 'path';
 
 export interface FileProperties {
   organizationId: number;
@@ -16,6 +16,6 @@ export class FileFactory {
     const userId = fileProperties.userId.toString();
 
     const key = path.resolve('organization', organizationId, 'user', userId, folder, filename);
-    return new File(key, fileProperties.userId, size);
+    return new File(key, size);
   }
 }

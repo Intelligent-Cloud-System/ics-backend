@@ -1,25 +1,27 @@
-import path from 'path';
+import * as path from 'path';
 
-import { NEW_ID, ZERO } from 'src/shared/util/util';
+import { ZERO } from 'src/shared/util/util';
+import { Folder } from './folder';
 
 export class File {
   public name: string;
   public basename: string;
   public ext: string;
-  public dir: string;
+  public folder: Folder;
 
   constructor(
     public readonly key: string,
-    public readonly userId: number,
     // file size in bytes
     public size: number = ZERO,
-    public readonly id: number = NEW_ID,
-    public readonly createdAt: Date = new Date()
+    public readonly lastModifiedAt: Date = new Date()
   ) {
     const parsed = path.parse(key);
     this.name = parsed.name;
     this.basename = parsed.base;
     this.ext = parsed.ext;
-    this.dir = parsed.dir;
+    const dir = parsed.dir;
+
+    // TODO: think how prettify it
+    this.folder = new Folder(`${dir}/`);
   }
 }
