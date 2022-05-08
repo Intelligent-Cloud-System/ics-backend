@@ -16,13 +16,13 @@ export class FileManagerFormatter {
       size: file.size,
       lastModifiedAt: file.lastModifiedAt,
       basename: file.basename,
-    }
+    };
   }
 
   public toListResponse(folders: Array<Folder>, files: Array<File>): ListResponse {
     return {
-      files: files.map(file => this.toFileResponse(file)),
-      folders: folders.map(folder => this.toFolderResponse(folder)),
-    }
+      files: files.map((file) => this.toFileResponse(file)),
+      folders: folders.map((folder) => this.toFolderResponse(folder)),
+    };
   }
 }

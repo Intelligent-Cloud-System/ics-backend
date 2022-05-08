@@ -23,19 +23,21 @@ export class FileManagerService {
     return folder;
   }
 
-  public async getContent(user: User, location: string): Promise<{ files: Array<File>, folders: Array<Folder> }> {
+  public async getContent(user: User, location: string): Promise<{ files: Array<File>; folders: Array<Folder> }> {
     const prefix = `organization/${user.id}/user/${user.id}`;
-    const wLocation = location.endsWith('/') ? location : `${location}/`
+    const wLocation = location.endsWith('/') ? location : `${location}/`;
     const userLocation = path.join(prefix, wLocation);
 
     const objects = await this.storageService.getFolderObjects(userLocation, '/');
 
-    const files = objects.Contents?.map(content => {
-      return new File(content.Key as string, content.Size, content.LastModified);
-    }) || [];
-    const folders = objects.CommonPrefixes?.map(commonPrefix => {
-      return new Folder(commonPrefix.Prefix as string);
-    }) || [];
+    const files =
+      objects.Contents?.map((content) => {
+        return new File(content.Key as string, content.Size, content.LastModified);
+      }) || [];
+    const folders =
+      objects.CommonPrefixes?.map((commonPrefix) => {
+        return new Folder(commonPrefix.Prefix as string);
+      }) || [];
 
     return { files, folders };
   }

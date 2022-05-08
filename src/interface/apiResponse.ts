@@ -36,8 +36,8 @@ export class FileResponse {
 
 export class ListResponse {
   @ApiProperty({ type: FolderResponse, isArray: true })
-  folders: Array<FolderResponse>
+  folders: Array<FolderResponse>;
 
   @ApiProperty({ type: FileResponse, isArray: true })
-  files: Array<FileResponse>
+  files: Array<FileResponse>;
 }

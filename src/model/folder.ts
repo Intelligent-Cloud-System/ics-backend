@@ -28,7 +28,7 @@ export class Folder {
 
     this.organizationId = Number.isNaN(organizationId) ? undefined : organizationId;
     this.userId = Number.isNaN(userId) ? undefined : userId;
-    this.path = (!this.organizationId || !this.userId) ? undefined : path;
+    this.path = !this.organizationId || !this.userId ? undefined : path;
   }
 
   public getOrganizationId(): number {

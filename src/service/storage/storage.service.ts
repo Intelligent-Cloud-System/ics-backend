@@ -149,9 +149,8 @@ export class StorageService {
 
   public async deleteFolder(folder: string): Promise<void> {
     const objects = await this.getFolderObjects(folder);
-    const Objects: ObjectIdentifier[] = (objects.Contents || [])
-      .filter((file) => !!file.Key)
-      .map((file) => ({ Key: file.Key })) || [];
+    const Objects: ObjectIdentifier[] =
+      (objects.Contents || []).filter((file) => !!file.Key).map((file) => ({ Key: file.Key })) || [];
 
     const input: DeleteObjectsCommandInput = {
       Bucket: this.s3Config.bucket,
