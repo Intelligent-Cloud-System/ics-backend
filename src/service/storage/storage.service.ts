@@ -2,7 +2,6 @@ import path from 'path';
 import { Readable } from 'stream';
 import { Injectable } from '@nestjs/common';
 import {
-  _Object,
   S3Client,
   GetObjectCommand,
   HeadObjectCommand,
