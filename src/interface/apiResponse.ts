@@ -23,6 +23,11 @@ export class FolderResponse {
   path: string;
 }
 
+export class DeleteFolderResponse {
+  @ApiProperty()
+  parentPath: string;
+}
+
 export class FileResponse {
   @ApiProperty()
   size: number;
@@ -34,10 +39,20 @@ export class FileResponse {
   basename: string;
 }
 
+export class DeleteFileResponse {
+  @ApiProperty()
+  parentPath: string;
+}
+
 export class ListResponse {
   @ApiProperty({ type: FolderResponse, isArray: true })
   folders: Array<FolderResponse>;
 
   @ApiProperty({ type: FileResponse, isArray: true })
   files: Array<FileResponse>;
+}
+
+export class UploadFileResponse {
+  @ApiProperty({ type: Array, isArray: true })
+  links: Array<{ name: string; url: string }>;
 }

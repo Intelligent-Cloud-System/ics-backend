@@ -15,7 +15,7 @@ export class FileFactory {
     const organizationId = fileProperties.organizationId.toString();
     const userId = fileProperties.userId.toString();
 
-    const key = path.resolve('organization', organizationId, 'user', userId, folder, filename);
+    const key = path.posix.join('organization', organizationId, 'user', userId, folder, filename);
     return new File(key, size);
   }
 }

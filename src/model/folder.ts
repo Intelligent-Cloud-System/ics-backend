@@ -23,6 +23,8 @@ export class Folder {
     const path = splitKey.slice(FolderKeyInfo.pathPosition).join('/');
 
     if (!key.endsWith('/')) {
+      console.log('err', key);
+
       throw new InvalidFolderKeyError();
     }
 

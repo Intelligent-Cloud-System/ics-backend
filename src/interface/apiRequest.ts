@@ -18,3 +18,21 @@ export class CreateFolderRequest {
   @ApiProperty({ type: String })
   name: string;
 }
+
+export class DeleteFolderRequest {
+  @ApiProperty({ type: String })
+  path: string;
+}
+
+export class UploadFileRequest {
+  @ApiProperty({ type: String })
+  location: string;
+
+  @ApiProperty({ type: Array, isArray: true })
+  fileInfos: Array<{ name: string; sizeL: number }>;
+}
+
+export class DeleteFileRequest {
+  @ApiProperty({ type: String })
+  location: string;
+}

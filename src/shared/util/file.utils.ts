@@ -4,4 +4,8 @@ const getFileName = (filePath: string): string => {
   return path.basename(filePath);
 };
 
-export { getFileName };
+const checkForUpwardDir = (filePath: string): boolean => {
+  return path.normalize(filePath).startsWith('..');
+};
+
+export { getFileName, checkForUpwardDir };

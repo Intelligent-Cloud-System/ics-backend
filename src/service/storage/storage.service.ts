@@ -87,7 +87,7 @@ export class StorageService {
     const files: SignedUrlResponse = {};
 
     const promises = filenames.map(async (filename: string): Promise<void> => {
-      const key = path.join(folderPath, filename);
+      const key = path.posix.join(folderPath, filename);
       const url = await this.getSignedGetUrl(key, expiresIn);
       files[filename] = url;
     });
