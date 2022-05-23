@@ -12,11 +12,11 @@ export class AuthenticationInterceptor implements NestInterceptor {
 
   constructor(private readonly userService: UserService) {}
 
-    async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest();
     const { url, method } = req;
 
-    const endpointShouldBeBypassed = this.endpointsToBypass.some(endpoint => {
+    const endpointShouldBeBypassed = this.endpointsToBypass.some((endpoint) => {
       return endpoint.url === url && endpoint.method === method;
     });
     if (endpointShouldBeBypassed) {
