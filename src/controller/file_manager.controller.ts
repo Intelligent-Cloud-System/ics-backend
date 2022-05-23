@@ -20,7 +20,7 @@ export class FileManagerController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: ListResponse })
-  public async list(@Req() { raw: { user } }: Request, @Query('location') location: string): Promise<ListResponse> {
+  public async list(@Req() { user }: Request, @Query('location') location: string): Promise<ListResponse> {
     const content = await this.fileManagerService.getContent(user, location);
 
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
@@ -30,8 +30,7 @@ export class FileManagerController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FolderResponse })
-  public async createFolder(@Req() req: Request, @Body() body: CreateFolderRequest): Promise<FolderResponse> {
-    const user = req.raw.user;
+  public async createFolder(@Req() { user }: Request, @Body() body: CreateFolderRequest): Promise<FolderResponse> {
     const folder = await this.fileManagerService.createFolder(user, body.location, body.name);
 
     return this.fileManagerFormatter.toFolderResponse(folder);
