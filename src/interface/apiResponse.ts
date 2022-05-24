@@ -41,3 +41,16 @@ export class ListResponse {
   @ApiProperty({ type: FileResponse, isArray: true })
   files: Array<FileResponse>;
 }
+
+export class LinkInfo {
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  url: string;
+}
+
+export class LinksResponse {
+  @ApiProperty({ isArray: true, type: LinkInfo })
+  links: Array<{ name: string; url: string }>;
+}

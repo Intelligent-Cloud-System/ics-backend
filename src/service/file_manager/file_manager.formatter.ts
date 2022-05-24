@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Folder } from '../../model/folder';
 import { File } from '../../model/file';
-import { FileResponse, FolderResponse, ListResponse } from '../../interface/apiResponse';
+import { FileResponse, FolderResponse, ListResponse, LinksResponse } from '../../interface/apiResponse';
 
 @Injectable()
 export class FileManagerFormatter {
@@ -25,4 +25,6 @@ export class FileManagerFormatter {
       folders: folders.map((folder) => this.toFolderResponse(folder)),
     };
   }
+
+  public toLinksResponse = (links: Array<{ name: string; url: string }>): LinksResponse => ({ links });
 }

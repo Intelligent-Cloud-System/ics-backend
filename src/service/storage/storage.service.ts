@@ -57,6 +57,11 @@ export class StorageService {
     this.s3Config = awsConfig.s3;
   }
 
+  public async checkFolderExists(Key: string, delimiter?: string): Promise<boolean> {
+    const folders = await this.getFolderObjects(Key, delimiter);
+    return folders.Contents !== undefined;
+  }
+
   public async upload(Key: string, Body?: PutObjectCommandInputBody): Promise<void> {
     const input: PutObjectCommandInput = {
       Bucket: this.s3Config.bucket,
@@ -87,7 +92,7 @@ export class StorageService {
     const files: SignedUrlResponse = {};
 
     const promises = filenames.map(async (filename: string): Promise<void> => {
-      const key = path.join(folderPath, filename);
+      const key = path.posix.join(folderPath, filename);
       const url = await this.getSignedGetUrl(key, expiresIn);
       files[filename] = url;
     });

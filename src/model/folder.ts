@@ -1,4 +1,5 @@
 import { ApplicationError } from '../shared/error/applicationError';
+import { dirname } from 'path';
 
 enum FolderKeyInfo {
   organizationIdPosition = 1,
@@ -48,11 +49,15 @@ export class Folder {
   }
 
   public getPath(): string {
-    if (!this.path) {
+    if (this.path === undefined) {
       throw new NoPathError();
     }
 
     return this.path;
+  }
+
+  public getParent(): Folder {
+    return new Folder(`${dirname(this.key)}/`);
   }
 }
 

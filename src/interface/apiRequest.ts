@@ -12,9 +12,35 @@ export class RegisterUserRequest {
 }
 
 export class CreateFolderRequest {
-  @ApiProperty({ type: String })
+  @ApiProperty()
   location: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty()
   name: string;
+}
+
+export class DeleteFolderRequest {
+  @ApiProperty()
+  path: string;
+}
+
+export class UploadSingleFileInfo {
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  size: number;
+}
+
+export class UploadFileRequest {
+  @ApiProperty()
+  location: string;
+
+  @ApiProperty({ isArray: true, type: UploadSingleFileInfo })
+  fileInfos: Array<{ name: string; size: number }>;
+}
+
+export class DeleteFileRequest {
+  @ApiProperty()
+  location: string;
 }
