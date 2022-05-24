@@ -13,9 +13,9 @@ export class FolderFactory {
     const { location, name } = folderProperties;
     const organizationId = folderProperties.organizationId.toString();
     const userId = folderProperties.userId.toString();
-    const locationElements = ['organization', organizationId, 'user', userId, location];
-    if (name) locationElements.push(name);
-    const key = path.posix.join(...locationElements, '/');
+    const keyElements = ['organization', organizationId, 'user', userId, location];
+    if (name) keyElements.push(name);
+    const key = path.posix.join(...keyElements, '/');
 
     return new Folder(key);
   }
