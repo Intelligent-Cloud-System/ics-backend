@@ -40,14 +40,16 @@ export class UserService {
     };
     const command = new GetUserCommand(input);
 
-    const account: GetUserCommandOutput = await this.client.send(command);
+    try {
+      const account: GetUserCommandOutput = await this.client.send(command);
 
-    if (account.Username) {
-      const user = await this.userRepository.getByEmail(account.Username);
-      if (user) {
-        return user;
+      if (account.Username) {
+        const user = await this.userRepository.getByEmail(account.Username);
+        if (user) {
+          return user;
+        }
       }
-    }
+    } catch (e) {}
 
     throw new NotValidTokenError('Not valid token');
   }
