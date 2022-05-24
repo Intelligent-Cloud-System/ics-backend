@@ -26,6 +26,7 @@ export class FileManagerController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: ListResponse })
   public async list(@Req() { raw: { user } }: Request, @Query('location') location: string): Promise<ListResponse> {
+    FileManagerService.ensureLocationCanBeUsed(location);
     const content = await this.fileManagerService.getContent(user, location);
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }

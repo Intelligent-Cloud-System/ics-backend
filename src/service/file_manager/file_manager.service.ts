@@ -18,6 +18,11 @@ export class FileManagerService {
     return true;
   }
 
+  public async ensureFolderExists(key: string): Promise<boolean> {
+    if (!(await this.storageService.checkFolderExists(key))) throw new FolderDoesNotExist('Folder does not exist');
+    return true;
+  }
+
   public async createFolder(user: User, location: string, name: string): Promise<Folder> {
     const folder = FolderFactory.from({
       userId: user.id,
@@ -51,6 +56,7 @@ export class FileManagerService {
 
   public async deleteFolder(user: User, body: DeleteFolderRequest): Promise<Folder> {
     const folder = FolderFactory.from({ organizationId: user.id, userId: user.id, location: body.path });
+    await this.ensureFolderExists(folder.key);
     this.storageService.deleteFolder(folder.key);
     return folder.getParent();
   }
@@ -79,3 +85,4 @@ export class FileManagerService {
 }
 
 export class UpwardDirectoryError extends ApplicationError {}
+export class FolderDoesNotExist extends ApplicationError {}
