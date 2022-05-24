@@ -13,7 +13,7 @@ import { ApplicationError } from 'src/shared/error/applicationError';
 export class FileManagerService {
   constructor(private readonly storageService: StorageService) {}
 
-  public static ensureLocationCanBeUsed(filePath: string): boolean {
+  public ensureLocationCanBeUsed(filePath: string): boolean {
     if (normalize(filePath).startsWith('..')) throw new UpwardDirectoryError('Trying to reach a directory above root');
     return true;
   }

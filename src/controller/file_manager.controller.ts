@@ -26,7 +26,7 @@ export class FileManagerController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: ListResponse })
   public async list(@Req() { raw: { user } }: Request, @Query('location') location: string): Promise<ListResponse> {
-    FileManagerService.ensureLocationCanBeUsed(location);
+    this.fileManagerService.ensureLocationCanBeUsed(location);
     const content = await this.fileManagerService.getContent(user, location);
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }
@@ -36,7 +36,7 @@ export class FileManagerController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FolderResponse })
   public async createFolder(@Req() req: Request, @Body() body: CreateFolderRequest): Promise<FolderResponse> {
-    FileManagerService.ensureLocationCanBeUsed(body.location);
+    this.fileManagerService.ensureLocationCanBeUsed(body.location);
     const folder = await this.fileManagerService.createFolder(req.raw.user, body.location, body.name);
     return this.fileManagerFormatter.toFolderResponse(folder);
   }
@@ -46,7 +46,7 @@ export class FileManagerController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FolderResponse })
   public async deleteFolder(@Req() req: Request, @Body() body: DeleteFolderRequest): Promise<FolderResponse> {
-    FileManagerService.ensureLocationCanBeUsed(body.path);
+    this.fileManagerService.ensureLocationCanBeUsed(body.path);
     const folder = await this.fileManagerService.deleteFolder(req.raw.user, body);
     return this.fileManagerFormatter.toFolderResponse(folder);
   }
@@ -56,7 +56,7 @@ export class FileManagerController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FolderResponse })
   public async deleteFile(@Req() req: Request, @Body() body: DeleteFileRequest): Promise<FolderResponse> {
-    FileManagerService.ensureLocationCanBeUsed(body.location);
+    this.fileManagerService.ensureLocationCanBeUsed(body.location);
     const folder = await this.fileManagerService.deleteFile(req.raw.user, body);
     return this.fileManagerFormatter.toFolderResponse(folder);
   }
@@ -66,7 +66,7 @@ export class FileManagerController {
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: LinksResponse })
   public async uploadFile(@Req() req: Request, @Body() body: UploadFileRequest): Promise<LinksResponse> {
-    FileManagerService.ensureLocationCanBeUsed(body.location);
+    this.fileManagerService.ensureLocationCanBeUsed(body.location);
     const links = await this.fileManagerService.uploadFiles(req.raw.user, body);
     return this.fileManagerFormatter.toLinksResponse(links);
   }
