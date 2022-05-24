@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { normalize } from 'path';
 
 import { StorageService } from '../storage/storage.service';
 import { Folder } from '../../model/folder';
@@ -6,16 +7,18 @@ import { FolderFactory } from './folder.factory';
 import { File, User } from '../../model';
 import { FileFactory } from './file.factory';
 import { DeleteFileRequest, DeleteFolderRequest, UploadFileRequest } from 'src/interface/apiRequest';
-import { checkForUpwardDir } from 'src/shared/util/file.utils';
 import { ApplicationError } from 'src/shared/error/applicationError';
 
 @Injectable()
 export class FileManagerService {
   constructor(private readonly storageService: StorageService) {}
 
-  public async createFolder(user: User, location: string, name: string): Promise<Folder> {
-    if (checkForUpwardDir(location)) throw new UpwardDirectoryError('Trying to reach a directory above root');
+  public static ensureLocationCanBeUsed(filePath: string): boolean {
+    if (normalize(filePath).startsWith('..')) throw new UpwardDirectoryError('Trying to reach a directory above root');
+    return true;
+  }
 
+  public async createFolder(user: User, location: string, name: string): Promise<Folder> {
     const folder = FolderFactory.from({
       userId: user.id,
       organizationId: user.id,
@@ -59,7 +62,6 @@ export class FileManagerService {
   }
 
   public async getContent(user: User, location: string): Promise<{ files: Array<File>; folders: Array<Folder> }> {
-    if (checkForUpwardDir(location)) throw new UpwardDirectoryError('Trying to reach a directory above root');
     const folder = FolderFactory.from({ organizationId: user.id, userId: user.id, location: location });
     const objects = await this.storageService.getFolderObjects(folder.key, '/');
 
