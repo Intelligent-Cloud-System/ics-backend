@@ -4,6 +4,4 @@
   reqest and request for review.
 -->
 
-- [ ] all existing tests pass (npm t)
-- [ ] tests that cover the new functionality are written and passed
-- [ ] the style and format of the code corresponds to the style of the organization (npm run fmt)
+- [ ] the style and format of the code corresponds to the style of the organization (yarn lint:format)
