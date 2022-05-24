@@ -24,11 +24,19 @@ export class DeleteFolderRequest {
   path: string;
 }
 
+export class UploadSingleFileInfo {
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  size: number;
+}
+
 export class UploadFileRequest {
   @ApiProperty()
   location: string;
 
-  @ApiProperty()
+  @ApiProperty({ isArray: true, type: UploadSingleFileInfo })
   fileInfos: Array<{ name: string; size: number }>;
 }
 
