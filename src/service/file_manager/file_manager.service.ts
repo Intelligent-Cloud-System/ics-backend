@@ -41,8 +41,8 @@ export class FileManagerService {
           filename: fileInfo.name,
           size: fileInfo.size,
         });
-        await this.storageService.upload(file.key);
-        return { name: fileInfo.name, url: (await this.storageService.getSignedPostUrl(fileInfo.name, file.size)).url };
+        const signedPostUrl = await this.storageService.getSignedPostUrl(file.key, file.size);
+        return { name: fileInfo.name, url: signedPostUrl.url };
       })
     );
 
