@@ -5,7 +5,7 @@ export interface FolderProperties {
   organizationId: number;
   userId: number;
   location: string;
-  name: string;
+  name?: string;
 }
 
 export class FolderFactory {
@@ -13,8 +13,10 @@ export class FolderFactory {
     const { location, name } = folderProperties;
     const organizationId = folderProperties.organizationId.toString();
     const userId = folderProperties.userId.toString();
+    const locationElements = ['organization', organizationId, 'user', userId, location];
+    if (name) locationElements.push(name);
+    const key = path.posix.join(...locationElements, '/');
 
-    const key = path.posix.join('organization', organizationId, 'user', userId, location, name, '/');
     return new Folder(key);
   }
 }

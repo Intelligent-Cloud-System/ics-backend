@@ -29,7 +29,7 @@ export class UploadFileRequest {
   location: string;
 
   @ApiProperty({ type: Array, isArray: true })
-  fileInfos: Array<{ name: string; sizeL: number }>;
+  fileInfos: Array<{ name: string; size: number }>;
 }
 
 export class DeleteFileRequest {
