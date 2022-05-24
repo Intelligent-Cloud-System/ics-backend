@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { normalize } from 'path';
+import { normalize, basename, dirname } from 'path';
 
 import { StorageService } from '../storage/storage.service';
 import { Folder } from '../../model/folder';
@@ -62,7 +62,12 @@ export class FileManagerService {
   }
 
   public async deleteFile(user: User, body: DeleteFileRequest): Promise<Folder> {
-    const file = FileFactory.from({ organizationId: user.id, userId: user.id, folder: body.location });
+    const file = FileFactory.from({
+      organizationId: user.id,
+      userId: user.id,
+      folder: dirname(body.location),
+      filename: basename(body.location),
+    });
     this.storageService.deleteFile(file.key);
     return file.folder;
   }

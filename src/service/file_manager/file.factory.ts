@@ -5,7 +5,7 @@ export interface FileProperties {
   organizationId: number;
   userId: number;
   folder: string;
-  filename?: string;
+  filename: string;
   size?: number;
 }
 
@@ -14,10 +14,7 @@ export class FileFactory {
     const { folder, filename, size } = fileProperties;
     const organizationId = fileProperties.organizationId.toString();
     const userId = fileProperties.userId.toString();
-
-    const locationElements = ['organization', organizationId, 'user', userId, folder];
-    if (filename) locationElements.push(filename);
-    const key = path.posix.join(...locationElements);
+    const key = path.posix.join('organization', organizationId, 'user', userId, folder, filename);
     return new File(key, size);
   }
 }
