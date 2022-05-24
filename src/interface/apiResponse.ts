@@ -43,6 +43,6 @@ export class ListResponse {
 }
 
 export class LinksResponse {
-  @ApiProperty({ type: Array, isArray: true })
+  @ApiProperty()
   links: Array<{ name: string; url: string }>;
 }
