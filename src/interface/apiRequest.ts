@@ -19,11 +19,6 @@ export class CreateFolderRequest {
   name: string;
 }
 
-export class DeleteFolderRequest {
-  @ApiProperty()
-  path: string;
-}
-
 export class UploadSingleFileInfo {
   @ApiProperty()
   name: string;
@@ -41,6 +36,6 @@ export class UploadFileRequest {
 }
 
 export class FileManagerDeleteRequest {
-  @ApiProperty({ isArray: true })
+  @ApiProperty({ isArray: true, type: String })
   paths: Array<string>;
 }
