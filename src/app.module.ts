@@ -11,6 +11,7 @@ import dbConfig from './config/db.config';
 import { UserService } from './service/user.service';
 import { UserRepository } from './repository/user.repository';
 import { DatabaseConfig } from './config/interfaces';
+import { OrganizationModule } from './module/organization.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DatabaseConfig } from './config/interfaces';
     }),
     TypeOrmModule.forRoot(dbConfig() as DatabaseConfig),
     UserModule,
+    OrganizationModule,
     SystemModule,
     FileManagerModule,
   ],

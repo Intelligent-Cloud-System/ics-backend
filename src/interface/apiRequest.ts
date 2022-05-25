@@ -11,6 +11,11 @@ export class RegisterUserRequest {
   email: string;
 }
 
+export class RegisterOrganizationRequest {
+  @ApiProperty()
+  name: string;
+}
+
 export class CreateFolderRequest {
   @ApiProperty()
   location: string;

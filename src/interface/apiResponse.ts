@@ -18,6 +18,14 @@ export class UserResponse {
   role: UserRole;
 }
 
+export class OrganizationResponse {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  name: string;
+}
+
 export class FolderResponse {
   @ApiProperty()
   path: string;

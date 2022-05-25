@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { FileEntity } from './file.entity';
+import { OrganizationEntity } from './organization.entity';
 
 export enum UserRole {
   User = 'User',
@@ -47,6 +48,9 @@ export class UserEntity {
     default: UserRole.User,
   })
   role: UserRole;
+
+  @ManyToMany(() => OrganizationEntity, (organization) => organization.users)
+  organizations: OrganizationEntity[];
 
   @OneToMany(() => FileEntity, (file) => file.user)
   files: FileEntity[];
