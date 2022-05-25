@@ -3,7 +3,6 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
-import fmp from 'fastify-multipart';
 
 import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/interfaces';
@@ -17,7 +16,6 @@ async function bootstrap() {
   const logger = new Logger(bootstrap.name);
 
   app.enableCors();
-  app.register(fmp);
 
   const swagger: SwaggerConfig = configService.get('swagger') as SwaggerConfig;
   const config = new DocumentBuilder()
