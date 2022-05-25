@@ -34,7 +34,7 @@ export class FileManagerFormatter {
 
   public toLinksResponse (signedPostUrls: Array<FileSignedPostUrl>): SignedPostUrlsResponse {
     const urls = signedPostUrls.map(({ file, signedPost }) => ({
-      name: file.name,
+      path: file.path,
       key: file.key,
       url: signedPost.url,
       fields: signedPost.fields,

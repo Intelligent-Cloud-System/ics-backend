@@ -44,7 +44,7 @@ export class FileManagerListResponse {
 
 export class PostUrlInfo {
   @ApiProperty()
-  name: string;
+  path: string;
 
   @ApiProperty()
   key: string;

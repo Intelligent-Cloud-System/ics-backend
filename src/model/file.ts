@@ -7,6 +7,7 @@ export class File {
   public name: string;
   public basename: string;
   public ext: string;
+  public path: string;
   public folder: Folder;
 
   constructor(
@@ -23,5 +24,6 @@ export class File {
 
     // TODO: think how prettify it
     this.folder = new Folder(`${dir}/`);
+    this.path = path.join(this.folder.path || '', this.basename);
   }
 }
