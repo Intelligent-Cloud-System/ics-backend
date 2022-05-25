@@ -22,6 +22,7 @@ export class FileManagerFormatter {
       size: file.size,
       lastModifiedAt: file.lastModifiedAt,
       basename: file.basename,
+      path: file.path,
     };
   }
 

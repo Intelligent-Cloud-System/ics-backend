@@ -32,6 +32,9 @@ export class FileResponse {
 
   @ApiProperty()
   basename: string;
+
+  @ApiProperty()
+  path: string;
 }
 
 export class FileManagerListResponse {

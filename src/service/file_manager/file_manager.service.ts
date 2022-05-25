@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { normalize, basename, dirname } from 'path';
+import { normalize } from 'path';
 
 import { StorageService } from '../storage/storage.service';
 import { Folder } from '../../model/folder';
 import { FolderFactory } from './folder.factory';
 import { File, User } from '../../model';
 import { FileFactory } from './file.factory';
-import { FileManagerDeleteRequest, DeleteFolderRequest, UploadFileRequest } from 'src/interface/apiRequest';
+import { FileManagerDeleteRequest, UploadFileRequest } from 'src/interface/apiRequest';
 import { ApplicationError } from 'src/shared/error/applicationError';
 import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 
