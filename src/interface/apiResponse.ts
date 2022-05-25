@@ -55,10 +55,15 @@ export class PostUrlInfo {
   @ApiProperty()
   url: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: {
+      oneOf: [{ type: 'string' }],
+    },
+  })
   fields: {
     [key: string]: string;
-  }
+  };
 }
 
 export class SignedPostUrlsResponse {
