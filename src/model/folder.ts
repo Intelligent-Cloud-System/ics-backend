@@ -32,6 +32,10 @@ export class Folder {
     this.path = !this.organizationId || !this.userId ? undefined : path;
   }
 
+  public static isFolderKey(key: string): boolean {
+    return key.endsWith('/');
+  }
+
   public getOrganizationId(): number {
     if (!this.organizationId || Number.isNaN(this.organizationId)) {
       throw new FolderOrganizationIdIsNaNError();

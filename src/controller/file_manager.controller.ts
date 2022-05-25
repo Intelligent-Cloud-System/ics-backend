@@ -8,8 +8,7 @@ import { FileManagerFormatter } from '../service/file_manager/file_manager.forma
 import { FolderResponse, FileManagerListResponse, SignedPostUrlsResponse } from '../interface/apiResponse';
 import {
   CreateFolderRequest,
-  DeleteFileRequest,
-  DeleteFolderRequest,
+  FileManagerDeleteRequest,
   UploadFileRequest,
 } from '../interface/apiRequest';
 
@@ -41,24 +40,17 @@ export class FileManagerController {
     return this.fileManagerFormatter.toFolderResponse(folder);
   }
 
-  @Post('folder/delete')
-  @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth('authorization')
-  @ApiResponse({ status: HttpStatus.OK, type: FolderResponse })
-  public async deleteFolder(@Req() { user }: Request, @Body() body: DeleteFolderRequest): Promise<FolderResponse> {
-    this.fileManagerService.ensureLocationCanBeUsed(body.path);
-    const folder = await this.fileManagerService.deleteFolder(user, body);
-    return this.fileManagerFormatter.toFolderResponse(folder);
-  }
-
   @Post('files/delete')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
-  @ApiResponse({ status: HttpStatus.OK, type: FolderResponse })
-  public async deleteFile(@Req() { user }: Request, @Body() body: DeleteFileRequest): Promise<FolderResponse> {
-    this.fileManagerService.ensureLocationCanBeUsed(body.location);
-    const folder = await this.fileManagerService.deleteFile(user, body);
-    return this.fileManagerFormatter.toFolderResponse(folder);
+  @ApiResponse({ status: HttpStatus.OK, type: FileManagerListResponse })
+  public async delete(
+    @Req() { user }: Request,
+    @Body() body: FileManagerDeleteRequest
+  ): Promise<FileManagerListResponse> {
+    const content = await this.fileManagerService.delete(user, body);
+
+    return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }
 
   @Post('/signed-urls/post')

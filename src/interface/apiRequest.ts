@@ -40,7 +40,7 @@ export class UploadFileRequest {
   fileInfos: Array<{ name: string; size: number }>;
 }
 
-export class DeleteFileRequest {
-  @ApiProperty()
-  location: string;
+export class FileManagerDeleteRequest {
+  @ApiProperty({ isArray: true })
+  paths: Array<string>;
 }

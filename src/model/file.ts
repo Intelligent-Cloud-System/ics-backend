@@ -26,4 +26,8 @@ export class File {
     this.folder = new Folder(`${dir}/`);
     this.path = path.join(this.folder.path || '', this.basename);
   }
+
+  public static isFileKey(key: string): boolean {
+    return !key.endsWith('/');
+  }
 }

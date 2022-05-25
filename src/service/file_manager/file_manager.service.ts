@@ -6,13 +6,18 @@ import { Folder } from '../../model/folder';
 import { FolderFactory } from './folder.factory';
 import { File, User } from '../../model';
 import { FileFactory } from './file.factory';
-import { DeleteFileRequest, DeleteFolderRequest, UploadFileRequest } from 'src/interface/apiRequest';
+import { FileManagerDeleteRequest, DeleteFolderRequest, UploadFileRequest } from 'src/interface/apiRequest';
 import { ApplicationError } from 'src/shared/error/applicationError';
 import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 
 export interface FileSignedPostUrl {
   file: File;
   signedPost: PresignedPost;
+}
+
+export interface FileManagerList {
+  files: Array<File>;
+  folders: Array<Folder>
 }
 
 @Injectable()
@@ -67,25 +72,51 @@ export class FileManagerService {
     return signedPostUrls;
   }
 
-  public async deleteFolder(user: User, body: DeleteFolderRequest): Promise<Folder> {
-    const folder = FolderFactory.from({ organizationId: user.id, userId: user.id, location: body.path });
-    await this.ensureFolderExists(folder.key);
-    this.storageService.deleteFolder(folder.key);
-    return folder.getParent();
+  public async deleteFolders(folders: Array<Folder>): Promise<void> {
+    const ensureFolderExistsPromises = folders.map(folder => this.ensureFolderExists(folder.key));
+    await Promise.all(ensureFolderExistsPromises);
+
+    const deleteFolderPromises = folders.map(folder => this.storageService.deleteFolder(folder.key));
+    await Promise.all(deleteFolderPromises);
   }
 
-  public async deleteFile(user: User, body: DeleteFileRequest): Promise<Folder> {
-    const file = FileFactory.from({
-      organizationId: user.id,
-      userId: user.id,
-      folder: dirname(body.location),
-      filename: basename(body.location),
+  public async deleteFiles(files: Array<File>): Promise<void> {
+    const deleteFilePromises = files.map(file => this.storageService.deleteFile(file.key));
+    await Promise.all(deleteFilePromises);
+  }
+
+  public async delete(user: User, { paths }: FileManagerDeleteRequest): Promise<FileManagerList> {
+    const folderPaths = paths.filter(key => Folder.isFolderKey(key));
+    const filePaths = paths.filter(key => File.isFileKey(key));
+
+    const files = filePaths.map(path => {
+      const file = FileFactory.from({
+        organizationId: user.id,
+        userId: user.id,
+        path,
+      });
+
+      return file;
     });
-    this.storageService.deleteFile(file.key);
-    return file.folder;
+
+    const folders = folderPaths.map(path => {
+      const folder = FolderFactory.from({
+        organizationId: user.id,
+        userId: user.id,
+        location: path,
+      });
+
+      return folder;
+    });
+
+    await this.deleteFiles(files);
+
+    await this.deleteFolders(folders);
+
+    return { files, folders };
   }
 
-  public async getContent(user: User, location: string): Promise<{ files: Array<File>; folders: Array<Folder> }> {
+  public async getContent(user: User, location: string): Promise<FileManagerList> {
     const folder = FolderFactory.from({ organizationId: user.id, userId: user.id, location: location });
     const objects = await this.storageService.getFolderObjects(folder.key, '/');
 
