@@ -8,6 +8,12 @@ import { File, User } from '../../model';
 import { FileFactory } from './file.factory';
 import { DeleteFileRequest, DeleteFolderRequest, UploadFileRequest } from 'src/interface/apiRequest';
 import { ApplicationError } from 'src/shared/error/applicationError';
+import { PresignedPost } from '@aws-sdk/s3-presigned-post';
+
+export interface FileSignedPostUrl {
+  file: File;
+  signedPost: PresignedPost;
+}
 
 @Injectable()
 export class FileManagerService {
@@ -36,22 +42,29 @@ export class FileManagerService {
     return folder;
   }
 
-  public async uploadFiles(user: User, body: UploadFileRequest): Promise<Array<{ name: string; url: string }>> {
-    const links = Promise.all(
-      body.fileInfos.map(async (fileInfo) => {
-        const file = FileFactory.from({
-          userId: user.id,
-          organizationId: user.id,
-          folder: body.location,
-          filename: fileInfo.name,
-          size: fileInfo.size,
-        });
-        const signedPostUrl = await this.storageService.getSignedPostUrl(file.key, file.size);
-        return { name: fileInfo.name, url: signedPostUrl.url };
-      })
-    );
+  public async getSignedPostUrls(user: User, body: UploadFileRequest): Promise<Array<FileSignedPostUrl>> {
+    const promises = body.fileInfos.map(async (fileInfo) => {
+      const file = FileFactory.from({
+        userId: user.id,
+        organizationId: user.id,
+        folder: body.location,
+        filename: fileInfo.name,
+        size: fileInfo.size,
+      });
+      const signedPostUrl = await this.storageService.getSignedPostUrl(
+        file.key,
+        file.size
+      );
 
-    return links;
+      return {
+        file,
+        signedPost: signedPostUrl,
+      };
+    });
+
+    const signedPostUrls = await Promise.all(promises);
+
+    return signedPostUrls;
   }
 
   public async deleteFolder(user: User, body: DeleteFolderRequest): Promise<Folder> {

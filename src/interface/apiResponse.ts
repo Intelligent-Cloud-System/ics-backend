@@ -34,7 +34,7 @@ export class FileResponse {
   basename: string;
 }
 
-export class ListResponse {
+export class FileManagerListResponse {
   @ApiProperty({ type: FolderResponse, isArray: true })
   folders: Array<FolderResponse>;
 
@@ -42,15 +42,23 @@ export class ListResponse {
   files: Array<FileResponse>;
 }
 
-export class LinkInfo {
+export class PostUrlInfo {
   @ApiProperty()
   name: string;
 
   @ApiProperty()
+  key: string;
+
+  @ApiProperty()
   url: string;
+
+  @ApiProperty()
+  fields: {
+    [key: string]: string;
+  }
 }
 
-export class LinksResponse {
-  @ApiProperty({ isArray: true, type: LinkInfo })
-  links: Array<{ name: string; url: string }>;
+export class SignedPostUrlsResponse {
+  @ApiProperty({ isArray: true, type: PostUrlInfo })
+  urls: Array<PostUrlInfo>;
 }

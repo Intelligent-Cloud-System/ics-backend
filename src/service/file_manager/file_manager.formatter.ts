@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Folder } from '../../model/folder';
 import { File } from '../../model/file';
-import { FileResponse, FolderResponse, ListResponse, LinksResponse } from '../../interface/apiResponse';
+import {
+  FileResponse,
+  FolderResponse,
+  FileManagerListResponse,
+  SignedPostUrlsResponse
+} from '../../interface/apiResponse';
+import { FileSignedPostUrl } from './file_manager.service';
 
 @Injectable()
 export class FileManagerFormatter {
@@ -19,12 +25,21 @@ export class FileManagerFormatter {
     };
   }
 
-  public toListResponse(folders: Array<Folder>, files: Array<File>): ListResponse {
+  public toListResponse(folders: Array<Folder>, files: Array<File>): FileManagerListResponse {
     return {
       files: files.map((file) => this.toFileResponse(file)),
       folders: folders.map((folder) => this.toFolderResponse(folder)),
     };
   }
 
-  public toLinksResponse = (links: Array<{ name: string; url: string }>): LinksResponse => ({ links });
+  public toLinksResponse (signedPostUrls: Array<FileSignedPostUrl>): SignedPostUrlsResponse {
+    const urls = signedPostUrls.map(({ file, signedPost }) => ({
+      name: file.name,
+      key: file.key,
+      url: signedPost.url,
+      fields: signedPost.fields,
+    }));
+
+    return { urls }
+  }
 }
