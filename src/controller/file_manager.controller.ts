@@ -5,9 +5,15 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from '../shared/request';
 import { FileManagerService } from '../service/file_manager/file_manager.service';
 import { FileManagerFormatter } from '../service/file_manager/file_manager.formatter';
-import { FolderResponse, FileManagerListResponse, SignedPostUrlsResponse } from '../interface/apiResponse';
+import {
+  FolderResponse,
+  FileManagerListResponse,
+  SignedPostUrlsResponse,
+  SignedGetUrlsResponse,
+} from '../interface/apiResponse';
 import {
   CreateFolderRequest,
+  DownloadFileRequest,
   FileManagerDeleteRequest,
   UploadFileRequest,
 } from '../interface/apiRequest';
@@ -64,6 +70,20 @@ export class FileManagerController {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
 
     const fileSignedPostUrls = await this.fileManagerService.getSignedPostUrls(user, body);
-    return this.fileManagerFormatter.toLinksResponse(fileSignedPostUrls);
+    return this.fileManagerFormatter.toLinksResponsePost(fileSignedPostUrls);
+  }
+
+  @Post('/signed-urls/get')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: SignedGetUrlsResponse })
+  public async getSignedGetUrls(
+    @Req() { user }: Request,
+    @Body() body: DownloadFileRequest
+  ): Promise<SignedGetUrlsResponse> {
+    this.fileManagerService.ensureLocationCanBeUsed(body.location);
+
+    const fileSignedPostUrls = await this.fileManagerService.getSignedGetUrls(user, body);
+    return this.fileManagerFormatter.toLinksResponseGet(fileSignedPostUrls);
   }
 }

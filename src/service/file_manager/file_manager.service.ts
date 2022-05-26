@@ -6,7 +6,7 @@ import { Folder } from '../../model/folder';
 import { FolderFactory } from './folder.factory';
 import { File, User } from '../../model';
 import { FileFactory } from './file.factory';
-import { FileManagerDeleteRequest, UploadFileRequest } from 'src/interface/apiRequest';
+import { DownloadFileRequest, FileManagerDeleteRequest, UploadFileRequest } from 'src/interface/apiRequest';
 import { ApplicationError } from 'src/shared/error/applicationError';
 import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 
@@ -15,9 +15,14 @@ export interface FileSignedPostUrl {
   signedPost: PresignedPost;
 }
 
+export interface FileSignedGetUrl {
+  file: File;
+  url: string;
+}
+
 export interface FileManagerList {
   files: Array<File>;
-  folders: Array<Folder>
+  folders: Array<Folder>;
 }
 
 @Injectable()
@@ -56,10 +61,7 @@ export class FileManagerService {
         filename: fileInfo.name,
         size: fileInfo.size,
       });
-      const signedPostUrl = await this.storageService.getSignedPostUrl(
-        file.key,
-        file.size
-      );
+      const signedPostUrl = await this.storageService.getSignedPostUrl(file.key, file.size);
 
       return {
         file,
@@ -72,24 +74,43 @@ export class FileManagerService {
     return signedPostUrls;
   }
 
+  public async getSignedGetUrls(user: User, body: DownloadFileRequest): Promise<Array<FileSignedGetUrl>> {
+    const promises = body.names.map(async (name) => {
+      const file = FileFactory.from({
+        userId: user.id,
+        organizationId: user.id,
+        folder: body.location,
+        filename: name,
+      });
+      const signedGetUrl = await this.storageService.getSignedGetUrl(file.key);
+      return {
+        file,
+        url: signedGetUrl,
+      };
+    });
+
+    const signedGetUrls = await Promise.all(promises);
+    return signedGetUrls;
+  }
+
   public async deleteFolders(folders: Array<Folder>): Promise<void> {
-    const ensureFolderExistsPromises = folders.map(folder => this.ensureFolderExists(folder.key));
+    const ensureFolderExistsPromises = folders.map((folder) => this.ensureFolderExists(folder.key));
     await Promise.all(ensureFolderExistsPromises);
 
-    const deleteFolderPromises = folders.map(folder => this.storageService.deleteFolder(folder.key));
+    const deleteFolderPromises = folders.map((folder) => this.storageService.deleteFolder(folder.key));
     await Promise.all(deleteFolderPromises);
   }
 
   public async deleteFiles(files: Array<File>): Promise<void> {
-    const deleteFilePromises = files.map(file => this.storageService.deleteFile(file.key));
+    const deleteFilePromises = files.map((file) => this.storageService.deleteFile(file.key));
     await Promise.all(deleteFilePromises);
   }
 
   public async delete(user: User, { paths }: FileManagerDeleteRequest): Promise<FileManagerList> {
-    const folderPaths = paths.filter(key => Folder.isFolderKey(key));
-    const filePaths = paths.filter(key => File.isFileKey(key));
+    const folderPaths = paths.filter((key) => Folder.isFolderKey(key));
+    const filePaths = paths.filter((key) => File.isFileKey(key));
 
-    const files = filePaths.map(path => {
+    const files = filePaths.map((path) => {
       const file = FileFactory.from({
         organizationId: user.id,
         userId: user.id,
@@ -99,7 +120,7 @@ export class FileManagerService {
       return file;
     });
 
-    const folders = folderPaths.map(path => {
+    const folders = folderPaths.map((path) => {
       const folder = FolderFactory.from({
         organizationId: user.id,
         userId: user.id,

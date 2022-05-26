@@ -35,6 +35,14 @@ export class UploadFileRequest {
   fileInfos: Array<{ name: string; size: number }>;
 }
 
+export class DownloadFileRequest {
+  @ApiProperty()
+  location: string;
+
+  @ApiProperty({ isArray: true, type: String })
+  names: Array<string>;
+}
+
 export class FileManagerDeleteRequest {
   @ApiProperty({ isArray: true, type: String })
   paths: Array<string>;
