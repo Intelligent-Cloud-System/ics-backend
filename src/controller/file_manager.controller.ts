@@ -1,4 +1,4 @@
-import { Req, Controller, HttpStatus, HttpCode, Post, Body, Get, Query } from '@nestjs/common';
+import { Req, Controller, HttpStatus, HttpCode, Post, Body, Get, Query, Delete } from '@nestjs/common';
 
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -46,7 +46,7 @@ export class FileManagerController {
     return this.fileManagerFormatter.toFolderResponse(folder);
   }
 
-  @Post('files/delete')
+  @Delete('files/delete')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FileManagerListResponse })
@@ -59,7 +59,7 @@ export class FileManagerController {
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }
 
-  @Post('/signed-urls/post')
+  @Get('/signed-urls/post')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: SignedPostUrlsResponse })
@@ -73,7 +73,7 @@ export class FileManagerController {
     return this.fileManagerFormatter.toLinksResponsePost(fileSignedPostUrls);
   }
 
-  @Post('/signed-urls/get')
+  @Get('/signed-urls/get')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: SignedGetUrlsResponse })
