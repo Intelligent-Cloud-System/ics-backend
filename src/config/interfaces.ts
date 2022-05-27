@@ -16,7 +16,8 @@ export interface SwaggerConfig {
 
 export interface S3Config {
   bucket: string;
-  linkTtl: number;
+  getUrlTtl: number;
+  postUrlTtl: number;
   region: string;
 }
 

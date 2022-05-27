@@ -81,7 +81,7 @@ export class StorageService {
 
     const command = new GetObjectCommand(input);
 
-    return await getSignedUrl(this.client, command, { expiresIn: this.s3Config.linkTtl });
+    return await getSignedUrl(this.client, command, { expiresIn: this.s3Config.getUrlTtl });
   }
 
   public async getSignedGetUrls(filenames: Array<string>, folderPath: string): Promise<SignedUrlResponse> {
@@ -103,7 +103,7 @@ export class StorageService {
       Bucket: this.s3Config.bucket,
       Key: key,
       Conditions: [['content-length-range', 0, maxFileSize]],
-      Expires: this.s3Config.linkTtl,
+      Expires: this.s3Config.postUrlTtl,
     };
 
     return await createPresignedPost(this.client, options);
