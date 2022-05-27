@@ -59,7 +59,7 @@ export class FileManagerController {
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }
 
-  @Get('/signed-urls/post')
+  @Post('/signed-urls/post')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: SignedPostUrlsResponse })
@@ -73,7 +73,7 @@ export class FileManagerController {
     return this.fileManagerFormatter.toPostUrlsResponse(fileSignedPostUrls);
   }
 
-  @Get('/signed-urls/get')
+  @Post('/signed-urls/get')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: SignedGetUrlsResponse })
