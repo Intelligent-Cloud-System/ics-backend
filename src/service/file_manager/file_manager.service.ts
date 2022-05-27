@@ -6,7 +6,7 @@ import { Folder } from '../../model/folder';
 import { FolderFactory } from './folder.factory';
 import { File, User } from '../../model';
 import { FileFactory } from './file.factory';
-import { DownloadFileRequest, FileManagerDeleteRequest, UploadFileRequest } from 'src/interface/apiRequest';
+import { ReceiveUrlGetRequest, FileManagerDeleteRequest, ReceiveUrlPostRequest } from 'src/interface/apiRequest';
 import { ApplicationError } from 'src/shared/error/applicationError';
 import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 
@@ -52,7 +52,7 @@ export class FileManagerService {
     return folder;
   }
 
-  public async getSignedPostUrls(user: User, body: UploadFileRequest): Promise<Array<FileSignedPostUrl>> {
+  public async getSignedPostUrls(user: User, body: ReceiveUrlPostRequest): Promise<Array<FileSignedPostUrl>> {
     const promises = body.fileInfos.map(async (fileInfo) => {
       const file = FileFactory.from({
         userId: user.id,
@@ -74,7 +74,7 @@ export class FileManagerService {
     return signedPostUrls;
   }
 
-  public async getSignedGetUrls(user: User, body: DownloadFileRequest): Promise<Array<FileSignedGetUrl>> {
+  public async getSignedGetUrls(user: User, body: ReceiveUrlGetRequest): Promise<Array<FileSignedGetUrl>> {
     const promises = body.names.map(async (name) => {
       const file = FileFactory.from({
         userId: user.id,

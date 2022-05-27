@@ -27,7 +27,7 @@ export class UploadSingleFileInfo {
   size: number;
 }
 
-export class UploadFileRequest {
+export class ReceiveUrlPostRequest {
   @ApiProperty()
   location: string;
 
@@ -35,7 +35,7 @@ export class UploadFileRequest {
   fileInfos: Array<{ name: string; size: number }>;
 }
 
-export class DownloadFileRequest {
+export class ReceiveUrlGetRequest {
   @ApiProperty()
   location: string;
 

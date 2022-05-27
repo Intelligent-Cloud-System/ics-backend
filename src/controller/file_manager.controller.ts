@@ -13,9 +13,9 @@ import {
 } from '../interface/apiResponse';
 import {
   CreateFolderRequest,
-  DownloadFileRequest,
+  ReceiveUrlGetRequest,
   FileManagerDeleteRequest,
-  UploadFileRequest,
+  ReceiveUrlPostRequest,
 } from '../interface/apiRequest';
 
 @Controller('file_manager')
@@ -65,7 +65,7 @@ export class FileManagerController {
   @ApiResponse({ status: HttpStatus.OK, type: SignedPostUrlsResponse })
   public async getSignedPostUrls(
     @Req() { user }: Request,
-    @Body() body: UploadFileRequest
+    @Body() body: ReceiveUrlPostRequest
   ): Promise<SignedPostUrlsResponse> {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
 
@@ -79,7 +79,7 @@ export class FileManagerController {
   @ApiResponse({ status: HttpStatus.OK, type: SignedGetUrlsResponse })
   public async getSignedGetUrls(
     @Req() { user }: Request,
-    @Body() body: DownloadFileRequest
+    @Body() body: ReceiveUrlGetRequest
   ): Promise<SignedGetUrlsResponse> {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
 
