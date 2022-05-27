@@ -37,9 +37,9 @@ export class FileManagerController {
   }
 
   @Post('folder/create')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth('authorization')
-  @ApiResponse({ status: HttpStatus.OK, type: FolderResponse })
+  @ApiResponse({ status: HttpStatus.CREATED, type: FolderResponse })
   public async createFolder(@Req() { user }: Request, @Body() body: CreateFolderRequest): Promise<FolderResponse> {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
     const folder = await this.fileManagerService.createFolder(user, body.location, body.name);
