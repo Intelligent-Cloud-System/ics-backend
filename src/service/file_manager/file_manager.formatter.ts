@@ -34,7 +34,7 @@ export class FileManagerFormatter {
     };
   }
 
-  public toLinksResponsePost(signedPostUrls: Array<FileSignedPostUrl>): SignedPostUrlsResponse {
+  public toPostUrlsResponse(signedPostUrls: Array<FileSignedPostUrl>): SignedPostUrlsResponse {
     const urls = signedPostUrls.map(({ file, signedPost }) => ({
       path: file.path,
       key: file.key,
@@ -45,7 +45,7 @@ export class FileManagerFormatter {
     return { urls };
   }
 
-  public toLinksResponseGet(signedPostUrls: Array<FileSignedGetUrl>): SignedGetUrlsResponse {
+  public toGetUrlsResponse(signedPostUrls: Array<FileSignedGetUrl>): SignedGetUrlsResponse {
     const urls = signedPostUrls.map(({ file, url }) => ({
       path: file.path,
       key: file.key,

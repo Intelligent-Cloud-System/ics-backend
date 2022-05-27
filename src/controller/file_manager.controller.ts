@@ -70,7 +70,7 @@ export class FileManagerController {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
 
     const fileSignedPostUrls = await this.fileManagerService.getSignedPostUrls(user, body);
-    return this.fileManagerFormatter.toLinksResponsePost(fileSignedPostUrls);
+    return this.fileManagerFormatter.toPostUrlsResponse(fileSignedPostUrls);
   }
 
   @Get('/signed-urls/get')
@@ -84,6 +84,6 @@ export class FileManagerController {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
 
     const fileSignedPostUrls = await this.fileManagerService.getSignedGetUrls(user, body);
-    return this.fileManagerFormatter.toLinksResponseGet(fileSignedPostUrls);
+    return this.fileManagerFormatter.toGetUrlsResponse(fileSignedPostUrls);
   }
 }
