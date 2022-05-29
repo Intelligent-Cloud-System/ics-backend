@@ -21,17 +21,12 @@ export class UserService {
   private readonly client: CognitoIdentityProviderClient;
   private readonly awsConfig: AWSConfig;
 
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly configService: ConfigService
-  ) {
-    const awsConfig: AWSConfig = this.configService.get<AWSConfig>(
-      'aws'
-    ) as AWSConfig;
+  constructor(private readonly userRepository: UserRepository, private readonly configService: ConfigService) {
+    const awsConfig: AWSConfig = this.configService.get<AWSConfig>('aws') as AWSConfig;
     this.awsConfig = awsConfig;
 
     this.client = new CognitoIdentityProviderClient({
-      region: awsConfig.region,
+      region: awsConfig.cognito.region,
       credentials: {
         accessKeyId: awsConfig.accessKeyId,
         secretAccessKey: awsConfig.secretAccessKey,
@@ -45,14 +40,16 @@ export class UserService {
     };
     const command = new GetUserCommand(input);
 
-    const account: GetUserCommandOutput = await this.client.send(command);
+    try {
+      const account: GetUserCommandOutput = await this.client.send(command);
 
-    if (account.Username) {
-      const user = await this.userRepository.getByEmail(account.Username);
-      if (user) {
-        return user;
+      if (account.Username) {
+        const user = await this.userRepository.getByEmail(account.Username);
+        if (user) {
+          return user;
+        }
       }
-    }
+    } catch (e) {}
 
     throw new NotValidTokenError('Not valid token');
   }
@@ -63,7 +60,7 @@ export class UserService {
 
   private async checkCognitoUserExist(username: string): Promise<boolean> {
     const input: AdminGetUserCommandInput = {
-      UserPoolId: this.awsConfig.userPoolId,
+      UserPoolId: this.awsConfig.cognito.userPoolId,
       Username: username,
     };
 

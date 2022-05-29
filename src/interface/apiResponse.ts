@@ -18,23 +18,71 @@ export class UserResponse {
   role: UserRole;
 }
 
+export class FolderResponse {
+  @ApiProperty()
+  path: string;
+}
+
 export class FileResponse {
   @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
   size: number;
+
+  @ApiProperty()
+  lastModifiedAt: Date;
+
+  @ApiProperty()
+  basename: string;
+
+  @ApiProperty()
+  path: string;
 }
 
-export class FileLinkResponse {
-  @ApiProperty()
-  link: string;
+export class FileManagerListResponse {
+  @ApiProperty({ type: FolderResponse, isArray: true })
+  folders: Array<FolderResponse>;
+
+  @ApiProperty({ type: FileResponse, isArray: true })
+  files: Array<FileResponse>;
 }
 
-export class FileDeleteResponse {
+export class PostUrlInfo {
   @ApiProperty()
-  id: number;
+  path: string;
+
+  @ApiProperty()
+  key: string;
+
+  @ApiProperty()
+  url: string;
+
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: {
+      oneOf: [{ type: 'string' }],
+    },
+  })
+  fields: {
+    [key: string]: string;
+  };
+}
+
+export class GetUrlInfo {
+  @ApiProperty()
+  path: string;
+
+  @ApiProperty()
+  key: string;
+
+  @ApiProperty()
+  url: string;
+}
+
+export class SignedPostUrlsResponse {
+  @ApiProperty({ isArray: true, type: PostUrlInfo })
+  urls: Array<PostUrlInfo>;
+}
+
+export class SignedGetUrlsResponse {
+  @ApiProperty({ isArray: true, type: GetUrlInfo })
+  urls: Array<GetUrlInfo>;
 }

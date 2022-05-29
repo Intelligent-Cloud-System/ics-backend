@@ -11,13 +11,26 @@ export interface DatabaseConfig {
 export interface SwaggerConfig {
   title: string;
   description: string;
+  version: string;
+}
+
+export interface S3Config {
+  bucket: string;
+  getUrlTtl: number;
+  postUrlTtl: number;
+  region: string;
+}
+
+export interface CognitoConfig {
+  region: string;
+  userPoolId: string;
 }
 
 export interface AWSConfig {
-  region: string;
   accessKeyId: string;
   secretAccessKey: string;
-  userPoolId: string;
+  cognito: CognitoConfig;
+  s3: S3Config;
 }
 
 export interface FileConfig {

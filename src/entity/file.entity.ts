@@ -1,17 +1,8 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 
 @Entity('file')
-@Unique(['filePath', 'userId'])
 export class FileEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -25,16 +16,10 @@ export class FileEntity {
   @Column({
     type: 'varchar',
     nullable: false,
-    name: 'file_path',
+    name: 'key',
+    unique: true,
   })
-  filePath: string;
-
-  @Column({
-    type: 'bigint',
-    nullable: false,
-    name: 'file_size',
-  })
-  fileSize: number;
+  key: string;
 
   @Column({
     type: 'number',

@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -18,7 +13,7 @@ export class ErrorInterceptor implements NestInterceptor {
           const response = context.switchToHttp().getResponse();
 
           return new Observable(() =>
-            response.status(err.statusCode).json({
+            response.status(err.statusCode).type('json').send({
               id: err.id,
               message: err.message,
               statusCode: err.statusCode,
