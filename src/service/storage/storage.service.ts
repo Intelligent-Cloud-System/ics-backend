@@ -73,7 +73,7 @@ export class StorageService {
     await this.client.send(command);
   }
 
-  public async getSignedGetUrl(key: string, expiresIn: number): Promise<string> {
+  public async getSignedGetUrl(key: string): Promise<string> {
     const input: GetObjectCommandInput = {
       Bucket: this.s3Config.bucket,
       Key: key,
@@ -81,19 +81,15 @@ export class StorageService {
 
     const command = new GetObjectCommand(input);
 
-    return await getSignedUrl(this.client, command, { expiresIn });
+    return await getSignedUrl(this.client, command, { expiresIn: this.s3Config.getUrlTtl });
   }
 
-  public async getSignedGetUrls(
-    filenames: Array<string>,
-    folderPath: string,
-    expiresIn: number
-  ): Promise<SignedUrlResponse> {
+  public async getSignedGetUrls(filenames: Array<string>, folderPath: string): Promise<SignedUrlResponse> {
     const files: SignedUrlResponse = {};
 
     const promises = filenames.map(async (filename: string): Promise<void> => {
       const key = path.posix.join(folderPath, filename);
-      const url = await this.getSignedGetUrl(key, expiresIn);
+      const url = await this.getSignedGetUrl(key);
       files[filename] = url;
     });
 
@@ -107,7 +103,7 @@ export class StorageService {
       Bucket: this.s3Config.bucket,
       Key: key,
       Conditions: [['content-length-range', 0, maxFileSize]],
-      Expires: this.s3Config.linkTtl,
+      Expires: this.s3Config.postUrlTtl,
     };
 
     return await createPresignedPost(this.client, options);

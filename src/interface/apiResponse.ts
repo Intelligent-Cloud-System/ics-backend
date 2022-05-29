@@ -66,7 +66,23 @@ export class PostUrlInfo {
   };
 }
 
+export class GetUrlInfo {
+  @ApiProperty()
+  path: string;
+
+  @ApiProperty()
+  key: string;
+
+  @ApiProperty()
+  url: string;
+}
+
 export class SignedPostUrlsResponse {
   @ApiProperty({ isArray: true, type: PostUrlInfo })
   urls: Array<PostUrlInfo>;
+}
+
+export class SignedGetUrlsResponse {
+  @ApiProperty({ isArray: true, type: GetUrlInfo })
+  urls: Array<GetUrlInfo>;
 }

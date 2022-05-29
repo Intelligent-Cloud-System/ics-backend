@@ -5,9 +5,10 @@ import {
   FileResponse,
   FolderResponse,
   FileManagerListResponse,
-  SignedPostUrlsResponse
+  SignedPostUrlsResponse,
+  SignedGetUrlsResponse,
 } from '../../interface/apiResponse';
-import { FileSignedPostUrl } from './file_manager.service';
+import { FileSignedGetUrl, FileSignedPostUrl } from './file_manager.service';
 
 @Injectable()
 export class FileManagerFormatter {
@@ -33,7 +34,7 @@ export class FileManagerFormatter {
     };
   }
 
-  public toLinksResponse (signedPostUrls: Array<FileSignedPostUrl>): SignedPostUrlsResponse {
+  public toPostUrlsResponse(signedPostUrls: Array<FileSignedPostUrl>): SignedPostUrlsResponse {
     const urls = signedPostUrls.map(({ file, signedPost }) => ({
       path: file.path,
       key: file.key,
@@ -41,6 +42,16 @@ export class FileManagerFormatter {
       fields: signedPost.fields,
     }));
 
-    return { urls }
+    return { urls };
+  }
+
+  public toGetUrlsResponse(signedPostUrls: Array<FileSignedGetUrl>): SignedGetUrlsResponse {
+    const urls = signedPostUrls.map(({ file, url }) => ({
+      path: file.path,
+      key: file.key,
+      url,
+    }));
+
+    return { urls };
   }
 }

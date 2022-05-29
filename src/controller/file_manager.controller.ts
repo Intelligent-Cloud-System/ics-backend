@@ -1,15 +1,21 @@
-import { Req, Controller, HttpStatus, HttpCode, Post, Body, Get, Query } from '@nestjs/common';
+import { Req, Controller, HttpStatus, HttpCode, Post, Body, Get, Query, Delete } from '@nestjs/common';
 
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Request } from '../shared/request';
 import { FileManagerService } from '../service/file_manager/file_manager.service';
 import { FileManagerFormatter } from '../service/file_manager/file_manager.formatter';
-import { FolderResponse, FileManagerListResponse, SignedPostUrlsResponse } from '../interface/apiResponse';
+import {
+  FolderResponse,
+  FileManagerListResponse,
+  SignedPostUrlsResponse,
+  SignedGetUrlsResponse,
+} from '../interface/apiResponse';
 import {
   CreateFolderRequest,
+  ReceiveUrlGetRequest,
   FileManagerDeleteRequest,
-  UploadFileRequest,
+  ReceiveUrlPostRequest,
 } from '../interface/apiRequest';
 
 @Controller('file_manager')
@@ -31,16 +37,16 @@ export class FileManagerController {
   }
 
   @Post('folder/create')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth('authorization')
-  @ApiResponse({ status: HttpStatus.OK, type: FolderResponse })
+  @ApiResponse({ status: HttpStatus.CREATED, type: FolderResponse })
   public async createFolder(@Req() { user }: Request, @Body() body: CreateFolderRequest): Promise<FolderResponse> {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
     const folder = await this.fileManagerService.createFolder(user, body.location, body.name);
     return this.fileManagerFormatter.toFolderResponse(folder);
   }
 
-  @Post('files/delete')
+  @Delete('files/delete')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('authorization')
   @ApiResponse({ status: HttpStatus.OK, type: FileManagerListResponse })
@@ -59,11 +65,25 @@ export class FileManagerController {
   @ApiResponse({ status: HttpStatus.OK, type: SignedPostUrlsResponse })
   public async getSignedPostUrls(
     @Req() { user }: Request,
-    @Body() body: UploadFileRequest
+    @Body() body: ReceiveUrlPostRequest
   ): Promise<SignedPostUrlsResponse> {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
 
     const fileSignedPostUrls = await this.fileManagerService.getSignedPostUrls(user, body);
-    return this.fileManagerFormatter.toLinksResponse(fileSignedPostUrls);
+    return this.fileManagerFormatter.toPostUrlsResponse(fileSignedPostUrls);
+  }
+
+  @Post('/signed-urls/get')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: SignedGetUrlsResponse })
+  public async getSignedGetUrls(
+    @Req() { user }: Request,
+    @Body() body: ReceiveUrlGetRequest
+  ): Promise<SignedGetUrlsResponse> {
+    this.fileManagerService.ensureLocationCanBeUsed(body.location);
+
+    const fileSignedPostUrls = await this.fileManagerService.getSignedGetUrls(user, body);
+    return this.fileManagerFormatter.toGetUrlsResponse(fileSignedPostUrls);
   }
 }

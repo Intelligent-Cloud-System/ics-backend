@@ -13,8 +13,8 @@ export class UserController {
   constructor(private readonly userService: UserService, private readonly userFormatter: UserFormatter) {}
 
   @Post('register')
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
+  @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({ status: HttpStatus.CREATED, type: UserResponse })
   public async register(@Body() body: RegisterUserRequest): Promise<UserResponse> {
     const user = await this.userService.registerUser(body);
     return this.userFormatter.toUserResponse(user);

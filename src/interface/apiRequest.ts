@@ -27,12 +27,20 @@ export class UploadSingleFileInfo {
   size: number;
 }
 
-export class UploadFileRequest {
+export class ReceiveUrlPostRequest {
   @ApiProperty()
   location: string;
 
   @ApiProperty({ isArray: true, type: UploadSingleFileInfo })
   fileInfos: Array<{ name: string; size: number }>;
+}
+
+export class ReceiveUrlGetRequest {
+  @ApiProperty()
+  location: string;
+
+  @ApiProperty({ isArray: true, type: String })
+  names: Array<string>;
 }
 
 export class FileManagerDeleteRequest {
