@@ -8,7 +8,7 @@ import { AppModule } from './app.module';
 import { SwaggerConfig } from './config/interfaces';
 import { ErrorInterceptor } from './interceptor/error.interceptor';
 import { AuthenticationInterceptor } from './interceptor/authentication.interceptor';
-import { UserService } from './service/user.service';
+import { UserService } from './service/user/user.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ maxParamLength: 1000 }));

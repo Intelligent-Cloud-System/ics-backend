@@ -8,7 +8,7 @@ import { FileManagerModule } from './module/file_manager.module';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
 
-import { UserService } from './service/user.service';
+import { UserService } from './service/user/user.service';
 import { UserRepository } from './repository/user.repository';
 import { DatabaseConfig } from './config/interfaces';
 

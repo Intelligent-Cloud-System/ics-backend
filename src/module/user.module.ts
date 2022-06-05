@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { UserService } from 'src/service/user.service';
+import { UserService } from 'src/service/user/user.service';
 import { UserController } from 'src/controller/user.controller';
 import { UserRepository } from 'src/repository/user.repository';
-import { UserFormatter } from 'src/formatter/user.formatter';
+import { UserFormatter } from 'src/service/user/user.formatter';
 
 @Module({
   imports: [],
