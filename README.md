@@ -12,7 +12,6 @@ It's also good for simple users, you don't need to create company account, you c
 | :-------------------------------------------------: |:---------------------------------------:| :-------------------------------------------------------:|
 | [Maxim Govoruha](https://github.com/MaksGovor)      | [Maksgovorrr](https://t.me/Maksgovorrr) | [maksgovruha@gmail.com](mailto:maksgovruha@gmail.com)    |
 | [Uryn Dmytro](https://github.com/tedi4t)            | [tedi4t](https://t.me/tedi4t)           | [tedi4t@gmail.com](mailto:tedi4t@gmail.com)              |
-| [Honchar Andriy](https://github.com/Honchar007)     | [Hemingwai](https://t.me/Hemingwai)     | [andrey2002335@gmail.com](mailto:andrey2002335@gmail.com)|
 | [Grybenko Yegor](https://github.com/YAGoOaR)        | [YAGoOaR](https://t.me/YAGoOaR)         | [yegorgribenko68@gmail.com](mailto:yegorgribenko68@gmail.com)|
 
 ## Licence
