@@ -13,7 +13,7 @@ export class FolderFactory {
     const { location, name } = folderProperties;
     const organizationId = folderProperties.organizationId.toString();
     const userId = folderProperties.userId.toString();
-    const key = path.posix.join('organization', organizationId, 'user', userId, location, name || '', '/');
+    const key = path.join('organization', organizationId, 'user', userId, location, name || '', '/');
 
     return new Folder(key);
   }
