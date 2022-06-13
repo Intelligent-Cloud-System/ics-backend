@@ -17,13 +17,15 @@ import {
   FileManagerDeleteRequest,
   ReceiveUrlPostRequest,
 } from '../interface/apiRequest';
+import { WebsocketService } from '../service/websocket/websocket.service';
 
 @Controller('file_manager')
 @ApiTags('FileManager')
 export class FileManagerController {
   constructor(
     private readonly fileManagerService: FileManagerService,
-    private readonly fileManagerFormatter: FileManagerFormatter
+    private readonly fileManagerFormatter: FileManagerFormatter,
+    private readonly websocketService: WebsocketService,
   ) {}
 
   @Get('all')
@@ -33,6 +35,9 @@ export class FileManagerController {
   public async list(@Req() { user }: Request, @Query('location') location: string): Promise<FileManagerListResponse> {
     this.fileManagerService.ensureLocationCanBeUsed(location);
     const content = await this.fileManagerService.getContent(user, location);
+
+    await this.websocketService.emitUserMessage('FilesListUpdated', user.id);
+
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }
 
