@@ -36,8 +36,6 @@ export class FileManagerController {
     this.fileManagerService.ensureLocationCanBeUsed(location);
     const content = await this.fileManagerService.getContent(user, location);
 
-    await this.websocketService.emitUserMessage('FilesListUpdated', user.id);
-
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }
 
@@ -48,6 +46,9 @@ export class FileManagerController {
   public async createFolder(@Req() { user }: Request, @Body() body: CreateFolderRequest): Promise<FolderResponse> {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
     const folder = await this.fileManagerService.createFolder(user, body.location, body.name);
+
+    await this.websocketService.emitUserMessage('FilesListUpdated', user.id);
+
     return this.fileManagerFormatter.toFolderResponse(folder);
   }
 
@@ -60,6 +61,8 @@ export class FileManagerController {
     @Body() body: FileManagerDeleteRequest
   ): Promise<FileManagerListResponse> {
     const content = await this.fileManagerService.delete(user, body);
+
+    await this.websocketService.emitUserMessage('FilesListUpdated', user.id);
 
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }
