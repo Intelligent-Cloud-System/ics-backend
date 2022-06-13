@@ -35,7 +35,7 @@ export class WebsocketController implements OnGatewayInit, OnGatewayConnection, 
     this.logger.log(`Client disconnected: ${socket.id}`);
   }
 
-  public async handleConnection(socket: Socket, ...args: any[]) {
+  public async handleConnection(socket: Socket) {
     this.logger.log(`Client connected: ${socket.id}`);
 
     const accessToken = socket.handshake.auth.accessToken;
