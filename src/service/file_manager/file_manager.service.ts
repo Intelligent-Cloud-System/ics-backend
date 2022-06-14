@@ -142,7 +142,7 @@ export class FileManagerService {
     const objects = await this.storageService.getFolderObjects(folder.key, '/');
 
     const files =
-      objects.Contents?.filter(content => {
+      objects.Contents?.filter((content) => {
         return content.Key !== folder.key;
       }).map((content) => {
         return new File(content.Key as string, content.Size, content.LastModified);

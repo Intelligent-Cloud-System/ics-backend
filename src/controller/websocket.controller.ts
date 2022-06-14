@@ -7,7 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { UserService } from '../service/user.service';
+import { UserService } from '../service/user/user.service';
 import { WebsocketService } from '../service/websocket/websocket.service';
 
 @WebSocketGateway({
@@ -17,12 +17,7 @@ import { WebsocketService } from '../service/websocket/websocket.service';
   path: '/socket',
 })
 export class WebsocketController implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-
-  constructor(
-    private readonly userService: UserService,
-    private readonly websocketService: WebsocketService,
-  ) {
-  }
+  constructor(private readonly userService: UserService, private readonly websocketService: WebsocketService) {}
 
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('AppGateway');

@@ -10,10 +10,7 @@ import { Request } from 'src/shared/request';
 @Controller('users')
 @ApiTags('User')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly userFormatter: UserFormatter,
-  ) {}
+  constructor(private readonly userService: UserService, private readonly userFormatter: UserFormatter) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)

@@ -26,7 +26,7 @@ export class FileManagerController {
   constructor(
     private readonly fileManagerService: FileManagerService,
     private readonly fileManagerFormatter: FileManagerFormatter,
-    private readonly websocketService: WebsocketService,
+    private readonly websocketService: WebsocketService
   ) {}
 
   @Get('all')

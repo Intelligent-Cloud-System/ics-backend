@@ -6,7 +6,6 @@ import { WebsocketEvent } from './events';
 
 @Injectable()
 export class WebsocketService {
-
   public server: Server;
 
   public generateRoomNames(user: User): Array<string> {
@@ -17,20 +16,13 @@ export class WebsocketService {
     return rooms;
   }
 
-  public emitUserMessage(
-    messageName: WebsocketEvent,
-    userId: number,
-    message?: any,
-  ): void {
+  public emitUserMessage(messageName: WebsocketEvent, userId: number, message?: any): void {
     const room = this.userRoom(userId);
 
-    this.server
-      .to(room)
-      .emit(messageName, message);
+    this.server.to(room).emit(messageName, message);
   }
 
   public userRoom(userId: number): string {
     return `User|${userId}`;
   }
-
 }
