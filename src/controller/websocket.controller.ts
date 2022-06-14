@@ -4,7 +4,6 @@ import {
   WebSocketServer,
   OnGatewayConnection,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 
 import { UserService } from 'src/service/user';
