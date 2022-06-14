@@ -20,7 +20,6 @@ export class WebsocketController implements OnGatewayInit, OnGatewayConnection {
   constructor(private readonly userService: UserService, private readonly websocketService: WebsocketService) {}
 
   @WebSocketServer() server: Server;
-  private logger: Logger = new Logger('AppGateway');
 
   afterInit(server: Server) {
     this.websocketService.server = server;
