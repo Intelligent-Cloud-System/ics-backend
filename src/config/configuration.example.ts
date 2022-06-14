@@ -39,5 +39,5 @@ export default () => ({
     origin: 'cors-app-url',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     credentials: true,
-  }
+  },
 });
