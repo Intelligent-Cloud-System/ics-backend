@@ -23,20 +23,21 @@ export default () => ({
     description: 'Intelligent file storage',
   },
   aws: {
-    region: 'your-aws-region',
     accessKeyId: 'your-aws-accessKeyId',
     secretAccessKey: 'your-aws-secretAccessKey',
-    userPoolId: 'your-aws-userPoolId',
+    cognito: {
+      region: 'your-aws-region',
+      userPoolId: 'your-aws-region',
+    },
+    s3: {
+      region: 'your-aws-region',
+      bucket: 'your-aws-bucket',
+      linkTtl: 7200,
+    },
   },
   cors: {
     origin: 'cors-app-url',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     credentials: true,
-  },
-  file: {
-    secretKey: new Array(32).fill(1),
-    algorithm: 'crypto-algorithm',
-    separator: 'secret-separator',
-    storageFolder: 'storage',
-  },
+  }
 });

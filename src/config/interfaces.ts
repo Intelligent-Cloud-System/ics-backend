@@ -32,10 +32,3 @@ export interface AWSConfig {
   cognito: CognitoConfig;
   s3: S3Config;
 }
-
-export interface FileConfig {
-  secretKey: Array<number>;
-  algorithm: string;
-  separator: string;
-  storageFolder: string;
-}

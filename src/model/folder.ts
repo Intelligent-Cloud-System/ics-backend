@@ -1,5 +1,6 @@
-import { ApplicationError } from '../shared/error/applicationError';
 import { dirname } from 'path';
+
+import { ApplicationError } from 'src/shared/error/applicationError';
 
 enum FolderKeyInfo {
   organizationIdPosition = 1,

@@ -1,10 +1,9 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { UserFormatter } from 'src/service/user/user.formatter';
+import { UserFormatter, UserService } from 'src/service/user';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
 import { UserResponse } from 'src/interface/apiResponse';
-import { UserService } from 'src/service/user/user.service';
 import { Request } from 'src/shared/request';
 
 @Controller('users')
