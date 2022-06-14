@@ -1,2 +1,3 @@
-export type WebsocketEvent =
-  'FilesListUpdated';
+export enum WebsocketEvent {
+  FilesListUpdated = 'FilesListUpdated',
+}

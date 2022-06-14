@@ -1,4 +1,4 @@
-import { Req, Controller, HttpStatus, HttpCode, Post, Body, Get, Query, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req } from '@nestjs/common';
 
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -6,18 +6,19 @@ import { Request } from '../shared/request';
 import { FileManagerService } from '../service/file_manager/file_manager.service';
 import { FileManagerFormatter } from '../service/file_manager/file_manager.formatter';
 import {
-  FolderResponse,
   FileManagerListResponse,
-  SignedPostUrlsResponse,
+  FolderResponse,
   SignedGetUrlsResponse,
+  SignedPostUrlsResponse,
 } from '../interface/apiResponse';
 import {
   CreateFolderRequest,
-  ReceiveUrlGetRequest,
   FileManagerDeleteRequest,
+  ReceiveUrlGetRequest,
   ReceiveUrlPostRequest,
 } from '../interface/apiRequest';
 import { WebsocketService } from '../service/websocket/websocket.service';
+import { WebsocketEvent } from '../service/websocket/events';
 
 @Controller('file_manager')
 @ApiTags('FileManager')
@@ -47,7 +48,7 @@ export class FileManagerController {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
     const folder = await this.fileManagerService.createFolder(user, body.location, body.name);
 
-    await this.websocketService.emitUserMessage('FilesListUpdated', user.id);
+    await this.websocketService.emitUserMessage(WebsocketEvent.FilesListUpdated, user.id);
 
     return this.fileManagerFormatter.toFolderResponse(folder);
   }
@@ -62,7 +63,7 @@ export class FileManagerController {
   ): Promise<FileManagerListResponse> {
     const content = await this.fileManagerService.delete(user, body);
 
-    await this.websocketService.emitUserMessage('FilesListUpdated', user.id);
+    await this.websocketService.emitUserMessage(WebsocketEvent.FilesListUpdated, user.id);
 
     return this.fileManagerFormatter.toListResponse(content.folders, content.files);
   }
