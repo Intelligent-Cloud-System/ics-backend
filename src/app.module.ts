@@ -11,6 +11,7 @@ import dbConfig from './config/db.config';
 import { UserService } from './service/user/user.service';
 import { UserRepository } from './repository/user.repository';
 import { DatabaseConfig } from './config/interfaces';
+import { WebsocketModule } from './module/websocket.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { DatabaseConfig } from './config/interfaces';
     UserModule,
     SystemModule,
     FileManagerModule,
+    WebsocketModule,
   ],
   providers: [UserService, UserRepository],
 })
