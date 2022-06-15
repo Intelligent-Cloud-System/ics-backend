@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Server } from 'socket.io';
 
-import { User } from '../../model';
-import { WebsocketEvent } from './events';
+import { User } from 'src/model';
+import { WebsocketEvent } from 'src/service/websocket';
 
 @Injectable()
 export class WebsocketService {

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { FileManagerController } from 'src/controller/file_manager.controller';
-import { FileManagerService } from '../service/file_manager/file_manager.service';
-import { FileManagerFormatter } from '../service/file_manager/file_manager.formatter';
-import { StorageService } from '../service/storage/storage.service';
+
+import { FileManagerController } from 'src/controller';
+import { FileManagerService, FileManagerFormatter } from 'src/service/file_manager';
+import { StorageService } from 'src/service/storage';
 
 @Module({
   imports: [],

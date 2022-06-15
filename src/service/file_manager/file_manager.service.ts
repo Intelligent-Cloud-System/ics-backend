@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { normalize } from 'path';
+import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 
-import { StorageService } from '../storage/storage.service';
-import { Folder } from '../../model/folder';
-import { FolderFactory } from './folder.factory';
-import { File, User } from '../../model';
-import { FileFactory } from './file.factory';
+import { StorageService } from 'src/service/storage';
+import { Folder, File, User } from 'src/model';
+import { FolderFactory, FileFactory } from 'src/service/file_manager';
 import { ReceiveUrlGetRequest, FileManagerDeleteRequest, ReceiveUrlPostRequest } from 'src/interface/apiRequest';
 import { ApplicationError } from 'src/shared/error/applicationError';
-import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 
 export interface FileSignedPostUrl {
   file: File;

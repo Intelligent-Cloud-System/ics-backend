@@ -1,7 +1,8 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler, HttpStatus } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { UserService } from '../service/user/user.service';
-import { ApplicationError } from '../shared/error/applicationError';
+
+import { UserService } from 'src/service/user/user.service';
+import { ApplicationError } from 'src/shared/error/applicationError';
 
 @Injectable()
 export class AuthenticationInterceptor implements NestInterceptor {
