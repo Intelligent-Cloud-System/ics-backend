@@ -2,23 +2,21 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req }
 
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { Request } from '../shared/request';
-import { FileManagerService } from '../service/file_manager/file_manager.service';
-import { FileManagerFormatter } from '../service/file_manager/file_manager.formatter';
+import { Request } from 'src/shared/request';
+import { FileManagerService, FileManagerFormatter } from 'src/service/file_manager';
 import {
   FileManagerListResponse,
   FolderResponse,
   SignedGetUrlsResponse,
   SignedPostUrlsResponse,
-} from '../interface/apiResponse';
+} from 'src/interface/apiResponse';
 import {
   CreateFolderRequest,
   FileManagerDeleteRequest,
   ReceiveUrlGetRequest,
   ReceiveUrlPostRequest,
-} from '../interface/apiRequest';
-import { WebsocketService } from '../service/websocket/websocket.service';
-import { WebsocketEvent } from '../service/websocket/events';
+} from 'src/interface/apiRequest';
+import { WebsocketService, WebsocketEvent } from 'src/service/websocket';
 
 @Controller('file_manager')
 @ApiTags('FileManager')
@@ -26,7 +24,7 @@ export class FileManagerController {
   constructor(
     private readonly fileManagerService: FileManagerService,
     private readonly fileManagerFormatter: FileManagerFormatter,
-    private readonly websocketService: WebsocketService,
+    private readonly websocketService: WebsocketService
   ) {}
 
   @Get('all')

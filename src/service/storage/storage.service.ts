@@ -1,6 +1,7 @@
 import path from 'path';
 import { Readable } from 'stream';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   S3Client,
   GetObjectCommand,
@@ -20,8 +21,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { createPresignedPost, PresignedPost, PresignedPostOptions } from '@aws-sdk/s3-presigned-post';
 
-import { ConfigService } from '@nestjs/config';
-import { AWSConfig, S3Config } from '../../config/interfaces';
+import { AWSConfig, S3Config } from 'src/config/interfaces';
 
 export type PutObjectCommandInputBody = Readable | string | Uint8Array | Buffer;
 

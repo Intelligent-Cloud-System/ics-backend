@@ -2,16 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserModule } from './module/user.module';
-import { SystemModule } from './module/system.module';
-import { FileManagerModule } from './module/file_manager.module';
+import { UserModule, SystemModule, FileManagerModule, WebsocketModule } from './module';
 import configuration from './config/configuration';
 import dbConfig from './config/db.config';
+import { DatabaseConfig } from './config/interfaces';
 
 import { UserService } from './service/user/user.service';
 import { UserRepository } from './repository/user.repository';
-import { DatabaseConfig } from './config/interfaces';
-import { WebsocketModule } from './module/websocket.module';
 
 @Module({
   imports: [

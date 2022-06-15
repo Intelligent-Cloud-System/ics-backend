@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 
-import { WebsocketController } from '../controller/websocket.controller';
-import { WebsocketService } from '../service/websocket/websocket.service';
-import { UserService } from '../service/user.service';
-import { UserRepository } from '../repository/user.repository';
+import { WebsocketController } from 'src/controller';
+import { WebsocketService } from 'src/service/websocket';
+import { UserService } from 'src/service/user';
+import { UserRepository } from 'src/repository';
 
 @Global()
 @Module({
