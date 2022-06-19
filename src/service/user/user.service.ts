@@ -9,8 +9,8 @@ import {
   AdminGetUserCommandInput,
 } from '@aws-sdk/client-cognito-identity-provider';
 
-import { UserRepository } from 'src/repository/user.repository';
-import { User } from 'src/model/user';
+import { UserRepository } from 'src/repository';
+import { User } from 'src/model';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
 import { Result } from 'src/shared/util/util';
 import { AWSConfig } from 'src/config/interfaces';

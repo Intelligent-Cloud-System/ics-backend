@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Folder } from '../../model/folder';
-import { File } from '../../model/file';
+
+import { Folder, File } from 'src/model';
 import {
   FileResponse,
   FolderResponse,
   FileManagerListResponse,
   SignedPostUrlsResponse,
   SignedGetUrlsResponse,
-} from '../../interface/apiResponse';
-import { FileSignedGetUrl, FileSignedPostUrl } from './file_manager.service';
+} from 'src/interface/apiResponse';
+import { FileSignedGetUrl, FileSignedPostUrl } from 'src/service/file_manager';
 
 @Injectable()
 export class FileManagerFormatter {

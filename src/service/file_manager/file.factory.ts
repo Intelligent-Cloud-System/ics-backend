@@ -1,5 +1,6 @@
 import * as path from 'path';
-import { File } from '../../model/';
+
+import { File } from 'src/model';
 
 export interface FileProperties {
   organizationId: number;

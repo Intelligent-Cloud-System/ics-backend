@@ -1,5 +1,6 @@
 import * as path from 'path';
-import { Folder } from '../../model/folder';
+
+import { Folder } from 'src/model/folder';
 
 export interface FolderProperties {
   organizationId: number;
