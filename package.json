@@ -52,9 +52,10 @@
     "@nestjs/platform-socket.io": "^8.4.6",
     "@nestjs/swagger": "^5.1.4",
     "@nestjs/typeorm": "^8.0.2",
-    "@nestjs/websockets": "^8.4.6",
+    "@nestjs/websockets": "^8.4.7",
     "fastify": "^3.28.0",
     "fastify-swagger": "^5.1.1",
+    "jimp": "^0.16.1",
     "pg": "^8.7.1",
     "rxjs": "^7.2.0",
     "typeorm": "^0.2.40"
