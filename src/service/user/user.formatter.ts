@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { GetUrlResponse, UserResponse } from 'src/interface/apiResponse';
+import { UserIconResponse , UserResponse } from 'src/interface/apiResponse';
 import { User } from 'src/model';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class UserFormatter {
     };
   }
 
-  public toGetUrlResponce(url: string): GetUrlResponse {
+  public toUserIconResponse(url: string): UserIconResponse  {
     return { url };
   }
 }

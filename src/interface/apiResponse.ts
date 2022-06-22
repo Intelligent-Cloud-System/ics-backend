@@ -87,7 +87,7 @@ export class SignedGetUrlsResponse {
   urls: Array<GetUrlInfo>;
 }
 
-export class GetUrlResponse {
+export class UserIconResponse  {
   @ApiProperty()
   url: string;
 }
