@@ -21,10 +21,7 @@ export class UserService {
   private readonly client: CognitoIdentityProviderClient;
   private readonly awsConfig: AWSConfig;
 
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly configService: ConfigService
-  ) {
+  constructor(private readonly userRepository: UserRepository, private readonly configService: ConfigService) {
     const awsConfig: AWSConfig = this.configService.get<AWSConfig>('aws') as AWSConfig;
     this.awsConfig = awsConfig;
 
@@ -94,9 +91,7 @@ export class UserService {
     }
 
     const user = new User(body.email, body.firstName, body.lastName);
-
     const insertedUser = await this.upsertUser(user);
-
     return insertedUser;
   }
 }

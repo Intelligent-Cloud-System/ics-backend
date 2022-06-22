@@ -11,9 +11,12 @@ import { ImageGen } from 'src/service/icon';
 @Controller('users')
 @ApiTags('User')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly userFormatter: UserFormatter,
+  constructor(
+    private readonly userService: UserService,
+    private readonly userFormatter: UserFormatter,
     private readonly storageService: StorageService,
-    private readonly imageGen: ImageGen) {}
+    private readonly imageGen: ImageGen
+  ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
@@ -22,7 +25,7 @@ export class UserController {
     const user = await this.userService.registerUser(body);
 
     const icon = await this.imageGen.generateImage(user.email);
-    this.storageService.upload(`userIcons/${user.id}.jpg`, icon);
+    this.storageService.upload(`userIcons/${user.id}/icon.jpg`, icon);
 
     return this.userFormatter.toUserResponse(user);
   }

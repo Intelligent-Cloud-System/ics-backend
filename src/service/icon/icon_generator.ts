@@ -36,15 +36,16 @@ export class ImageGen {
     return img.getBufferAsync(Jimp.MIME_JPEG);
   }
 
-  private fractalFunc(z: Complex, c: Complex): Complex {
-    return z.pow2().add(c);
-  }
+  // f(z) = z^2 + c - complex quadratic polynomial to visualize a fractal(Julia Set)
+  private fractalFormula = (z: Complex, c: Complex): Complex => z.pow2().add(c);
 
-  private evaluateJuliaSetPoint(z: Complex, c: Complex): number {
-    let res = z;
+  // The fractal(Julia Set) visualization image shows how many iterations it took for function
+  // to reach a set threshold in a specific point
+  private evaluateJuliaSetPoint(point: Complex, offset: Complex): number {
+    let res = point;
     let i = 0;
     while (res.abs() < constants.juliaSetThreshold && i < constants.juliaSetMaxIter) {
-      res = this.fractalFunc(res, c);
+      res = this.fractalFormula(res, offset);
       i++;
     }
     return i / constants.juliaSetMaxIter;
@@ -82,12 +83,14 @@ export class ImageGen {
     return pixel;
   }
 
-  private interpolateTwoColors(a: number[], b: number[], s: number): number[] {
-    return a.map((value, i) => Math.floor(value + (b[i] - value) * s));
+  private interpolateTwoColors(colorA: number[], colorB: number[], interpolator: number): number[] {
+    return colorA.map((value, i) => Math.floor(value + (colorB[i] - value) * interpolator));
   }
 
-  private interpolateThreeColors(a: number[], b: number[], c: number[], s: number): number[] {
-    return s < 0.5 ? this.interpolateTwoColors(a, b, s * 2) : this.interpolateTwoColors(b, c, s * 2 - 1);
+  private interpolateThreeColors(colorA: number[], colorB: number[], colorC: number[], interpolator: number): number[] {
+    return interpolator < 0.5
+      ? this.interpolateTwoColors(colorA, colorB, interpolator * 2)
+      : this.interpolateTwoColors(colorB, colorC, interpolator * 2 - 1);
   }
 
   private toParamRange = (x: number): number => -1 + x * 2;
