@@ -102,8 +102,8 @@ export class UserService {
 
     const insertedUser = await this.upsertUser(user);
 
-    const icon = this.imageGen.generateImage(user.email);
-    this.storageService.upload(`userIcons/${user.email}.jpg`, await icon);
+    const icon = await this.imageGen.generateImage(user.email);
+    this.storageService.upload(`userIcons/${user.id}.jpg`, icon);
 
     return insertedUser;
   }
