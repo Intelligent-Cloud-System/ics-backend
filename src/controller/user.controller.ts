@@ -5,17 +5,25 @@ import { UserFormatter, UserService } from 'src/service/user';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
 import { UserResponse } from 'src/interface/apiResponse';
 import { Request } from 'src/shared/request';
+import { StorageService } from 'src/service/storage';
+import { ImageGen } from 'src/service/icon';
 
 @Controller('users')
 @ApiTags('User')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly userFormatter: UserFormatter) {}
+  constructor(private readonly userService: UserService, private readonly userFormatter: UserFormatter,
+    private readonly storageService: StorageService,
+    private readonly imageGen: ImageGen) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({ status: HttpStatus.CREATED, type: UserResponse })
   public async register(@Body() body: RegisterUserRequest): Promise<UserResponse> {
     const user = await this.userService.registerUser(body);
+
+    const icon = await this.imageGen.generateImage(user.email);
+    this.storageService.upload(`userIcons/${user.id}.jpg`, icon);
+
     return this.userFormatter.toUserResponse(user);
   }
 
