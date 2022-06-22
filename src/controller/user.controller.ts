@@ -1,9 +1,9 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserFormatter, UserService } from 'src/service/user';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
-import { UserResponse } from 'src/interface/apiResponse';
+import { GetUrlResponse, UserResponse } from 'src/interface/apiResponse';
 import { Request } from 'src/shared/request';
 import { StorageService } from 'src/service/storage';
 import { ImageGen } from 'src/service/icon';
@@ -40,5 +40,14 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
   public async currentUser(@Req() { user }: Request): Promise<UserResponse> {
     return this.userFormatter.toUserResponse(user);
+  }
+
+  @Get('icon')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('authorization')
+  @ApiResponse({ status: HttpStatus.OK, type: GetUrlResponse })
+  public async userIcon(@Query('userId') userId: number): Promise<GetUrlResponse> {
+    const url = await this.storageService.getSignedGetUrl(`userIcons/${userId}/icon.jpg`);
+    return this.userFormatter.toGetUrlResponce(url);
   }
 }

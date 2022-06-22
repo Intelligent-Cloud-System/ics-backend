@@ -86,3 +86,8 @@ export class SignedGetUrlsResponse {
   @ApiProperty({ isArray: true, type: GetUrlInfo })
   urls: Array<GetUrlInfo>;
 }
+
+export class GetUrlResponse {
+  @ApiProperty()
+  url: string;
+}
