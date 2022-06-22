@@ -9,6 +9,8 @@ import { DatabaseConfig } from './config/interfaces';
 
 import { UserService } from './service/user/user.service';
 import { UserRepository } from './repository/user.repository';
+import { ImageGen } from './service/icon';
+import { StorageService } from './service/storage';
 
 @Module({
   imports: [
@@ -23,6 +25,6 @@ import { UserRepository } from './repository/user.repository';
     FileManagerModule,
     WebsocketModule,
   ],
-  providers: [UserService, UserRepository],
+  providers: [UserService, UserRepository, ImageGen, StorageService],
 })
 export class AppModule {}

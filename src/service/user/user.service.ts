@@ -16,12 +16,20 @@ import { Result } from 'src/shared/util/util';
 import { AWSConfig } from 'src/config/interfaces';
 import { ApplicationError } from 'src/shared/error/applicationError';
 
+import { StorageService } from 'src/service/storage';
+import { ImageGen } from 'src/service/icon/icon_generator';
+
 @Injectable()
 export class UserService {
   private readonly client: CognitoIdentityProviderClient;
   private readonly awsConfig: AWSConfig;
 
-  constructor(private readonly userRepository: UserRepository, private readonly configService: ConfigService) {
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly configService: ConfigService,
+    private readonly storageService: StorageService,
+    private readonly imageGen: ImageGen
+  ) {
     const awsConfig: AWSConfig = this.configService.get<AWSConfig>('aws') as AWSConfig;
     this.awsConfig = awsConfig;
 
@@ -93,6 +101,9 @@ export class UserService {
     const user = new User(body.email, body.firstName, body.lastName);
 
     const insertedUser = await this.upsertUser(user);
+
+    const icon = this.imageGen.generateImage(user.email);
+    this.storageService.upload(`userIcons/${user.email}.jpg`, await icon);
 
     return insertedUser;
   }

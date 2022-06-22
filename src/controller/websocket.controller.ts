@@ -1,9 +1,4 @@
-import {
-  WebSocketGateway,
-  OnGatewayInit,
-  WebSocketServer,
-  OnGatewayConnection,
-} from '@nestjs/websockets';
+import { WebSocketGateway, OnGatewayInit, WebSocketServer, OnGatewayConnection } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
 import { UserService } from 'src/service/user';
