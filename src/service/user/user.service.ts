@@ -91,9 +91,7 @@ export class UserService {
     }
 
     const user = new User(body.email, body.firstName, body.lastName);
-
     const insertedUser = await this.upsertUser(user);
-
     return insertedUser;
   }
 }

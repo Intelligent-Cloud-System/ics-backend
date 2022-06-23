@@ -23,13 +23,13 @@ export class FileFactory {
       const { size } = fileProperties;
       const organizationId = fileProperties.organizationId.toString();
       const userId = fileProperties.userId.toString();
-      const key = path.posix.join('organization', organizationId, 'user', userId, fileProperties.path);
+      const key = path.join('organization', organizationId, 'user', userId, fileProperties.path);
       return new File(key, size);
     } else {
       const { folder, filename, size } = fileProperties;
       const organizationId = fileProperties.organizationId.toString();
       const userId = fileProperties.userId.toString();
-      const key = path.posix.join('organization', organizationId, 'user', userId, folder, filename);
+      const key = path.join('organization', organizationId, 'user', userId, folder, filename);
       return new File(key, size);
     }
   }
