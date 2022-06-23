@@ -90,7 +90,7 @@ export class FileManagerController {
   ): Promise<SignedGetUrlsResponse> {
     this.fileManagerService.ensureLocationCanBeUsed(body.location);
 
-    const fileSignedPostUrls = await this.fileManagerService.getSignedGetUrls(user, body);
-    return this.fileManagerFormatter.toGetUrlsResponse(fileSignedPostUrls);
+    const fileSignedGetUrls = await this.fileManagerService.getSignedGetUrls(user, body);
+    return this.fileManagerFormatter.toGetUrlsResponse(fileSignedGetUrls);
   }
 }
