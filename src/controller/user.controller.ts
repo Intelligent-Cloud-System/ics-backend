@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserFormatter, UserService } from 'src/service/user';
 import { RegisterUserRequest } from 'src/interface/apiRequest';
-import { UserIconResponse  as UserIconResponse , UserResponse } from 'src/interface/apiResponse';
+import { UserIconResponse as UserIconResponse, UserResponse } from 'src/interface/apiResponse';
 import { Request } from 'src/shared/request';
 import { StorageService } from 'src/service/storage';
 import { ImageGen } from 'src/service/icon';
