@@ -86,3 +86,8 @@ export class SignedGetUrlsResponse {
   @ApiProperty({ isArray: true, type: GetUrlInfo })
   urls: Array<GetUrlInfo>;
 }
+
+export class UserIconResponse  {
+  @ApiProperty()
+  url: string;
+}
